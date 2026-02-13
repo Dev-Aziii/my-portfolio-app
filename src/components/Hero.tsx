@@ -6,7 +6,7 @@ export default function Hero() {
     <section className="flex flex-col md:flex-row gap-8 items-start md:items-center animate-fade-in-up">
       {/* Profile Image */}
       <div className="relative group">
-        <div className="absolute -inset-1 bg-linear-to-r from-gray-800 to-gray-400 dark:from-gray-300 dark:to-gray-600 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200" />
+        <div className="absolute -inset-1 bg-linear-to-b from-gray-800 to-gray-400 dark:from-gray-300 dark:to-gray-600 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200" />
         <img
           alt="Profile of Adzyl Jipos"
           className="relative w-32 h-32 md:w-40 md:h-40 rounded-2xl object-cover shadow-lg border-4 border-surface-light dark:border-surface-dark"
