@@ -20,7 +20,7 @@ export default function Experience({ entries, compact }: ExperienceProps) {
         {entries.map((exp, index) => (
           <div
             key={`${exp.title}-${exp.year}`}
-            className={`relative pl-8${index === entries.length - 1 ? " pb-2" : ""}`}
+            className={`relative pl-10 ${index === entries.length - 1 ? "pb-2" : ""}`}
           >
             <div
               className={`absolute -left-[9px] top-1 w-4 h-4 rounded-full border-4 border-surface-light dark:border-background-dark ${
@@ -29,12 +29,12 @@ export default function Experience({ entries, compact }: ExperienceProps) {
                   : "bg-border-light dark:bg-border-dark"
               }`}
             />
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-1">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-1 gap-2">
               <h3 className="text-lg font-bold text-text-light dark:text-white flex items-center gap-2">
                 {exp.title}
                 {exp.emoji && <span className="text-xl">{exp.emoji}</span>}
               </h3>
-              <span className="text-sm font-mono text-text-muted-light dark:text-text-muted-dark bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
+              <span className="text-sm font-mono text-text-muted-light dark:text-text-muted-dark bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded whitespace-nowrap">
                 {exp.year}
               </span>
             </div>
