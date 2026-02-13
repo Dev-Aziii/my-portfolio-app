@@ -34,6 +34,7 @@ export default function Home() {
           <TechStack
             categories={techStack}
             limit={4}
+            categoryLimit={3}
             showViewAll
             compact
           />

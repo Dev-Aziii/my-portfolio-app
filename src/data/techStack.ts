@@ -3,11 +3,13 @@ import type { TechCategory } from "./types";
 export const techStack: TechCategory[] = [
   {
     name: "Frontend",
-    items: ["JavaScript", "TypeScript", "React", "Vite", "Tailwind CSS"],
+    items: ["JavaScript", "TypeScript", "React", 
+            "Vite", "Tailwind CSS"],
   },
   {
     name: "Backend",
-    items: ["Node.js", "Laravel", "Flutter", "PostgreSQL", "Java", "Python", "C#", "PHP", "Dart", "ASP.NET",  "MySQL", "SQL Server", "Firebase"],
+    items: ["Node.js", "Laravel", "Flutter", "ASP.NET", "PostgreSQL", "Java", 
+            "Python", "C#", "PHP", "Dart", "MySQL", "SQL Server", "Firebase"],
   },
   {
     name: "AI & Machine Learning",
@@ -15,6 +17,7 @@ export const techStack: TechCategory[] = [
   },
   {
     name: "DevOps & Tools",
-    items: ["Docker", "GitHub Actions", "Git", "GitHub", "Visual Studio", "VsCode", "Postman", "Figma"],
+    items: ["Docker", "GitHub Actions", "Git", "GitHub", 
+            "Visual Studio", "VsCode", "Postman", "Figma"],
   },
 ];

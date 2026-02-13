@@ -9,4 +9,11 @@ export const projects: Project[] = [
     url: "#",
     icon: Code,
   },
+  {
+    title: "PeopleHub-HRMS",
+    description:
+      "Desktop-based Human Resource Management System (HRMS) developed in C# using Windows Forms and enhanced with DevExpress components",
+    url: "https://github.com/Dev-Aziii/peopleHUB-HRMS",
+    icon: Code,
+  },
 ];

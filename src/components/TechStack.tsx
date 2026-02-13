@@ -5,11 +5,14 @@ import type { TechCategory } from "@/data/types";
 interface TechStackProps {
   categories: TechCategory[];
   limit?: number;
+  categoryLimit?: number;
   showViewAll?: boolean;
   compact?: boolean;
 }
 
-export default function TechStack({ categories, limit, showViewAll, compact }: TechStackProps) {
+export default function TechStack({ categories, limit, categoryLimit, showViewAll, compact }: TechStackProps) {
+  const displayCategories = categoryLimit ? categories.slice(0, categoryLimit) : categories;
+
   return (
     <section>
       <div className="flex justify-between items-center mb-6">
@@ -28,11 +31,11 @@ export default function TechStack({ categories, limit, showViewAll, compact }: T
       </div>
 
       <div className="space-y-6">
-        {categories.length === 0 ? (
+        {displayCategories.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-text-muted-light dark:text-text-muted-dark">No tech stack added yet.</p>
           </div>
-        ) : categories.map((category) => {
+        ) : displayCategories.map((category) => {
           const items = limit ? category.items.slice(0, limit) : category.items;
           return (
             <div key={category.name}>
