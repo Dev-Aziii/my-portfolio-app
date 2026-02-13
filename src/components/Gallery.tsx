@@ -1,13 +1,10 @@
-interface GalleryImage {
-  src: string;
-  alt: string;
+import type { GalleryImage } from "@/data/types";
+
+interface GalleryProps {
+  images: GalleryImage[];
 }
 
-const images: GalleryImage[] = [
-
-];
-
-export default function Gallery() {
+export default function Gallery({ images }: GalleryProps) {
   return (
     <section>
       <h2 className="text-2xl font-bold text-text-light dark:text-white mb-8">

@@ -1,17 +1,11 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import type { Recommendation } from "@/data/types";
 
-interface Recommendation {
-  quote: string;
-  author: string;
-  title: string;
-  initials: string;
+interface RecommendationsProps {
+  recommendations: Recommendation[];
 }
 
-const recommendations: Recommendation[] = [
-
-];
-
-export default function Recommendations() {
+export default function Recommendations({ recommendations }: RecommendationsProps) {
   return (
     <section className="text-center py-8">
       <h2 className="text-2xl font-bold text-text-light dark:text-white mb-8">
