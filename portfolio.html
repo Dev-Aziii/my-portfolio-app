@@ -1,0 +1,982 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Bryl Lim - Portfolio</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#4f46e5", // Indigo-600 for deep indigo accent
+              "background-light": "#FAFAFA",
+              "background-dark": "#111111",
+              "surface-light": "#FFFFFF",
+              "surface-dark": "#1F1F1F",
+              "border-light": "#E5E7EB",
+              "border-dark": "#333333",
+              "text-light": "#1F2937",
+              "text-dark": "#E5E7EB",
+              "text-muted-light": "#6B7280",
+              "text-muted-dark": "#9CA3AF",
+            },
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              display: ["Inter", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.5rem",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background-color: #cbd5e1;
+        border-radius: 20px;
+      }
+      .dark ::-webkit-scrollbar-thumb {
+        background-color: #4b5563;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark font-sans antialiased transition-colors duration-300"
+  >
+    <nav
+      class="fixed top-0 w-full z-50 bg-surface-light/80 dark:bg-surface-dark/80 backdrop-blur-md border-b border-border-light dark:border-border-dark"
+    >
+      <div
+        class="max-w-4xl mx-auto px-6 py-4 flex justify-between items-center"
+      >
+        <span
+          class="text-lg font-bold tracking-tight text-primary dark:text-primary"
+          >Bryl.</span
+        >
+        <button
+          class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          id="theme-toggle"
+        >
+          <span
+            class="material-icons-outlined text-text-muted-light dark:text-text-muted-dark"
+            >dark_mode</span
+          >
+        </button>
+      </div>
+    </nav>
+    <main class="max-w-4xl mx-auto px-6 pt-28 pb-20 space-y-24">
+      <section
+        class="flex flex-col md:flex-row gap-8 items-start md:items-center animate-fade-in-up"
+      >
+        <div class="relative group">
+          <div
+            class="absolute -inset-1 bg-gradient-to-r from-primary to-purple-600 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"
+          ></div>
+          <img
+            alt="Profile of Bryl Lim"
+            class="relative w-32 h-32 md:w-40 md:h-40 rounded-2xl object-cover shadow-lg border-4 border-surface-light dark:border-surface-dark"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpcIUuqTMBhjAFuEgzCz4jD3Xje1_RAFNgRSomb6jrJH3Zr-2H9FPg_NhJhEUA-BOORyZ51Zu_yPfz1FioYSpzhp8aWKHJ4WZ9ZcEYoxLUtZ4CwpnzAYM5rZFbOlP7Ivls6DTWh4F539grpv_7vsfUiNA3yzFiqGgoSP-0wjuyOIcxklV8BvFoSZK8Hfnus7BAY7c8rXYI0izMV4VFS1kgkspwRTqn0ZVCnGRj0iqDVSjYK4MX400sYDzL0BIwhAJASG9op79j3A"
+          />
+        </div>
+        <div class="flex-1 space-y-4">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <h1
+                class="text-3xl md:text-4xl font-bold text-text-light dark:text-white"
+              >
+                Bryl Lim
+              </h1>
+              <span
+                class="material-icons-outlined text-blue-500"
+                style="font-size: 1.25rem"
+                >verified</span
+              >
+            </div>
+            <div
+              class="flex items-center text-text-muted-light dark:text-text-muted-dark text-sm"
+            >
+              <span class="material-icons-outlined mr-1" style="font-size: 1rem"
+                >location_on</span
+              >
+              Metro Manila, Philippines
+            </div>
+          </div>
+          <p class="text-lg text-text-light dark:text-gray-300 font-medium">
+            AI \ Software Engineer \ Content Creator
+          </p>
+          <div class="flex flex-wrap gap-3 pt-2">
+            <button
+              class="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg font-medium hover:bg-opacity-90 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+            >
+              <span class="material-icons-outlined text-sm"
+                >calendar_today</span
+              >
+              Schedule a Call
+            </button>
+            <button
+              class="flex items-center gap-2 bg-white dark:bg-surface-dark border border-border-light dark:border-border-dark text-text-light dark:text-text-dark px-5 py-2.5 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+            >
+              <span class="material-icons-outlined text-sm">email</span>
+              Send Email
+            </button>
+            <a
+              class="flex items-center gap-2 text-text-muted-light dark:text-text-muted-dark hover:text-primary dark:hover:text-primary px-3 py-2.5 font-medium transition-colors"
+              href="#"
+            >
+              <span class="material-icons-outlined text-sm">article</span>
+              Read my blog
+            </a>
+          </div>
+          <div
+            class="mt-4 inline-flex items-center gap-2 px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 text-xs font-semibold rounded-md border border-blue-100 dark:border-blue-800"
+          >
+            <span class="material-icons-outlined text-sm">emoji_events</span>
+            DICT OpenGov Hackathon 2025 Champion
+          </div>
+        </div>
+      </section>
+      <section class="grid grid-cols-1 md:grid-cols-3 gap-12">
+        <div class="md:col-span-2 space-y-6">
+          <h2 class="text-2xl font-bold text-text-light dark:text-white mb-4">
+            About
+          </h2>
+          <div
+            class="prose dark:prose-invert max-w-none text-text-muted-light dark:text-gray-400 leading-relaxed"
+          >
+            <p>
+              I'm a full-stack software engineer specializing in developing
+              solutions with JavaScript, Python, and PHP. I work on projects
+              including building modern web applications, mobile apps, search
+              engine optimization, digital marketing, and making code tutorials.
+            </p>
+            <p>
+              I've helped startups and MSMEs grow and streamline their processes
+              through software solutions. I've also built a community of over
+              200,000 developers sharing knowledge and mentorship.
+            </p>
+            <p>
+              Lately, I've been diving deeper into the world of artificial
+              intelligence, focusing on integrating AI tools and techniques into
+              modern applications. My work now includes developing AI-powered
+              solutions, creating intelligent applications, and leveraging
+              generative AI to optimize development workflows and deliver
+              cutting-edge technology.
+            </p>
+          </div>
+        </div>
+        <div class="md:col-span-1 flex flex-col gap-6">
+          <div
+            class="relative bg-gradient-to-br from-gray-800 to-black rounded-xl p-6 text-white shadow-2xl overflow-hidden group hover:scale-[1.02] transition-transform duration-300 h-80 flex flex-col justify-between"
+          >
+            <div
+              class="absolute top-0 right-0 p-2 opacity-20 text-6xl font-bold"
+            >
+              100
+            </div>
+            <div>
+              <div class="w-10 h-1 bg-white mb-1"></div>
+              <div class="w-6 h-1 bg-white mb-6"></div>
+              <h3 class="text-lg font-bold tracking-wider mb-1">
+                DEVS ONE HUNDRED
+              </h3>
+              <p class="text-[10px] uppercase tracking-widest text-gray-400">
+                Access Card
+              </p>
+            </div>
+            <div>
+              <p
+                class="text-[10px] uppercase tracking-widest text-gray-500 mb-1"
+              >
+                Founding Member
+              </p>
+              <p class="font-mono text-xl tracking-wide">BRYL</p>
+            </div>
+            <div class="flex justify-between items-end">
+              <p class="text-[10px] uppercase tracking-widest text-gray-500">
+                Developer
+              </p>
+              <div class="bg-white p-1 rounded-sm">
+                <svg
+                  class="w-8 h-8 text-black"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M3 3h18v18H3V3zm16 16V5H5v14h14zM7 7h2v2H7V7zm4 0h2v2h-2V7zm4 0h2v2h-2V7zM7 11h2v2H7v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2zM7 15h2v2H7v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2z"
+                  ></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div
+            class="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl p-4 text-white shadow-lg flex items-center justify-between"
+          >
+            <div>
+              <p class="text-xs font-bold uppercase opacity-80">I'm Part of</p>
+              <p class="text-xl font-bold">PH 100</p>
+            </div>
+            <span class="material-icons-outlined animate-pulse"
+              >arrow_forward</span
+            >
+          </div>
+        </div>
+      </section>
+      <section>
+        <div class="flex justify-between items-center mb-8">
+          <h2 class="text-2xl font-bold text-text-light dark:text-white">
+            Tech Stack
+          </h2>
+          <a
+            class="text-sm font-medium text-primary hover:text-indigo-500 transition-colors flex items-center"
+            href="#"
+          >
+            View All
+            <span class="material-icons-outlined text-sm ml-1"
+              >chevron_right</span
+            >
+          </a>
+        </div>
+        <div class="space-y-8">
+          <div>
+            <h3
+              class="text-sm uppercase tracking-wider font-semibold text-text-muted-light dark:text-text-muted-dark mb-4"
+            >
+              Frontend
+            </h3>
+            <div class="flex flex-wrap gap-3">
+              <span
+                class="px-4 py-2 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-lg text-sm font-medium text-text-light dark:text-text-dark shadow-sm hover:border-primary transition-colors cursor-default"
+                >JavaScript</span
+              >
+              <span
+                class="px-4 py-2 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-lg text-sm font-medium text-text-light dark:text-text-dark shadow-sm hover:border-primary transition-colors cursor-default"
+                >TypeScript</span
+              >
+              <span
+                class="px-4 py-2 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-lg text-sm font-medium text-text-light dark:text-text-dark shadow-sm hover:border-primary transition-colors cursor-default"
+                >React</span
+              >
+              <span
+                class="px-4 py-2 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-lg text-sm font-medium text-text-light dark:text-text-dark shadow-sm hover:border-primary transition-colors cursor-default"
+                >Next.js</span
+              >
+              <span
+                class="px-4 py-2 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-lg text-sm font-medium text-text-light dark:text-text-dark shadow-sm hover:border-primary transition-colors cursor-default"
+                >Vue.js</span
+              >
+              <span
+                class="px-4 py-2 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-lg text-sm font-medium text-text-light dark:text-text-dark shadow-sm hover:border-primary transition-colors cursor-default"
+                >Tailwind CSS</span
+              >
+            </div>
+          </div>
+          <div>
+            <h3
+              class="text-sm uppercase tracking-wider font-semibold text-text-muted-light dark:text-text-muted-dark mb-4"
+            >
+              Backend
+            </h3>
+            <div class="flex flex-wrap gap-3">
+              <span
+                class="px-4 py-2 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-lg text-sm font-medium text-text-light dark:text-text-dark shadow-sm hover:border-primary transition-colors cursor-default"
+                >Node.js</span
+              >
+              <span
+                class="px-4 py-2 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-lg text-sm font-medium text-text-light dark:text-text-dark shadow-sm hover:border-primary transition-colors cursor-default"
+                >Python</span
+              >
+              <span
+                class="px-4 py-2 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-lg text-sm font-medium text-text-light dark:text-text-dark shadow-sm hover:border-primary transition-colors cursor-default"
+                >PHP</span
+              >
+              <span
+                class="px-4 py-2 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-lg text-sm font-medium text-text-light dark:text-text-dark shadow-sm hover:border-primary transition-colors cursor-default"
+                >Laravel</span
+              >
+              <span
+                class="px-4 py-2 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-lg text-sm font-medium text-text-light dark:text-text-dark shadow-sm hover:border-primary transition-colors cursor-default"
+                >PostgreSQL</span
+              >
+              <span
+                class="px-4 py-2 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-lg text-sm font-medium text-text-light dark:text-text-dark shadow-sm hover:border-primary transition-colors cursor-default"
+                >MongoDB</span
+              >
+            </div>
+          </div>
+          <div>
+            <h3
+              class="text-sm uppercase tracking-wider font-semibold text-text-muted-light dark:text-text-muted-dark mb-4"
+            >
+              DevOps &amp; Cloud
+            </h3>
+            <div class="flex flex-wrap gap-3">
+              <span
+                class="px-4 py-2 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-lg text-sm font-medium text-text-light dark:text-text-dark shadow-sm hover:border-primary transition-colors cursor-default"
+                >AWS</span
+              >
+              <span
+                class="px-4 py-2 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-lg text-sm font-medium text-text-light dark:text-text-dark shadow-sm hover:border-primary transition-colors cursor-default"
+                >Docker</span
+              >
+              <span
+                class="px-4 py-2 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-lg text-sm font-medium text-text-light dark:text-text-dark shadow-sm hover:border-primary transition-colors cursor-default"
+                >Kubernetes</span
+              >
+              <span
+                class="px-4 py-2 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-lg text-sm font-medium text-text-light dark:text-text-dark shadow-sm hover:border-primary transition-colors cursor-default"
+                >GitHub Actions</span
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+      <section>
+        <h2 class="text-2xl font-bold text-text-light dark:text-white mb-8">
+          Experience
+        </h2>
+        <div
+          class="relative border-l-2 border-border-light dark:border-border-dark ml-3 space-y-12"
+        >
+          <div class="relative pl-8">
+            <div
+              class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-primary border-4 border-surface-light dark:border-background-dark"
+            ></div>
+            <div
+              class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-1"
+            >
+              <h3 class="text-lg font-bold text-text-light dark:text-white">
+                Principal AI Engineer
+              </h3>
+              <span
+                class="text-sm font-mono text-text-muted-light dark:text-text-muted-dark bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded"
+                >2025</span
+              >
+            </div>
+            <p class="text-text-muted-light dark:text-gray-400">
+              Standard Chartered
+            </p>
+          </div>
+          <div class="relative pl-8">
+            <div
+              class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-border-light dark:bg-border-dark border-4 border-surface-light dark:border-background-dark"
+            ></div>
+            <div
+              class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-1"
+            >
+              <h3 class="text-lg font-bold text-text-light dark:text-white">
+                AI Ops Engineer
+              </h3>
+              <span
+                class="text-sm font-mono text-text-muted-light dark:text-text-muted-dark bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded"
+                >2025</span
+              >
+            </div>
+            <p class="text-text-muted-light dark:text-gray-400">
+              Centre of Excellence for GenAI, Cambridge
+            </p>
+          </div>
+          <div class="relative pl-8">
+            <div
+              class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-border-light dark:bg-border-dark border-4 border-surface-light dark:border-background-dark"
+            ></div>
+            <div
+              class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-1"
+            >
+              <h3 class="text-lg font-bold text-text-light dark:text-white">
+                Senior Full-Stack Developer
+              </h3>
+              <span
+                class="text-sm font-mono text-text-muted-light dark:text-text-muted-dark bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded"
+                >2024</span
+              >
+            </div>
+            <p class="text-text-muted-light dark:text-gray-400">
+              Core Technology, Cambridge
+            </p>
+          </div>
+          <div class="relative pl-8">
+            <div
+              class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-border-light dark:bg-border-dark border-4 border-surface-light dark:border-background-dark"
+            ></div>
+            <div
+              class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-1"
+            >
+              <h3 class="text-lg font-bold text-text-light dark:text-white">
+                Software Engineering Lead
+              </h3>
+              <span
+                class="text-sm font-mono text-text-muted-light dark:text-text-muted-dark bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded"
+                >2022</span
+              >
+            </div>
+            <p class="text-text-muted-light dark:text-gray-400">PocketDevs</p>
+          </div>
+          <div class="relative pl-8">
+            <div
+              class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-border-light dark:bg-border-dark border-4 border-surface-light dark:border-background-dark"
+            ></div>
+            <div
+              class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-1"
+            >
+              <h3 class="text-lg font-bold text-text-light dark:text-white">
+                Lead Application Developer
+              </h3>
+              <span
+                class="text-sm font-mono text-text-muted-light dark:text-text-muted-dark bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded"
+                >2021</span
+              >
+            </div>
+            <p class="text-text-muted-light dark:text-gray-400">
+              Bluewind Asia
+            </p>
+          </div>
+          <div class="relative pl-8">
+            <div
+              class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-border-light dark:bg-border-dark border-4 border-surface-light dark:border-background-dark"
+            ></div>
+            <div
+              class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-1"
+            >
+              <h3 class="text-lg font-bold text-text-light dark:text-white">
+                BS Information Technology
+              </h3>
+              <span
+                class="text-sm font-mono text-text-muted-light dark:text-text-muted-dark bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded"
+                >2019</span
+              >
+            </div>
+            <p class="text-text-muted-light dark:text-gray-400">
+              University of San Carlos
+            </p>
+          </div>
+          <div class="relative pl-8 pb-2">
+            <div
+              class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-border-light dark:bg-border-dark border-4 border-surface-light dark:border-background-dark"
+            ></div>
+            <div
+              class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-1"
+            >
+              <h3
+                class="text-lg font-bold text-text-light dark:text-white flex items-center gap-2"
+              >
+                Hello World! <span class="text-xl">👋</span>
+              </h3>
+              <span
+                class="text-sm font-mono text-text-muted-light dark:text-text-muted-dark bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded"
+                >2015</span
+              >
+            </div>
+            <p class="text-text-muted-light dark:text-gray-400">
+              Wrote my first line of code
+            </p>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div class="flex justify-between items-center mb-8">
+          <h2 class="text-2xl font-bold text-text-light dark:text-white">
+            Recent Projects
+          </h2>
+          <a
+            class="text-sm font-medium text-primary hover:text-indigo-500 transition-colors flex items-center"
+            href="#"
+          >
+            View All
+            <span class="material-icons-outlined text-sm ml-1"
+              >chevron_right</span
+            >
+          </a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div
+            class="group bg-surface-light dark:bg-surface-dark rounded-xl p-6 border border-border-light dark:border-border-dark hover:border-primary/50 dark:hover:border-primary/50 transition-all shadow-sm hover:shadow-md"
+          >
+            <div class="flex justify-between items-start mb-4">
+              <div
+                class="p-3 bg-gray-100 dark:bg-gray-800 rounded-lg group-hover:bg-indigo-50 dark:group-hover:bg-indigo-900/30 transition-colors"
+              >
+                <span class="material-icons-outlined text-primary text-2xl"
+                  >code</span
+                >
+              </div>
+              <span
+                class="material-icons-outlined text-text-muted-light dark:text-text-muted-dark transform group-hover:rotate-45 transition-transform duration-300"
+                >arrow_outward</span
+              >
+            </div>
+            <h3 class="text-lg font-bold text-text-light dark:text-white mb-2">
+              CodeCred
+            </h3>
+            <p
+              class="text-text-muted-light dark:text-text-muted-dark text-sm mb-4"
+            >
+              Online certifications for programmers
+            </p>
+            <code
+              class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-primary"
+              >codecred.dev</code
+            >
+          </div>
+          <div
+            class="group bg-surface-light dark:bg-surface-dark rounded-xl p-6 border border-border-light dark:border-border-dark hover:border-primary/50 dark:hover:border-primary/50 transition-all shadow-sm hover:shadow-md"
+          >
+            <div class="flex justify-between items-start mb-4">
+              <div
+                class="p-3 bg-gray-100 dark:bg-gray-800 rounded-lg group-hover:bg-indigo-50 dark:group-hover:bg-indigo-900/30 transition-colors"
+              >
+                <span class="material-icons-outlined text-primary text-2xl"
+                  >error_outline</span
+                >
+              </div>
+              <span
+                class="material-icons-outlined text-text-muted-light dark:text-text-muted-dark transform group-hover:rotate-45 transition-transform duration-300"
+                >arrow_outward</span
+              >
+            </div>
+            <h3 class="text-lg font-bold text-text-light dark:text-white mb-2">
+              BASE404
+            </h3>
+            <p
+              class="text-text-muted-light dark:text-text-muted-dark text-sm mb-4"
+            >
+              Online coding bootcamp
+            </p>
+            <code
+              class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-primary"
+              >base-404.com</code
+            >
+          </div>
+          <div
+            class="group bg-surface-light dark:bg-surface-dark rounded-xl p-6 border border-border-light dark:border-border-dark hover:border-primary/50 dark:hover:border-primary/50 transition-all shadow-sm hover:shadow-md"
+          >
+            <div class="flex justify-between items-start mb-4">
+              <div
+                class="p-3 bg-gray-100 dark:bg-gray-800 rounded-lg group-hover:bg-indigo-50 dark:group-hover:bg-indigo-900/30 transition-colors"
+              >
+                <span class="material-icons-outlined text-primary text-2xl"
+                  >checkroom</span
+                >
+              </div>
+              <span
+                class="material-icons-outlined text-text-muted-light dark:text-text-muted-dark transform group-hover:rotate-45 transition-transform duration-300"
+                >arrow_outward</span
+              >
+            </div>
+            <h3 class="text-lg font-bold text-text-light dark:text-white mb-2">
+              DIIN.PH
+            </h3>
+            <p
+              class="text-text-muted-light dark:text-text-muted-dark text-sm mb-4"
+            >
+              AI-powered wardrobe assistant
+            </p>
+            <code
+              class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-primary"
+              >diin.ph</code
+            >
+          </div>
+          <div
+            class="group bg-surface-light dark:bg-surface-dark rounded-xl p-6 border border-border-light dark:border-border-dark hover:border-primary/50 dark:hover:border-primary/50 transition-all shadow-sm hover:shadow-md"
+          >
+            <div class="flex justify-between items-start mb-4">
+              <div
+                class="p-3 bg-gray-100 dark:bg-gray-800 rounded-lg group-hover:bg-indigo-50 dark:group-hover:bg-indigo-900/30 transition-colors"
+              >
+                <span class="material-icons-outlined text-primary text-2xl"
+                  >fitness_center</span
+                >
+              </div>
+              <span
+                class="material-icons-outlined text-text-muted-light dark:text-text-muted-dark transform group-hover:rotate-45 transition-transform duration-300"
+                >arrow_outward</span
+              >
+            </div>
+            <h3 class="text-lg font-bold text-text-light dark:text-white mb-2">
+              DYNAMIS Workout Tracker
+            </h3>
+            <p
+              class="text-text-muted-light dark:text-text-muted-dark text-sm mb-4"
+            >
+              AI-powered workout tracker
+            </p>
+            <code
+              class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-primary"
+              >dynamis-app.online</code
+            >
+          </div>
+        </div>
+      </section>
+      <section>
+        <div class="flex justify-between items-center mb-8">
+          <h2 class="text-2xl font-bold text-text-light dark:text-white">
+            Recent Certifications
+          </h2>
+          <a
+            class="text-sm font-medium text-primary hover:text-indigo-500 transition-colors flex items-center"
+            href="#"
+          >
+            View All
+            <span class="material-icons-outlined text-sm ml-1"
+              >chevron_right</span
+            >
+          </a>
+        </div>
+        <div class="space-y-3">
+          <a
+            class="block bg-surface-light dark:bg-surface-dark p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors flex items-center justify-between group"
+            href="#"
+          >
+            <div>
+              <h4 class="font-semibold text-text-light dark:text-white">
+                Huawei Developer Expert
+              </h4>
+              <p
+                class="text-xs text-text-muted-light dark:text-text-muted-dark mt-1"
+              >
+                Huawei
+              </p>
+            </div>
+            <span
+              class="material-icons-outlined text-gray-300 dark:text-gray-600 group-hover:text-primary transition-colors"
+              >verified</span
+            >
+          </a>
+          <a
+            class="block bg-surface-light dark:bg-surface-dark p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors flex items-center justify-between group"
+            href="#"
+          >
+            <div>
+              <h4 class="font-semibold text-text-light dark:text-white">
+                Generative AI Leader
+              </h4>
+              <p
+                class="text-xs text-text-muted-light dark:text-text-muted-dark mt-1"
+              >
+                Google
+              </p>
+            </div>
+            <span
+              class="material-icons-outlined text-gray-300 dark:text-gray-600 group-hover:text-primary transition-colors"
+              >verified</span
+            >
+          </a>
+          <a
+            class="block bg-surface-light dark:bg-surface-dark p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors flex items-center justify-between group"
+            href="#"
+          >
+            <div>
+              <h4 class="font-semibold text-text-light dark:text-white">
+                Software Engineering
+              </h4>
+              <p
+                class="text-xs text-text-muted-light dark:text-text-muted-dark mt-1"
+              >
+                TestDome
+              </p>
+            </div>
+            <span
+              class="material-icons-outlined text-gray-300 dark:text-gray-600 group-hover:text-primary transition-colors"
+              >verified</span
+            >
+          </a>
+          <a
+            class="block bg-surface-light dark:bg-surface-dark p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors flex items-center justify-between group"
+            href="#"
+          >
+            <div>
+              <h4 class="font-semibold text-text-light dark:text-white">
+                Generative AI Professional
+              </h4>
+              <p
+                class="text-xs text-text-muted-light dark:text-text-muted-dark mt-1"
+              >
+                Oracle
+              </p>
+            </div>
+            <span
+              class="material-icons-outlined text-gray-300 dark:text-gray-600 group-hover:text-primary transition-colors"
+              >verified</span
+            >
+          </a>
+        </div>
+      </section>
+      <section class="text-center py-8">
+        <h2 class="text-2xl font-bold text-text-light dark:text-white mb-8">
+          Recommendations
+        </h2>
+        <div
+          class="max-w-2xl mx-auto bg-surface-light dark:bg-surface-dark p-8 rounded-2xl shadow-lg border border-border-light dark:border-border-dark relative"
+        >
+          <span
+            class="absolute top-6 left-6 text-6xl text-primary opacity-20 font-serif leading-none"
+            >“</span
+          >
+          <p
+            class="text-lg italic text-text-light dark:text-gray-300 leading-relaxed mb-6 z-10 relative"
+          >
+            Bryl was the most talented software engineer I've mentored in a long
+            time. He's a fast learner, and he always makes sure to deliver
+            quality output given a period of time. He is also very keen on
+            learning new technologies, and I find him to be objectively...
+          </p>
+          <div class="flex items-center justify-center gap-4">
+            <div
+              class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center text-white font-bold text-sm"
+            >
+              CL
+            </div>
+            <div class="text-left">
+              <p class="font-bold text-sm text-text-light dark:text-white">
+                Cris Lawrence Adrian Militante
+              </p>
+              <p
+                class="text-xs text-text-muted-light dark:text-text-muted-dark"
+              >
+                ICT Director at GCM
+              </p>
+            </div>
+          </div>
+          <div class="flex justify-center mt-6 gap-2">
+            <span class="w-2 h-2 bg-primary rounded-full cursor-pointer"></span>
+            <span
+              class="w-2 h-2 bg-gray-300 dark:bg-gray-700 rounded-full cursor-pointer hover:bg-primary/50 transition-colors"
+            ></span>
+            <span
+              class="w-2 h-2 bg-gray-300 dark:bg-gray-700 rounded-full cursor-pointer hover:bg-primary/50 transition-colors"
+            ></span>
+            <span
+              class="w-2 h-2 bg-gray-300 dark:bg-gray-700 rounded-full cursor-pointer hover:bg-primary/50 transition-colors"
+            ></span>
+          </div>
+        </div>
+      </section>
+      <section>
+        <h2 class="text-2xl font-bold text-text-light dark:text-white mb-8">
+          Gallery
+        </h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div
+            class="relative group aspect-square rounded-xl overflow-hidden cursor-pointer"
+          >
+            <img
+              alt="Speaking at event"
+              class="object-cover w-full h-full transform group-hover:scale-110 transition-transform duration-500"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBG-EyXJzNlZrZWIjMjsCIwlHCBZUgNFR-LjwQKkE5Hs4bEBTGCladNwg0oU9YEffl2DW7ODVRkFlu6VKMtqvQyFVexn5G8eR17nmSrajZlnorMYd9h47mr4IhQ00SRhcYT2M1YfkvVY8t6GBUy_DQ0V0cZE7yhrRhXNpjes3ZWTFHR3cDFJ6AdiC3RHMhEmenXOBXl61igy1hMCwbfnOgPN2DkAIwOorKa2_dw6k38p1yaOnfc2YxgqT9DUI0rbCgjY-yZmTfd6Q"
+            />
+            <div
+              class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-opacity"
+            ></div>
+          </div>
+          <div
+            class="relative group aspect-square rounded-xl overflow-hidden cursor-pointer"
+          >
+            <img
+              alt="Hackathon winning team"
+              class="object-cover w-full h-full transform group-hover:scale-110 transition-transform duration-500"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5ahNc-KIdyrXNH25Ct4PguCSOuSGUOmH5HhlcrgD8T51an8X1G1JK8m23npBFoVlydME4zLfwHs0DVn93fSe0u2Z1TyNnJNVi8wsT9Moapu7S4-8kU1f9nU_PNLHfyw3YD4u2MGavcLF8sQcBJzQddhg8OVoLlVSwF-hz6g0Y81m08droDk1XTc-uIv7XZGXsmtTtlgocr9PGrRCdKieAzZCaXoNndx9bgE7Z--1YhOdWAPvXf1A4tsIeg-2A3M4HY_uKvn4tNA"
+            />
+            <div
+              class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-opacity"
+            ></div>
+          </div>
+          <div
+            class="relative group aspect-square rounded-xl overflow-hidden cursor-pointer"
+          >
+            <img
+              alt="Tech conference presentation"
+              class="object-cover w-full h-full transform group-hover:scale-110 transition-transform duration-500"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVNjygVbRtx6afdRnpMasOWy0kBUV5E609OM6YpkubNUVTtzfD1cpNHO1Zq--MCUezYo5DP2E-Lxbs7xVtoSs8rf5k4ZZBDQCTV6J9FDy264PbzEaV_4ay1TBGxqLyt9dtWYHl2oRWpgOLBJ8dXAf91TKuNrrgIBX5Ts_Uv1h4OHWClJ08-3p-rhA3q2C1H2t2CGGtwl7v4YBqI3Oi5Rw0MzUXZxRXSY6qMtnrG3PGpJGY6i_WzpZ8sv4kXi96c5BkEPJI6JU1CA"
+            />
+            <div
+              class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-opacity"
+            ></div>
+          </div>
+          <div
+            class="relative group aspect-square rounded-xl overflow-hidden cursor-pointer"
+          >
+            <img
+              alt="Award ceremony"
+              class="object-cover w-full h-full transform group-hover:scale-110 transition-transform duration-500"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAotay8bzjlPNwwDt1pBBqbOmxB30XxmX_8BBEakQwDy1onKofeHv6liPZB9Kh7VEkiA5V8RvKTmD_ehdQYht9sJCyUHoT6xzdjdpbrJu-2_pZOm9kpUTYJ86ZsxDhB0N2IV9coXKvh4b8N6UTviHpUrtXaRwTNCyxuVfyfJsqIYTvrvFuNS_1WLnnCbrwl5u7ppE2_bBXkioWCB7ycvCBrI067ZbagHHSRCSuvKuQgzg-0N0xcYOsTkocx-kmoOrT4Xd8PLVvtWw"
+            />
+            <div
+              class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-opacity"
+            ></div>
+          </div>
+        </div>
+      </section>
+      <section
+        class="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8 border-t border-border-light dark:border-border-dark"
+      >
+        <div>
+          <h3 class="font-bold text-text-light dark:text-white mb-4">
+            A member of
+          </h3>
+          <div
+            class="space-y-4 text-sm text-text-muted-light dark:text-text-muted-dark"
+          >
+            <a
+              class="flex items-start justify-between hover:text-primary transition-colors"
+              href="#"
+            >
+              <span
+                >Analytics &amp; Artificial Intelligence Association of the
+                Philippines (AAP)</span
+              >
+              <span class="material-icons-outlined text-xs">open_in_new</span>
+            </a>
+            <a
+              class="flex items-start justify-between hover:text-primary transition-colors"
+              href="#"
+            >
+              <span>Philippine Software Industry Association</span>
+              <span class="material-icons-outlined text-xs">open_in_new</span>
+            </a>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-bold text-text-light dark:text-white mb-4">
+            Social Links
+          </h3>
+          <div class="space-y-3">
+            <a
+              class="flex items-center gap-2 text-text-muted-light dark:text-text-muted-dark hover:text-primary dark:hover:text-primary transition-colors"
+              href="#"
+            >
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"
+                ></path>
+              </svg>
+              LinkedIn
+            </a>
+            <a
+              class="flex items-center gap-2 text-text-muted-light dark:text-text-muted-dark hover:text-primary dark:hover:text-primary transition-colors"
+              href="#"
+            >
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                ></path>
+              </svg>
+              GitHub
+            </a>
+            <a
+              class="flex items-center gap-2 text-text-muted-light dark:text-text-muted-dark hover:text-primary dark:hover:text-primary transition-colors"
+              href="#"
+            >
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                ></path>
+              </svg>
+              Instagram
+            </a>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-bold text-text-light dark:text-white mb-4">
+            Contact
+          </h3>
+          <div class="space-y-4">
+            <a
+              class="block p-3 bg-surface-light dark:bg-surface-dark rounded-lg border border-border-light dark:border-border-dark hover:border-primary transition-colors"
+              href="mailto:bryllim@gmail.com"
+            >
+              <div class="flex items-center gap-2 mb-1">
+                <span class="material-icons-outlined text-sm text-primary"
+                  >email</span
+                >
+                <span
+                  class="text-xs font-bold uppercase tracking-wide text-text-muted-light dark:text-text-muted-dark"
+                  >Email</span
+                >
+              </div>
+              <p class="text-sm font-medium">bryllim@gmail.com</p>
+            </a>
+            <a
+              class="block p-3 bg-surface-light dark:bg-surface-dark rounded-lg border border-border-light dark:border-border-dark hover:border-primary transition-colors group"
+              href="#"
+            >
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="material-icons-outlined text-sm text-primary"
+                    >calendar_today</span
+                  >
+                  <span
+                    class="text-xs font-bold uppercase tracking-wide text-text-muted-light dark:text-text-muted-dark"
+                    >Let's Talk</span
+                  >
+                </div>
+                <span
+                  class="material-icons-outlined text-sm text-gray-400 group-hover:text-primary"
+                  >chevron_right</span
+                >
+              </div>
+              <p class="text-sm font-medium">Schedule a Call</p>
+            </a>
+          </div>
+        </div>
+      </section>
+      <footer
+        class="text-center text-sm text-text-muted-light dark:text-text-muted-dark"
+      >
+        <p>© 2026 Bryl Lim. All rights reserved.</p>
+      </footer>
+    </main>
+    <div class="fixed bottom-6 right-6 z-40">
+      <button
+        class="bg-gray-900 dark:bg-white text-white dark:text-black px-6 py-3 rounded-full font-medium shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center gap-2"
+      >
+        <span class="material-icons-outlined text-sm">chat_bubble_outline</span>
+        Chat with Bryl
+      </button>
+    </div>
+    <script>
+      const themeToggle = document.getElementById("theme-toggle");
+      const html = document.documentElement;
+      const icon = themeToggle.querySelector("span");
+      themeToggle.addEventListener("click", () => {
+        if (html.classList.contains("dark")) {
+          html.classList.remove("dark");
+          icon.textContent = "dark_mode";
+          localStorage.theme = "light";
+        } else {
+          html.classList.add("dark");
+          icon.textContent = "light_mode";
+          localStorage.theme = "dark";
+        }
+      });
+      // Check local storage or system preference
+      if (
+        localStorage.theme === "dark" ||
+        (!("theme" in localStorage) &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        html.classList.add("dark");
+        icon.textContent = "light_mode";
+      } else {
+        html.classList.remove("dark");
+        icon.textContent = "dark_mode";
+      }
+    </script>
+  </body>
+</html>
