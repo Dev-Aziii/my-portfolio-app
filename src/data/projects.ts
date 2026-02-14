@@ -29,6 +29,8 @@ export const projects: Project[] = [
       },
       additionalImages: [
         "/images/projects/elecsys/img1.jpg",
+        "/images/projects/elecsys/img2.jpg",
+        "/images/projects/elecsys/img3.jpg",
       ],
     },
   },
