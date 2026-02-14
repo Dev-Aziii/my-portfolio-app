@@ -26,6 +26,26 @@ export interface Project {
   description: string;
   url: string;
   icon: LucideIcon;
+  slug?: string; // For URL routing
+  details?: ProjectDetails;
+}
+
+export interface ProjectDetails {
+  heroImage: string;
+  techs: string[];
+  gist: {
+    title: string;
+    description: string;
+  };
+  problem: {
+    title: string;
+    description: string;
+  };
+  solution: {
+    title: string;
+    description: string;
+  };
+  additionalImages?: string[];
 }
 
 export interface Certification {

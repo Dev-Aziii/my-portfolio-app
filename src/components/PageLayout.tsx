@@ -5,19 +5,21 @@ import ThemeToggle from "@/components/ThemeToggle";
 interface PageLayoutProps {
   title: string;
   children: React.ReactNode;
+  backTo?: string;
+  backLabel?: string;
 }
 
-export default function PageLayout({ title, children }: PageLayoutProps) {
+export default function PageLayout({ title, children, backTo = "/", backLabel = "Back to Home" }: PageLayoutProps) {
   return (
     <main className="max-w-4xl mx-auto px-6 py-12">
       <div className="flex items-center justify-between mb-10">
         <div className="flex items-center gap-4">
           <Link
-            to="/"
+            to={backTo}
             className="flex items-center gap-1.5 text-md text-text-muted-light dark:text-text-muted-dark hover:text-text-light dark:hover:text-white transition-colors"
           >
             <ArrowLeft className="size-4" />
-            Back to Home
+            {backLabel}
           </Link>
           <h1 className="text-2xl font-bold text-text-light dark:text-white">
             {title}

@@ -16,7 +16,9 @@ export default function Projects({ projects, limit, showViewAll, compact, hideTi
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
   const animateItems = hideTitle;
 
-  const copyToClipboard = async (url: string) => {
+  const copyToClipboard = async (url: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     try {
       await navigator.clipboard.writeText(url);
       setCopiedUrl(url);
@@ -54,12 +56,8 @@ export default function Projects({ projects, limit, showViewAll, compact, hideTi
           {displayed.map((project, index) => {
             const Icon = project.icon;
             const isCopied = copiedUrl === project.url;
-            return (
-              <div
-                key={project.title}
-                className={`group bg-surface-light dark:bg-surface-dark rounded-xl p-5 border border-border-light dark:border-border-dark hover:border-text-light/50 dark:hover:border-white/50 transition-all shadow-sm hover:shadow-md ${animateItems ? "animate-fade-in-up" : ""}`}
-                style={animateItems ? { animationDelay: `${index * 120}ms` } : undefined}
-              >
+            const projectContent = (
+              <>
                 <div className="flex justify-between items-start mb-3">
                   <div className="p-2.5 bg-gray-100 dark:bg-gray-800 rounded-lg group-hover:bg-gray-200 dark:group-hover:bg-gray-700 transition-colors">
                     <Icon className="size-5 text-text-light dark:text-white" />
@@ -77,7 +75,7 @@ export default function Projects({ projects, limit, showViewAll, compact, hideTi
                     {project.url}
                   </code>
                   <button
-                    onClick={() => copyToClipboard(project.url)}
+                    onClick={(e) => copyToClipboard(project.url, e)}
                     className="p-1.5 bg-gray-100 dark:bg-gray-800 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                     aria-label="Copy URL"
                     title={isCopied ? "Copied!" : "Copy URL"}
@@ -89,6 +87,27 @@ export default function Projects({ projects, limit, showViewAll, compact, hideTi
                     )}
                   </button>
                 </div>
+              </>
+            );
+
+            const cardClasses = `group bg-surface-light dark:bg-surface-dark rounded-xl p-5 border border-border-light dark:border-border-dark hover:border-text-light/50 dark:hover:border-white/50 transition-all shadow-sm hover:shadow-md ${animateItems ? "animate-fade-in-up" : ""}`;
+
+            return project.slug && project.details ? (
+              <Link
+                key={project.title}
+                to={`/projects/${project.slug}`}
+                className={cardClasses}
+                style={animateItems ? { animationDelay: `${index * 120}ms` } : undefined}
+              >
+                {projectContent}
+              </Link>
+            ) : (
+              <div
+                key={project.title}
+                className={cardClasses}
+                style={animateItems ? { animationDelay: `${index * 120}ms` } : undefined}
+              >
+                {projectContent}
               </div>
             );
           })}
