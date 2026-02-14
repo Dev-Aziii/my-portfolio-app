@@ -8,27 +8,30 @@ interface TechStackProps {
   categoryLimit?: number;
   showViewAll?: boolean;
   compact?: boolean;
+  hideTitle?: boolean;
 }
 
-export default function TechStack({ categories, limit, categoryLimit, showViewAll, compact }: TechStackProps) {
+export default function TechStack({ categories, limit, categoryLimit, showViewAll, compact, hideTitle }: TechStackProps) {
   const displayCategories = categoryLimit ? categories.slice(0, categoryLimit) : categories;
 
   return (
     <section>
-      <div className="flex justify-between items-center mb-6">
-        <h2 className={`${compact ? "text-xl" : "text-2xl"} font-bold text-text-light dark:text-white`}>
-          Tech Stack
-        </h2>
-        {showViewAll && (
-          <Link
-            className="text-sm font-medium text-text-light dark:text-text-dark hover:text-gray-500 transition-colors flex items-center"
-            to="/tech-stack"
-          >
-            View All
-            <ChevronRight className="size-4 ml-1" />
-          </Link>
-        )}
-      </div>
+      {!hideTitle && (
+        <div className="flex justify-between items-center mb-6">
+          <h2 className={`${compact ? "text-xl" : "text-2xl"} font-bold text-text-light dark:text-white`}>
+            Tech Stack
+          </h2>
+          {showViewAll && (
+            <Link
+              className="text-sm font-medium text-text-light dark:text-text-dark hover:text-gray-500 transition-colors flex items-center"
+              to="/tech-stack"
+            >
+              View All
+              <ChevronRight className="size-4 ml-1" />
+            </Link>
+          )}
+        </div>
+      )}
 
       <div className="space-y-6">
         {displayCategories.length === 0 ? (

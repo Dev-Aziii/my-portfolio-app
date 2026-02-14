@@ -8,9 +8,10 @@ interface ProjectsProps {
   limit?: number;
   showViewAll?: boolean;
   compact?: boolean;
+  hideTitle?: boolean;
 }
 
-export default function Projects({ projects, limit, showViewAll, compact }: ProjectsProps) {
+export default function Projects({ projects, limit, showViewAll, compact, hideTitle }: ProjectsProps) {
   const displayed = limit ? projects.slice(0, limit) : projects;
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
 
@@ -26,20 +27,22 @@ export default function Projects({ projects, limit, showViewAll, compact }: Proj
 
   return (
     <section>
-      <div className="flex justify-between items-center mb-6">
-        <h2 className={`${compact ? "text-xl" : "text-2xl"} font-bold text-text-light dark:text-white`}>
-          {compact ? "Projects" : "Recent Projects"}
-        </h2>
-        {showViewAll && (
-          <Link
-            className="text-sm font-medium text-text-light dark:text-text-dark hover:text-gray-500 transition-colors flex items-center"
-            to="/projects"
-          >
-            View All
-            <ChevronRight className="size-4 ml-1" />
-          </Link>
-        )}
-      </div>
+      {!hideTitle && (
+        <div className="flex justify-between items-center mb-6">
+          <h2 className={`${compact ? "text-xl" : "text-2xl"} font-bold text-text-light dark:text-white`}>
+            {compact ? "Projects" : "Recent Projects"}
+          </h2>
+          {showViewAll && (
+            <Link
+              className="text-sm font-medium text-text-light dark:text-text-dark hover:text-gray-500 transition-colors flex items-center"
+              to="/projects"
+            >
+              View All
+              <ChevronRight className="size-4 ml-1" />
+            </Link>
+          )}
+        </div>
+      )}
 
       {displayed.length === 0 ? (
         <div className="text-center py-12">

@@ -5,7 +5,7 @@ import { techStack } from "@/data";
 export default function TechStackPage() {
   return (
     <PageLayout title="Tech Stack">
-      <TechStack categories={techStack} />
+      <TechStack categories={techStack} hideTitle={true} />
     </PageLayout>
   );
 }

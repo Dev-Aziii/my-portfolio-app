@@ -5,7 +5,7 @@ import { certifications } from "@/data";
 export default function CertificationsPage() {
   return (
     <PageLayout title="Certifications">
-      <Certifications certifications={certifications} />
+      <Certifications certifications={certifications} hideTitle={true} />
     </PageLayout>
   );
 }

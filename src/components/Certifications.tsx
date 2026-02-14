@@ -7,27 +7,30 @@ interface CertificationsProps {
   limit?: number;
   showViewAll?: boolean;
   compact?: boolean;
+  hideTitle?: boolean;
 }
 
-export default function Certifications({ certifications, limit, showViewAll, compact }: CertificationsProps) {
+export default function Certifications({ certifications, limit, showViewAll, compact, hideTitle }: CertificationsProps) {
   const displayed = limit ? certifications.slice(0, limit) : certifications;
 
   return (
     <section>
-      <div className="flex justify-between items-center mb-6">
-        <h2 className={`${compact ? "text-xl" : "text-2xl"} font-bold text-text-light dark:text-white`}>
-          {compact ? "Certifications" : "Recent Certifications"}
-        </h2>
-        {showViewAll && (
-          <Link
-            className="text-sm font-medium text-text-light dark:text-text-dark hover:text-gray-500 transition-colors flex items-center"
-            to="/certifications"
-          >
-            View All
-            <ChevronRight className="size-4 ml-1" />
-          </Link>
-        )}
-      </div>
+      {!hideTitle && (
+        <div className="flex justify-between items-center mb-6">
+          <h2 className={`${compact ? "text-xl" : "text-2xl"} font-bold text-text-light dark:text-white`}>
+            {compact ? "Certifications" : "Recent Certifications"}
+          </h2>
+          {showViewAll && (
+            <Link
+              className="text-sm font-medium text-text-light dark:text-text-dark hover:text-gray-500 transition-colors flex items-center"
+              to="/certifications"
+            >
+              View All
+              <ChevronRight className="size-4 ml-1" />
+            </Link>
+          )}
+        </div>
+      )}
 
       {displayed.length === 0 ? (
         <div className="text-center py-12">

@@ -5,7 +5,7 @@ import { projects } from "@/data";
 export default function ProjectsPage() {
   return (
     <PageLayout title="Projects">
-      <Projects projects={projects} />
+      <Projects projects={projects} hideTitle={true} />
     </PageLayout>
   );
 }
