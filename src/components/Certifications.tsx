@@ -12,6 +12,7 @@ interface CertificationsProps {
 
 export default function Certifications({ certifications, limit, showViewAll, compact, hideTitle }: CertificationsProps) {
   const displayed = limit ? certifications.slice(0, limit) : certifications;
+  const animateItems = hideTitle;
 
   return (
     <section>
@@ -38,10 +39,11 @@ export default function Certifications({ certifications, limit, showViewAll, com
         </div>
       ) : (
       <div className="space-y-2.5">
-        {displayed.map((cert) => (
+        {displayed.map((cert, index) => (
           <a
             key={cert.title}
-            className="block bg-surface-light dark:bg-surface-dark p-3.5 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors group"
+            className={`block bg-surface-light dark:bg-surface-dark p-3.5 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors group ${animateItems ? "animate-fade-in-up" : ""}`}
+            style={animateItems ? { animationDelay: `${index * 120}ms` } : undefined}
             href={cert.href}
             target="_blank"
             rel="noopener noreferrer"

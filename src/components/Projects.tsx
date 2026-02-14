@@ -14,6 +14,7 @@ interface ProjectsProps {
 export default function Projects({ projects, limit, showViewAll, compact, hideTitle }: ProjectsProps) {
   const displayed = limit ? projects.slice(0, limit) : projects;
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
+  const animateItems = hideTitle;
 
   const copyToClipboard = async (url: string) => {
     try {
@@ -50,13 +51,14 @@ export default function Projects({ projects, limit, showViewAll, compact, hideTi
         </div>
       ) : (
         <div className={`grid grid-cols-1 ${compact ? "" : "md:grid-cols-2"} gap-4`}>
-          {displayed.map((project) => {
+          {displayed.map((project, index) => {
             const Icon = project.icon;
             const isCopied = copiedUrl === project.url;
             return (
               <div
                 key={project.title}
-                className="group bg-surface-light dark:bg-surface-dark rounded-xl p-5 border border-border-light dark:border-border-dark hover:border-text-light/50 dark:hover:border-white/50 transition-all shadow-sm hover:shadow-md"
+                className={`group bg-surface-light dark:bg-surface-dark rounded-xl p-5 border border-border-light dark:border-border-dark hover:border-text-light/50 dark:hover:border-white/50 transition-all shadow-sm hover:shadow-md ${animateItems ? "animate-fade-in-up" : ""}`}
+                style={animateItems ? { animationDelay: `${index * 120}ms` } : undefined}
               >
                 <div className="flex justify-between items-start mb-3">
                   <div className="p-2.5 bg-gray-100 dark:bg-gray-800 rounded-lg group-hover:bg-gray-200 dark:group-hover:bg-gray-700 transition-colors">

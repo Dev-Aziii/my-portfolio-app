@@ -29,14 +29,14 @@
 
   --radius: 0.5rem;
 
-  --animate-fade-in-up: fade-in-up 0.6s ease-out forwards;
+  --animate-fade-in-up: fade-in-up 0.5s ease-out both;
   --animate-float: float 6s ease-in-out infinite;
   --animate-pulse-subtle: pulse-subtle 4s ease-in-out infinite;
 
   @keyframes fade-in-up {
     from {
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(16px);
     }
     to {
       opacity: 1;
@@ -105,4 +105,9 @@
   max-width: 100%;
   margin: 0 auto;
   padding: 0;
+}
+
+/* Prevent flicker: animated elements start hidden until animation runs */
+.animate-fade-in-up {
+  opacity: 0;
 }

@@ -27,10 +27,12 @@ export default function Home() {
     <>
       <main className="max-w-4xl mx-auto px-6 pt-12 pb-16 space-y-14">
         <Hero data={heroData} />
-        <About paragraphs={aboutParagraphs} />
+        <div className="animate-fade-in-up" style={{ animationDelay: '120ms' }}>
+          <About paragraphs={aboutParagraphs} />
+        </div>
 
         {/* TechStack + Experience side-by-side on large screens */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 animate-fade-in-up" style={{ animationDelay: '240ms' }}>
           <TechStack
             categories={techStack}
             limit={4}
@@ -42,7 +44,7 @@ export default function Home() {
         </div>
 
         {/* Projects + Certifications side-by-side on large screens */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 animate-fade-in-up" style={{ animationDelay: '360ms' }}>
           <Projects
             projects={projects}
             limit={2}
@@ -57,13 +59,19 @@ export default function Home() {
           />
         </div>
 
-        <Recommendations recommendations={recommendations} />
-        <Gallery images={galleryImages} />
-        <Footer
-          socialLinks={socialLinks}
-          memberships={memberships}
-          email={contactEmail}
-        />
+        <div className="animate-fade-in-up" style={{ animationDelay: '480ms' }}>
+          <Recommendations recommendations={recommendations} />
+        </div>
+        <div className="animate-fade-in-up" style={{ animationDelay: '600ms' }}>
+          <Gallery images={galleryImages} />
+        </div>
+        <div className="animate-fade-in-up" style={{ animationDelay: '720ms' }}>
+          <Footer
+            socialLinks={socialLinks}
+            memberships={memberships}
+            email={contactEmail}
+          />
+        </div>
       </main>
       {/* <ChatButton /> */}
     </>

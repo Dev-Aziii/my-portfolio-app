@@ -78,7 +78,7 @@ export default function Footer({ socialLinks, memberships, email }: FooterProps)
       </section>
 
       {/* Copyright */}
-      <footer className="text-center text-sm text-text-muted-light dark:text-text-muted-dark">
+      <footer className="text-center mt-15 text-sm text-text-muted-light dark:text-text-muted-dark">
         <p>&copy; 2026 Adzyl Jipos. All rights reserved.</p>
       </footer>
     </>

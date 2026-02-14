@@ -13,6 +13,7 @@ interface TechStackProps {
 
 export default function TechStack({ categories, limit, categoryLimit, showViewAll, compact, hideTitle }: TechStackProps) {
   const displayCategories = categoryLimit ? categories.slice(0, categoryLimit) : categories;
+  const animateItems = hideTitle;
 
   return (
     <section>
@@ -38,10 +39,14 @@ export default function TechStack({ categories, limit, categoryLimit, showViewAl
           <div className="text-center py-12">
             <p className="text-text-muted-light dark:text-text-muted-dark">No tech stack added yet.</p>
           </div>
-        ) : displayCategories.map((category) => {
+        ) : displayCategories.map((category, catIndex) => {
           const items = limit ? category.items.slice(0, limit) : category.items;
           return (
-            <div key={category.name}>
+            <div
+              key={category.name}
+              className={animateItems ? "animate-fade-in-up" : ""}
+              style={animateItems ? { animationDelay: `${catIndex * 120}ms` } : undefined}
+            >
               <h3 className="text-sm uppercase tracking-wider font-semibold text-text-muted-light dark:text-text-muted-dark mb-3">
                 {category.name}
               </h3>
