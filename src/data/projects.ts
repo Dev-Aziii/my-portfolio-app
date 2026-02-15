@@ -6,11 +6,11 @@ export const projects: Project[] = [
     title: "ElecSys",
     description:
       "A Web Application Election System for Samal Island Multipurpose Cooperative (SIMC) developed using Laravel Framework and Tailwnd CSS.",
-    url: "no link yet",
+    url: "/no-link-yet",
     icon: Code,
     slug: "elecsys",
     details: {
-      heroImage: "/images/projects/elecsys/hero.png",
+      heroImage: "/images/projects/elecsys/hero.jpg",
       techs: ["PHP", "Laravel", "MySQL", "Linux", "Nginx"],
       gist: {
         title: "The Gist",

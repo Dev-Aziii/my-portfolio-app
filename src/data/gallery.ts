@@ -10,11 +10,11 @@ export const galleryImages: GalleryImage[] = [
         alt: "Image 2"
     },
     {
-        src: "/images/img3.jpeg",
+        src: "/images/img3.jpg",
         alt: "Image 3"
     },
     {
-        src: "/images/img4.jpeg",
+        src: "/images/img4.jpg",
         alt: "Image 4"
     },
 ];
