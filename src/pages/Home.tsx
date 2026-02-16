@@ -35,8 +35,8 @@ export default function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 animate-fade-in-up" style={{ animationDelay: '240ms' }}>
           <TechStack
             categories={techStack}
-            limit={4}
-            categoryLimit={3}
+            limit={5}
+            categoryLimit={2}
             showViewAll
             compact
           />

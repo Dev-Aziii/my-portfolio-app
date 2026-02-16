@@ -1,4 +1,4 @@
-import { Code } from "lucide-react";
+import { SiLaravel, SiSharp  } from "react-icons/si";
 import type { Project } from "./types";
 
 export const projects: Project[] = [
@@ -7,7 +7,7 @@ export const projects: Project[] = [
     description:
       "A Web Application Election System for Samal Island Multipurpose Cooperative (SIMC) developed using Laravel Framework and Tailwnd CSS.",
     url: "/no-link-yet",
-    icon: Code,
+    icon: SiLaravel,
     slug: "elecsys",
     details: {
       heroImage: "/images/projects/elecsys/hero.jpg",
@@ -39,7 +39,7 @@ export const projects: Project[] = [
     description:
       "Desktop-based Human Resource Management System (HRMS) developed in C# using Windows Forms and enhanced with DevExpress components.",
     url: "https://github.com/Dev-Aziii/peopleHUB-HRMS",
-    icon: Code,
+    icon: SiSharp,
     slug: "peoplehub-hrms",
     details: {
       heroImage: "/images/projects/peoplehub/hero.png",

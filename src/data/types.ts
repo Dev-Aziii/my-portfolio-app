@@ -1,4 +1,6 @@
 import type { LucideIcon } from "lucide-react";
+import type { IconType } from "react-icons";
+import type { FunctionComponent, SVGProps } from "react";
 
 export interface HeroData {
   name: string;
@@ -9,9 +11,14 @@ export interface HeroData {
   profileImage2: string;
 }
 
+export interface TechItem {
+  name: string;
+  icon: LucideIcon | IconType | FunctionComponent<SVGProps<SVGSVGElement>>;
+}
+
 export interface TechCategory {
   name: string;
-  items: string[];
+  items: TechItem[];
 }
 
 export interface ExperienceEntry {
@@ -26,8 +33,8 @@ export interface Project {
   title: string;
   description: string;
   url: string;
-  icon: LucideIcon;
-  slug?: string; // For URL routing
+  icon:  LucideIcon | IconType | FunctionComponent<SVGProps<SVGSVGElement>>;
+  slug?: string;
   details?: ProjectDetails;
 }
 

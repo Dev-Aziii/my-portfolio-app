@@ -51,14 +51,18 @@ export default function TechStack({ categories, limit, categoryLimit, showViewAl
                 {category.name}
               </h3>
               <div className="flex flex-wrap gap-2">
-                {items.map((item) => (
-                  <span
-                    key={item}
-                    className="px-3 py-1.5 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-lg text-sm font-medium text-text-light dark:text-text-dark shadow-sm hover:border-text-light dark:hover:border-white transition-colors cursor-default"
-                  >
-                    {item}
-                  </span>
-                ))}
+                {items.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <div
+                      key={item.name}
+                      className="flex items-center gap-2 px-3 py-1.5 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-lg text-sm font-medium text-text-light dark:text-text-dark shadow-sm hover:border-text-light dark:hover:border-white transition-colors cursor-default"
+                    >
+                      <Icon className="size-4" />
+                      <span>{item.name}</span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           );
