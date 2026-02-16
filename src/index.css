@@ -144,6 +144,23 @@
   max-width: 100%;
   margin: 0 auto;
   padding: 0;
+  position: relative;
+  min-height: 100vh;
+  isolation: isolate;
+}
+
+.interactive-bg {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.app-content-layer {
+  position: relative;
+  z-index: 1;
 }
 
 /* Prevent flicker: animated elements start hidden until animation runs */
@@ -194,6 +211,8 @@
 
 :root {
   --radius: 0.625rem;
+  --dot-rgb: 100 116 139;
+  --dot-alpha: 0.12;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -228,6 +247,8 @@
 }
 
 .dark {
+  --dot-rgb: 148 163 184;
+  --dot-alpha: 0.16;
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);

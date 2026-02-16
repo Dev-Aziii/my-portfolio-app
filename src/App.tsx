@@ -10,7 +10,8 @@ import ScrollToTop from "./components/ScrollToTop";
 function App() {
   return (
     <BrowserRouter>
-      <ScrollToTop />
+      <div className="app-content-layer">
+        <ScrollToTop />
         <Routes>
           <Route index element={<Home />} />
           <Route path="/tech-stack" element={<TechStackPage />} />
@@ -19,6 +20,7 @@ function App() {
           <Route path="/certifications" element={<CertificationsPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+      </div>
     </BrowserRouter>
   );
 }
