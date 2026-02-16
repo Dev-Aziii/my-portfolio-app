@@ -6,6 +6,7 @@ export interface HeroData {
   location: string;
   email: string;
   profileImage: string;
+  profileImage2: string;
 }
 
 export interface TechCategory {

@@ -15,8 +15,14 @@ export default function Hero({ data }: HeroProps) {
         <div className="absolute -inset-1 bg-linear-to-b from-gray-800 to-gray-400 dark:from-gray-300 dark:to-gray-600 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200" />
         <img
           alt={`Profile of ${data.name}`}
-          className="relative w-32 h-32 md:w-40 md:h-40 rounded-2xl object-cover shadow-lg border-4 border-surface-light dark:border-surface-dark"
+          className="relative w-32 h-32 md:w-40 md:h-40 rounded-2xl object-cover shadow-lg border-4 border-surface-light dark:border-surface-dark transition-opacity duration-300 ease-in-out group-hover:opacity-0"
           src={data.profileImage}
+        />
+        <img
+          alt={`Profile of ${data.name}`}
+          className="absolute inset-0 w-32 h-32 md:w-40 md:h-40 rounded-2xl object-cover shadow-lg border-4 border-surface-light dark:border-surface-dark opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out"
+          src={data.profileImage2}
+          aria-hidden="true"
         />
       </div>
 

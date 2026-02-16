@@ -9,7 +9,7 @@ export const experiences: ExperienceEntry[] = [
   {
     title: "Hello World!",
     year: "2021",
-    company: "Wrote my first line of code JAVA",
+    company: "system.out.println(\"Hello, World!\");",
     emoji: "",
   },
 ];
