@@ -4,9 +4,9 @@ interface AboutProps {
 
 export default function About({ paragraphs }: AboutProps) {
   return (
-    <section className="grid grid-cols-1 md:grid-cols-3 gap-12">
+    <section>
       {/* About Text */}
-      <div className="md:col-span-2 space-y-6">
+      <div className="space-y-6">
         <h2 className="text-2xl font-bold text-text-light dark:text-white mb-4">
           About
         </h2>
