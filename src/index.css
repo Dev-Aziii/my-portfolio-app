@@ -105,6 +105,41 @@
   }
 }
 
+@layer components {
+  .tech-pill {
+    position: relative;
+    isolation: isolate;
+    transition: border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease;
+  }
+
+  .tech-pill::after {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    background: color-mix(in srgb, var(--tech-brand-color) 22%, transparent);
+    filter: blur(10px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms ease;
+    z-index: -1;
+  }
+
+  .tech-pill:hover {
+    border-color: var(--tech-brand-color);
+    box-shadow: 0 0 0 1px var(--tech-brand-color),
+      0 0 18px color-mix(in srgb, var(--tech-brand-color) 38%, transparent);
+  }
+
+  .tech-pill:hover::after {
+    opacity: 1;
+  }
+
+  .tech-pill:hover .tech-pill__icon {
+    color: var(--tech-brand-color);
+  }
+}
+
 #root {
   max-width: 100%;
   margin: 0 auto;

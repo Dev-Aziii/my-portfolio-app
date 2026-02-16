@@ -1,5 +1,6 @@
 import { ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import type { CSSProperties } from "react";
 import type { TechCategory } from "@/data/types";
 
 interface TechStackProps {
@@ -56,9 +57,10 @@ export default function TechStack({ categories, limit, categoryLimit, showViewAl
                   return (
                     <div
                       key={item.name}
-                      className="flex items-center gap-2 px-3 py-1.5 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-lg text-sm font-medium text-text-light dark:text-text-dark shadow-sm hover:border-text-light dark:hover:border-white transition-colors cursor-default"
+                      className="tech-pill group flex items-center gap-2 px-3 py-1.5 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-lg text-sm font-medium text-text-light dark:text-text-dark shadow-sm cursor-default"
+                      style={{ "--tech-brand-color": item.brandColor } as CSSProperties}
                     >
-                      <Icon className="size-4" />
+                      <Icon className="tech-pill__icon size-4 transition-colors duration-200" />
                       <span>{item.name}</span>
                     </div>
                   );

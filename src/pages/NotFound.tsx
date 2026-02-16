@@ -1,4 +1,7 @@
+import usePageTitle from "@/hooks/usePageTitle";
+
 export default function NotFound() {
+  usePageTitle("Not Found | Adzyl Jipos");
   return (
     <div className="min-h-screen flex items-center justify-center bg-background-light dark:bg-background-dark px-6">
       <div className="text-center">

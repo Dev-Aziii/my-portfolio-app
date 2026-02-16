@@ -14,6 +14,7 @@ export interface HeroData {
 export interface TechItem {
   name: string;
   icon: LucideIcon | IconType | FunctionComponent<SVGProps<SVGSVGElement>>;
+  brandColor: string;
 }
 
 export interface TechCategory {

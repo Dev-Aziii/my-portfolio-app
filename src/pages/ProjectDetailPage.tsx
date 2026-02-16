@@ -3,8 +3,10 @@ import { ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import PageLayout from "@/components/PageLayout";
 import { projects } from "@/data";
+import usePageTitle from "@/hooks/usePageTitle";
 
 export default function ProjectDetailPage() {
+  usePageTitle("Project Details | Adzyl Jipos");
   const { slug } = useParams<{ slug: string }>();
   const project = projects.find((p) => p.slug === slug);
   const [currentIndex, setCurrentIndex] = useState(0);

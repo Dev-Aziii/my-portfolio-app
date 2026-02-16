@@ -7,6 +7,7 @@ import Certifications from "@/components/Certifications";
 import Recommendations from "@/components/Recommendations";
 import Gallery from "@/components/Gallery";
 import Footer from "@/components/Footer";
+import usePageTitle from "@/hooks/usePageTitle";
 // import ChatButton from "@/components/ChatButton";
 import {
   heroData,
@@ -23,6 +24,7 @@ import {
 } from "@/data";
 
 export default function Home() {
+  usePageTitle("Home | Adzyl Jipos");
   return (
     <>
       <main className="max-w-4xl mx-auto px-6 pt-12 pb-16 space-y-14">
