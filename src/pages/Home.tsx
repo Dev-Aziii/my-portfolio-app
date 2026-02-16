@@ -33,6 +33,7 @@ export default function Home() {
 
         {/* TechStack + Experience side-by-side on large screens */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 animate-fade-in-up" style={{ animationDelay: '240ms' }}>
+           <Experience entries={experiences} compact />
           <TechStack
             categories={techStack}
             limit={5}
@@ -40,7 +41,7 @@ export default function Home() {
             showViewAll
             compact
           />
-          <Experience entries={experiences} compact />
+         
         </div>
 
         {/* Projects + Certifications side-by-side on large screens */}
