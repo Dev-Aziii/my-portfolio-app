@@ -59,7 +59,11 @@ export const projects: Project[] = [
         description:
           "I developed a desktop application using C# and Windows Forms, integrating SQL Server for data storage. DevExpress components were used to create a polished and intuitive interface. The system allows users to add and manage employees, track attendance, approve leave requests, and calculate payroll, all in a self-contained desktop environment. This project fulfilled the course requirements and provided hands-on experience in building practical desktop applications.",
       },
-      additionalImages: [],
+      additionalImages: [
+         "/images/projects/peoplehub/img1.png",
+        "/images/projects/peoplehub/img2.png",
+        "/images/projects/peoplehub/img3.png",
+      ],
     },
   }
 ];
