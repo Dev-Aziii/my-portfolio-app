@@ -1,4 +1,4 @@
-import { SiLaravel, SiSharp  } from "react-icons/si";
+import { SiLaravel, SiSharp, SiDotnet } from "react-icons/si";
 import type { Project } from "./types";
 
 export const projects: Project[] = [
@@ -31,6 +31,46 @@ export const projects: Project[] = [
         "/images/projects/elecsys/img1.jpg",
         "/images/projects/elecsys/img2.jpg",
         "/images/projects/elecsys/img3.jpg",
+      ],
+    },
+  },
+  {
+    title: "AccSys",
+    description:
+      "A Web-Based Integrated Accounting & Financial Management System that automates bookkeeping, financial reporting, and financial transaction management for organizations.",
+    url: "http://accsys-jps.runasp.net",
+    icon: SiDotnet,
+    slug: "accsys",
+    details: {
+      heroImage: "/images/projects/accsys/hero.png",
+      techs: [
+        ".NET 8",
+        "Blazor WebAssembly",
+        "ASP.NET Core Web API",
+        "SQL Server 2022",
+        "MudBlazor",
+        "Entity Framework Core"
+      ],
+      gist: {
+        title: "The Gist",
+        description:
+          "AccSys is a modern web-based accounting and financial management system designed to automate financial processes for organizations. Built using .NET 8, Blazor WebAssembly, and SQL Server, the system integrates core accounting modules such as General Ledger, Accounts Payable, and Accounts Receivable into a single platform. It features automated double-entry bookkeeping, real-time financial dashboards, and financial statement generation. AccSys also integrates external services such as PayMongo for payment processing, the World Bank API for Philippine inflation data, and Frankfurter API for currency exchange rates, providing a comprehensive financial ecosystem.",
+      },
+      problem: {
+        title: "Where It Came From: The Problem",
+        description:
+          "Many small to medium organizations still rely on fragmented tools such as spreadsheets and manual bookkeeping to manage financial operations. This leads to inconsistent financial records, delayed reporting, and higher risk of accounting errors. Managing bills, invoices, journal entries, and financial reports across different tools also makes it difficult for management to obtain real-time financial insights. A unified system was needed to centralize financial data, automate bookkeeping processes, and provide secure multi-user access with role-based permissions.",
+      },
+      solution: {
+        title: "The Solution",
+        description:
+          "AccSys was developed as an integrated accounting platform that centralizes all financial operations within a secure web-based system. The platform implements automated double-entry bookkeeping, ensuring every transaction maintains accounting integrity. Core modules such as Accounts Payable, Accounts Receivable, and the General Ledger allow organizations to manage vendors, customers, bills, invoices, and journal entries efficiently. Real-time financial dashboards and automatically generated financial statements provide immediate insights into business performance. With role-based access control, JWT authentication, and audit logging, the system ensures secure multi-user financial management while maintaining transparency and accountability.",
+      },
+      additionalImages: [
+        "/images/projects/accsys/img1.png",
+        "/images/projects/accsys/img2.png",
+        "/images/projects/accsys/img3.png",
+        "/images/projects/accsys/img4.png",
       ],
     },
   },
