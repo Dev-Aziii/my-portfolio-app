@@ -4,35 +4,32 @@ import type { Project } from "./types";
 export const projects: Project[] = [
   {
     title: "ElecSys",
-    description:
-      "A Web Application Election System for Samal Island Multipurpose Cooperative (SIMC) developed using Laravel Framework and Tailwnd CSS.",
-    url: "/no-link-yet",
-    icon: SiLaravel,
     slug: "elecsys",
+    icon: SiLaravel,
+    url: "/no-link-yet",
+    description: "A high-performance, Dockerized election management system built with Laravel Octane and FrankenPHP, engineered for offline-first reliability in large-scale cooperative voting.",
     details: {
       heroImage: "/images/projects/elecsys/hero.jpg",
-      techs: ["PHP", "Laravel", "MySQL", "Linux", "Nginx"],
+      techs: ["Laravel", "Octane", "FrankenPHP", "Docker", "Caddy", "MySQL"],
       gist: {
         title: "The Gist",
-        description:
-          "ElecSys is a custom-built election management system I developed for Samal Island Multipurpose Cooperative (SIMC), which has over 7,000 illigible voters. In past years, elections and member management were plagued with issues: the cooperative relied on a third-party SaaS, which was costly (internet fees were separate), unreliable in low-connectivity areas, and slow to resolve problems since contacting their support was difficult. Our team built a centralized, offline-first system running on a LEMP stack virtual machine, accessible via a local LAN through host PC port forwarding. This ensures reliable voting and dashboard operations without depending on internet connectivity.",
+        description: "ElecSys is a custom-built election system developed for the Samal Island Multipurpose Cooperative (SIMC) to manage over 7,000 eligible voters. Replacing a costly and unreliable third-party SaaS, I architected a high-performance, localized solution. By deploying a Dockerized environment on a physical server using Laravel Octane and FrankenPHP, we achieved lightning-fast response times and 100% uptime, independent of the island's often-unstable internet connectivity."
       },
       problem: {
-        title: "Where It Came From: The Problem",
-        description:
-          "SIMC’s previous election operations faced multiple challenges. The third-party SaaS they used required stable internet, which was often unavailable in remote areas such as Samal Island. Operational issues were frequent, costs were high due to separate internet fees, and fixing problems required contacting external admins, which was slow and inefficient. With over 7,000 members, manually managing voter eligibility, vote counts, and reporting became extremely difficult. The cooperative needed a system that could work offline, reduce dependency on external providers, and ensure accurate, real-time election management.",
+        title: "The Challenge: Breaking SaaS Dependency",
+        description: "SIMC previously relied on an external SaaS provider that required a constant internet connection—a major bottleneck in remote areas of Samal Island. This dependency led to high operational costs, frequent timeouts during peak voting hours, and a total lack of control over technical support. With 7,000 members needing to cast votes simultaneously, the cooperative required a localized infrastructure that could handle high traffic without relying on the cloud."
       },
       solution: {
-        title: "The Solution",
-        description:
-          "I developed ElecSys as an offline-first system deployed on a LEMP stack virtual machine. Using a custom LAN network architecture with host PC port forwarding, all terminals could access the system locally for voting and dashboard operations, eliminating the need for internet connectivity. Our solution includes a secure backend database to store all member and election data, a responsive frontend for vote casting and dashboard monitoring, and user-friendly interfaces for administrators. By removing reliance on third-party services, reducing costs, and providing full control over operations, ElecSys dramatically improved election efficiency, accuracy, and reliability for SIMC.",
+        title: "The Solution: Local-First High Performance",
+        description: "I engineered a modern infrastructure using Docker Desktop on a physical on-site server. To meet high concurrency demands, I implemented Laravel Octane powered by FrankenPHP, with Caddy serving as a high-performance web server. The networking architecture utilizes a localized LAN with Caddy handling requests through a physical server, allowing all voting terminals to access the system via local IP/port forwarding. This 'private cloud' approach eliminated internet costs, removed external latency, and provided SIMC with full sovereignty over their election data."
       },
       additionalImages: [
         "/images/projects/elecsys/img1.jpg",
         "/images/projects/elecsys/img2.jpg",
         "/images/projects/elecsys/img3.jpg",
-      ],
-    },
+        "/images/projects/elecsys/img4.jpg"
+      ]
+    }
   },
   {
     title: "AccSys",
