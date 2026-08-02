@@ -9,7 +9,7 @@ export const projects: Project[] = [
     url: "/no-link-yet",
     description: "A high-performance, containerized election management system engineered for offline-first reliability in large-scale cooperative voting environments.",
     details: {
-      heroImage: "/images/projects/elecsys/hero.jpg",
+      heroImage: "/images/projects/elecsys/hero.webp",
       techs: ["Laravel", "Octane", "FrankenPHP", "Docker", "Caddy", "MySQL"],
       gist: {
         title: "The Gist",
@@ -23,10 +23,10 @@ export const projects: Project[] = [
         description: "I architected and deployed a containerized application stack on a dedicated on-site server to enable a fully localized voting system. The platform was optimized for high concurrency and low-latency access within a private network environment. By eliminating reliance on external services, the system ensured reliable performance, reduced operational overhead, and provided full control over data and infrastructure."
       },
       additionalImages: [
-        "/images/projects/elecsys/img1.jpg",
-        "/images/projects/elecsys/img2.jpg",
-        "/images/projects/elecsys/img3.jpg",
-        "/images/projects/elecsys/img4.jpg"
+        "/images/projects/elecsys/img1.webp",
+        "/images/projects/elecsys/img2.webp",
+        "/images/projects/elecsys/img3.webp",
+        "/images/projects/elecsys/img4.webp"
       ]
     }
   },
@@ -38,7 +38,7 @@ export const projects: Project[] = [
     icon: SiDotnet,
     slug: "accsys",
     details: {
-      heroImage: "/images/projects/accsys/hero.png",
+      heroImage: "/images/projects/accsys/hero.webp",
       techs: [
         ".NET 8",
         "Blazor WebAssembly",
@@ -63,10 +63,10 @@ export const projects: Project[] = [
           "AccSys was developed as an integrated accounting platform that centralizes all financial operations within a secure web-based system. The platform implements automated double-entry bookkeeping, ensuring every transaction maintains accounting integrity. Core modules such as Accounts Payable, Accounts Receivable, and the General Ledger allow organizations to manage vendors, customers, bills, invoices, and journal entries efficiently. Real-time financial dashboards and automatically generated financial statements provide immediate insights into business performance. With role-based access control, JWT authentication, and audit logging, the system ensures secure multi-user financial management while maintaining transparency and accountability.",
       },
       additionalImages: [
-        "/images/projects/accsys/img1.png",
-        "/images/projects/accsys/img2.png",
-        "/images/projects/accsys/img3.png",
-        "/images/projects/accsys/img4.png",
+        "/images/projects/accsys/img1.webp",
+        "/images/projects/accsys/img2.webp",
+        "/images/projects/accsys/img3.webp",
+        "/images/projects/accsys/img4.webp",
       ],
     },
   },
@@ -78,7 +78,7 @@ export const projects: Project[] = [
     icon: SiSharp,
     slug: "peoplehub-hrms",
     details: {
-      heroImage: "/images/projects/peoplehub/hero.png",
+      heroImage: "/images/projects/peoplehub/hero.webp",
       techs: ["C#", "Windows Forms", "DevExpress", ".NET", "SQL Server"],
       gist: {
         title: "The Gist",
@@ -96,9 +96,9 @@ export const projects: Project[] = [
           "I developed a desktop application using C# and Windows Forms, integrating SQL Server for data storage. DevExpress components were used to create a polished and intuitive interface. The system allows users to add and manage employees, track attendance, approve leave requests, and calculate payroll, all in a self-contained desktop environment. This project fulfilled the course requirements and provided hands-on experience in building practical desktop applications.",
       },
       additionalImages: [
-         "/images/projects/peoplehub/img1.png",
-        "/images/projects/peoplehub/img2.png",
-        "/images/projects/peoplehub/img3.png",
+         "/images/projects/peoplehub/img1.webp",
+        "/images/projects/peoplehub/img2.webp",
+        "/images/projects/peoplehub/img3.webp",
       ],
     },
   }

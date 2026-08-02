@@ -5,6 +5,6 @@ export const heroData: HeroData = {
   title: "Software Developer",
   location: "Samal, Davao del Norte, Philippines",
   email: "adzyl.jipos@gmail.com",
-  profileImage: "/images/profile.png",
-  profileImage2: "/images/profile2.png",
+  profileImage: "/images/profile.webp",
+  profileImage2: "/images/profile2.webp",
 };
