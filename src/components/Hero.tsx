@@ -1,4 +1,4 @@
-import { BadgeCheck, MapPin, Mail } from "lucide-react";
+import { BadgeCheck, MapPin, Mail, FileDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ThemeToggle from "@/components/ThemeToggle";
 import type { HeroData } from "@/data/types";
@@ -53,6 +53,12 @@ export default function Hero({ data }: HeroProps) {
             <a href={`mailto:${data.email}`}>
               <Mail className="size-4" />
               Send Email
+            </a>
+          </Button>
+          <Button variant="default" asChild>
+            <a href={data.cvUrl} target="_blank" rel="noopener noreferrer">
+              <FileDown className="size-4" />
+              Download CV
             </a>
           </Button>
         </div>

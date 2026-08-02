@@ -9,6 +9,7 @@ export interface HeroData {
   email: string;
   profileImage: string;
   profileImage2: string;
+  cvUrl: string;
 }
 
 export interface TechItem {

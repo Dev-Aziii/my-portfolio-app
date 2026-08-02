@@ -7,4 +7,5 @@ export const heroData: HeroData = {
   email: "adzyl.jipos@gmail.com",
   profileImage: "/images/profile.webp",
   profileImage2: "/images/profile2.webp",
+  cvUrl: "/CV-jipos.pdf",
 };
