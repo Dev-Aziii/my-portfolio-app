@@ -7,6 +7,8 @@ import Certifications from "@/components/Certifications";
 import Recommendations from "@/components/Recommendations";
 import Gallery from "@/components/Gallery";
 import Footer from "@/components/Footer";
+import SectionNav from "@/components/SectionNav";
+import BackToTop from "@/components/BackToTop";
 import usePageTitle from "@/hooks/usePageTitle";
 // import ChatButton from "@/components/ChatButton";
 import {
@@ -28,13 +30,15 @@ export default function Home() {
   return (
     <>
       <main className="max-w-4xl mx-auto px-6 pt-12 pb-16 space-y-14">
-        <Hero data={heroData} />
-        <div className="animate-fade-in-up" style={{ animationDelay: '120ms' }}>
+        <section id="home" className="scroll-mt-24">
+          <Hero data={heroData} />
+        </section>
+        <section id="about" className="scroll-mt-24 animate-fade-in-up" style={{ animationDelay: '120ms' }}>
           <About paragraphs={aboutParagraphs} />
-        </div>
+        </section>
 
         {/* TechStack + Experience side-by-side on large screens */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 animate-fade-in-up" style={{ animationDelay: '240ms' }}>
+        <section id="experience" className="scroll-mt-24 grid grid-cols-1 lg:grid-cols-2 gap-10 animate-fade-in-up" style={{ animationDelay: '240ms' }}>
            <Experience entries={experiences} compact />
           <TechStack
             categories={techStack}
@@ -44,10 +48,10 @@ export default function Home() {
             compact
           />
          
-        </div>
+        </section>
 
         {/* Projects + Certifications side-by-side on large screens */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 animate-fade-in-up" style={{ animationDelay: '360ms' }}>
+        <section id="projects" className="scroll-mt-24 grid grid-cols-1 lg:grid-cols-2 gap-10 animate-fade-in-up" style={{ animationDelay: '360ms' }}>
           <Projects
             projects={projects}
             limit={2}
@@ -60,14 +64,14 @@ export default function Home() {
             showViewAll
             compact
           />
-        </div>
+        </section>
 
-        <div className="animate-fade-in-up" style={{ animationDelay: '480ms' }}>
+        <section id="recommendations" className="scroll-mt-24 animate-fade-in-up" style={{ animationDelay: '480ms' }}>
           <Recommendations recommendations={recommendations} />
-        </div>
-        <div className="animate-fade-in-up" style={{ animationDelay: '600ms' }}>
+        </section>
+        <section id="gallery" className="scroll-mt-24 animate-fade-in-up" style={{ animationDelay: '600ms' }}>
           <Gallery images={galleryImages} />
-        </div>
+        </section>
         <div className="animate-fade-in-up" style={{ animationDelay: '720ms' }}>
           <Footer
             socialLinks={socialLinks}
@@ -76,6 +80,8 @@ export default function Home() {
           />
         </div>
       </main>
+      <SectionNav />
+      <BackToTop />
       {/* <ChatButton /> */}
     </>
   );
