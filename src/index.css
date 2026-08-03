@@ -290,3 +290,50 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* ---------- Touch long-press profile reveal (mobile only; desktop hover untouched) ---------- */
+
+@property --profile-reveal-r {
+  syntax: "<length-percentage>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@media (hover: none) {
+  .profile-reveal {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+  }
+
+  .profile-reveal img {
+    -webkit-user-drag: none;
+  }
+
+  /* Neutralize sticky :hover so a plain tap never reveals the mask */
+  .profile-reveal:not(.touch-revealed):hover .profile-glow {
+    opacity: 0.25 !important;
+  }
+
+  .profile-reveal .profile-back {
+    opacity: 1 !important;
+    --profile-reveal-r: 0px;
+    -webkit-mask-image: radial-gradient(circle var(--profile-reveal-r) at var(--x, 50%) var(--y, 50%), rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0.7) 70%, rgba(0, 0, 0, 0.2) 88%, rgba(0, 0, 0, 0) 100%);
+    mask-image: radial-gradient(circle var(--profile-reveal-r) at var(--x, 50%) var(--y, 50%), rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0.7) 70%, rgba(0, 0, 0, 0.2) 88%, rgba(0, 0, 0, 0) 100%);
+    transition: --profile-reveal-r 500ms ease-in-out;
+  }
+
+  .profile-reveal.touch-revealed .profile-back {
+    --profile-reveal-r: 400px;
+  }
+
+  .profile-reveal .profile-glow {
+    opacity: 0.25;
+    transition: opacity 500ms ease-in-out;
+  }
+
+  .profile-reveal.touch-revealed .profile-glow {
+    opacity: 0.5;
+  }
+}
