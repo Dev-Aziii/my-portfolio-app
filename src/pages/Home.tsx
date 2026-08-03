@@ -8,7 +8,6 @@ import Recommendations from "@/components/Recommendations";
 import Gallery from "@/components/Gallery";
 import Footer from "@/components/Footer";
 import SectionNav from "@/components/SectionNav";
-import BackToTop from "@/components/BackToTop";
 import usePageTitle from "@/hooks/usePageTitle";
 // import ChatButton from "@/components/ChatButton";
 import {
@@ -81,7 +80,6 @@ export default function Home() {
         </div>
       </main>
       <SectionNav />
-      <BackToTop />
       {/* <ChatButton /> */}
     </>
   );
