@@ -1,7 +1,47 @@
-import { SiLaravel, SiSharp, SiDotnet } from "react-icons/si";
+import {SiReact, SiLaravel, SiSharp, SiDotnet } from "react-icons/si";
 import type { Project } from "./types";
 
 export const projects: Project[] = [
+  {
+    title: "Tezā",
+    slug: "teza",
+    icon: SiReact,
+    url: "https://teza-v1.vercel.app/",
+    description: "A modern progressive web application that helps couples stay connected through shared updates, plans, spontaneous proposals, and meaningful daily interactions.",
+    details: {
+      heroImage: "/images/projects/teza/hero.webp",
+      techs: [
+        "React",
+        "TypeScript",
+        "Vite",
+        "Tailwind CSS",
+        "shadcn/ui",
+        "Supabase",
+        "PWA"
+      ],
+      gist: {
+        title: "The Gist",
+        description:
+          "Long-distance relationships and busy schedules often make it difficult for couples to stay informed about each other's daily lives. Conversations become scattered across multiple messaging apps, plans get forgotten, and spontaneous date ideas can easily be overlooked. Tezā centralizes communication into a single shared space designed specifically for couples."
+      },
+      problem: {
+        title: "The Challenge: Keeping Couples Connected",
+        description:
+          "Traditional messaging platforms are built for conversations, not relationship management. They lack dedicated features for sharing daily status updates, organizing future plans, tracking shared schedules, or sending actionable date proposals. As a result, important moments become buried in chat history, making it harder for couples to stay synchronized despite their busy lives."
+      },
+      solution: {
+        title: "The Solution: A Dedicated Relationship Hub",
+        description:
+          "I designed and developed Tezā as a Progressive Web Application that combines communication, planning, and shared experiences into one intuitive platform. Couples can post what they're currently doing, maintain shared daily and monthly plans, create spontaneous date proposals that can be accepted or declined, and view a unified activity feed that keeps both partners connected in real time. Built with React and Supabase, the application delivers a responsive, installable experience while leveraging real-time synchronization and secure authentication through Supabase's free-tier infrastructure."
+      },
+      additionalImages: [
+        "/images/projects/teza/img.webp",
+        "/images/projects/teza/img1.webp",
+        "/images/projects/teza/img2.webp",
+        "/images/projects/teza/img3.webp"
+      ]
+    }
+  },
   {
     title: "ElecSys",
     slug: "elecsys",
