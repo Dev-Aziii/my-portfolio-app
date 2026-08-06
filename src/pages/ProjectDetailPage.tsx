@@ -1,7 +1,8 @@
 import { useParams, Navigate } from "react-router-dom";
-import { ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
+import { ExternalLink, ChevronLeft, ChevronRight, Maximize2 } from "lucide-react";
 import { useState } from "react";
 import PageLayout from "@/components/PageLayout";
+import Lightbox from "@/components/Lightbox";
 import { projects } from "@/data";
 import usePageTitle from "@/hooks/usePageTitle";
 
@@ -10,6 +11,7 @@ export default function ProjectDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const project = projects.find((p) => p.slug === slug);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   if (!project || !project.details) {
     return <Navigate to="/projects" replace />;
@@ -115,27 +117,41 @@ export default function ProjectDetailPage() {
             Project Gallery
           </h2>
           <div className="relative">
-            {/* Main Image */}
-            <div className="relative rounded-xl overflow-hidden shadow-sm border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark">
+            {/* Main Image Container */}
+            <div
+              onClick={() => setLightboxIndex(currentIndex)}
+              className="relative group cursor-pointer rounded-xl overflow-hidden shadow-sm border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark"
+            >
               <img
                 src={details.additionalImages[currentIndex]}
                 alt={`Slide ${currentIndex + 1}`}
-                className="w-full h-[500px] object-cover"
+                className="w-full h-[500px] object-cover transform group-hover:scale-105 transition-transform duration-500"
               />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition-all duration-300 flex items-center justify-center">
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/50 p-3 rounded-full text-white backdrop-blur-xs shadow-lg">
+                  <Maximize2 className="size-6" />
+                </div>
+              </div>
 
               {/* Navigation Buttons */}
               {details.additionalImages.length > 1 && (
                 <>
                   <button
-                    onClick={goToPrevious}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-surface-light/90 dark:bg-surface-dark/90 hover:bg-surface-light dark:hover:bg-surface-dark transition-colors shadow-sm border border-border-light dark:border-border-dark"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      goToPrevious();
+                    }}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-surface-light/90 dark:bg-surface-dark/90 hover:bg-surface-light dark:hover:bg-surface-dark transition-colors shadow-sm border border-border-light dark:border-border-dark cursor-pointer z-10"
                     aria-label="Previous image"
                   >
                     <ChevronLeft className="size-5 text-text-light dark:text-white" />
                   </button>
                   <button
-                    onClick={goToNext}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-surface-light/90 dark:bg-surface-dark/90 hover:bg-surface-light dark:hover:bg-surface-dark transition-colors shadow-sm border border-border-light dark:border-border-dark"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      goToNext();
+                    }}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-surface-light/90 dark:bg-surface-dark/90 hover:bg-surface-light dark:hover:bg-surface-dark transition-colors shadow-sm border border-border-light dark:border-border-dark cursor-pointer z-10"
                     aria-label="Next image"
                   >
                     <ChevronRight className="size-5 text-text-light dark:text-white" />
@@ -144,7 +160,7 @@ export default function ProjectDetailPage() {
               )}
 
               {/* Image Counter */}
-              <div className="absolute bottom-4 right-4 px-3 py-1 rounded-full bg-black/60 text-white text-xs font-medium">
+              <div className="absolute bottom-4 right-4 px-3 py-1 rounded-full bg-black/60 text-white text-xs font-medium z-10">
                 {currentIndex + 1} / {details.additionalImages.length}
               </div>
             </div>
@@ -156,7 +172,7 @@ export default function ProjectDetailPage() {
                   <button
                     key={index}
                     onClick={() => goToSlide(index)}
-                    className={`shrink-0 rounded-lg overflow-hidden border-2 transition-all ${
+                    className={`shrink-0 rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${
                       index === currentIndex
                         ? "border-text-light dark:border-white"
                         : "border-transparent hover:border-border-light dark:hover:border-border-dark"
@@ -172,6 +188,17 @@ export default function ProjectDetailPage() {
               </div>
             )}
           </div>
+
+          {/* Fullscreen Lightbox Modal */}
+          <Lightbox
+            images={details.additionalImages}
+            currentIndex={lightboxIndex}
+            onClose={() => setLightboxIndex(null)}
+            onNavigate={(index) => {
+              setLightboxIndex(index);
+              setCurrentIndex(index);
+            }}
+          />
         </section>
       )}
     </PageLayout>

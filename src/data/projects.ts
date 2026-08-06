@@ -15,7 +15,7 @@ export const projects: Project[] = [
         "TypeScript",
         "Vite",
         "Tailwind CSS",
-        "shadcn/ui",
+        "Vercel",
         "Supabase",
         "PWA"
       ],

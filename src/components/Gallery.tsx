@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback, useRef } from "react";
-import { createPortal } from "react-dom";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { useState, useRef } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { GalleryImage } from "@/data/types";
+import Lightbox from "./Lightbox";
 
 interface GalleryProps {
   images: GalleryImage[];
@@ -24,30 +24,7 @@ export default function Gallery({ images }: GalleryProps) {
   };
 
   const openLightbox = (index: number) => setLightboxIndex(index);
-  const closeLightbox = useCallback(() => setLightboxIndex(null), []);
-  const lightboxPrev = useCallback(
-    () => setLightboxIndex((i) => (i !== null && i > 0 ? i - 1 : i)),
-    []
-  );
-  const lightboxNext = useCallback(
-    () => setLightboxIndex((i) => (i !== null && i < images.length - 1 ? i + 1 : i)),
-    [images.length]
-  );
-
-  useEffect(() => {
-    if (lightboxIndex === null) return;
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closeLightbox();
-      if (e.key === "ArrowLeft") lightboxPrev();
-      if (e.key === "ArrowRight") lightboxNext();
-    };
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", handleKey);
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", handleKey);
-    };
-  }, [lightboxIndex, closeLightbox, lightboxPrev, lightboxNext]);
+  const closeLightbox = () => setLightboxIndex(null);
 
   return (
     <section>
@@ -64,7 +41,7 @@ export default function Gallery({ images }: GalleryProps) {
           {/* Left nav */}
           <button
             onClick={() => scroll("left")}
-            className="absolute left-2 sm:-left-5 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark shadow-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all opacity-100 sm:opacity-0 sm:group-hover/gallery:opacity-100"
+            className="absolute left-2 sm:-left-5 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark shadow-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all opacity-100 sm:opacity-0 sm:group-hover/gallery:opacity-100 cursor-pointer"
             aria-label="Scroll left"
           >
             <ChevronLeft className="size-4 text-text-light dark:text-white" />
@@ -95,7 +72,7 @@ export default function Gallery({ images }: GalleryProps) {
           {/* Right nav */}
           <button
             onClick={() => scroll("right")}
-            className="absolute right-2 sm:-right-5 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark shadow-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all opacity-100 sm:opacity-0 sm:group-hover/gallery:opacity-100"
+            className="absolute right-2 sm:-right-5 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark shadow-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all opacity-100 sm:opacity-0 sm:group-hover/gallery:opacity-100 cursor-pointer"
             aria-label="Scroll right"
           >
             <ChevronRight className="size-4 text-text-light dark:text-white" />
@@ -104,57 +81,12 @@ export default function Gallery({ images }: GalleryProps) {
       )}
 
       {/* Lightbox */}
-      {lightboxIndex !== null && createPortal(
-        <div
-          className="fixed inset-0 z-9999 flex items-center justify-center bg-gray-800/60 backdrop-blur-sm"
-          onClick={closeLightbox}
-        >
-          {/* Close button */}
-          <button
-            onClick={closeLightbox}
-            className="absolute top-6 right-6 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors z-10"
-            aria-label="Close"
-          >
-            <X className="size-6 text-white" />
-          </button>
-
-          {/* Prev arrow */}
-          {lightboxIndex > 0 && (
-            <button
-              onClick={(e) => { e.stopPropagation(); lightboxPrev(); }}
-              className="absolute left-6 p-3 rounded-full bg-white/10 hover:bg-white/20 transition-colors z-10"
-              aria-label="Previous image"
-            >
-              <ChevronLeft className="size-6 text-white" />
-            </button>
-          )}
-
-          {/* Image */}
-          <img
-            src={images[lightboxIndex].src}
-            alt={images[lightboxIndex].alt}
-            className="relative z-20 max-h-[85vh] max-w-[90vw] object-contain rounded-lg shadow-2xl ring-1 ring-white/10"
-            onClick={(e) => e.stopPropagation()}
-          />
-
-          {/* Next arrow */}
-          {lightboxIndex < images.length - 1 && (
-            <button
-              onClick={(e) => { e.stopPropagation(); lightboxNext(); }}
-              className="absolute right-6 p-3 rounded-full bg-white/10 hover:bg-white/20 transition-colors z-10"
-              aria-label="Next image"
-            >
-              <ChevronRight className="size-6 text-white" />
-            </button>
-          )}
-
-          {/* Image counter */}
-          <div className="absolute bottom-6 text-white/60 text-sm font-medium">
-            {lightboxIndex + 1} / {images.length}
-          </div>
-        </div>,
-        document.body
-      )}
+      <Lightbox
+        images={images}
+        currentIndex={lightboxIndex}
+        onClose={closeLightbox}
+        onNavigate={(idx) => setLightboxIndex(idx)}
+      />
     </section>
   );
 }
