@@ -8,7 +8,8 @@ const sections = [
   { id: "techstack", label: "03. STACK" },
   { id: "projects", label: "04. WORK" },
   { id: "certifications", label: "05. CERTS" },
-  // { id: "gallery", label: "06. PHOTOS" },
+  { id: "github", label: "06. GITHUB" },
+  // { id: "gallery", label: "07. PHOTOS" },
 ];
 
 export default function SectionNav() {

@@ -5,6 +5,7 @@ import TechStack from "@/components/TechStack";
 import Experience from "@/components/Experience";
 import Projects from "@/components/Projects";
 import Certifications from "@/components/Certifications";
+import GitHubContributions from "@/components/GitHubContributions";
 import Recommendations from "@/components/Recommendations";
 // import Gallery from "@/components/Gallery";
 import Footer from "@/components/Footer";
@@ -82,6 +83,11 @@ export default function Home() {
             limit={5}
             showViewAll
           />
+        </section>
+
+        {/* Section 06: GitHub Contributions */}
+        <section id="github" className="scroll-mt-28 animate-fade-in-up border-t border-border pt-10">
+          <GitHubContributions />
         </section>
 
         {/* Recommendations */}
