@@ -25,10 +25,7 @@ export default function Hero({ data }: HeroProps) {
 
         {/* Lead Summary */}
         <p className="text-base sm:text-lg text-muted-foreground leading-relaxed font-sans max-w-3xl">
-          <span className="font-serif text-3xl font-bold float-left mr-2 leading-none text-foreground">
-            S
-          </span>
-          pecializing in modern full-stack web and mobile application engineering. Passionate about clean code, scalable architecture, and delivering polished, accessible digital products with robust technology stacks.
+          Specializing in modern full-stack web and mobile application engineering. Passionate about clean code, scalable architecture, and delivering polished, accessible digital products with robust technology stacks.
         </p>
 
         {/* Rectangular Action Buttons Bar */}
