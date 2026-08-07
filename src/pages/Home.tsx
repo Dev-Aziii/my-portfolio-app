@@ -6,7 +6,7 @@ import Experience from "@/components/Experience";
 import Projects from "@/components/Projects";
 import Certifications from "@/components/Certifications";
 import Recommendations from "@/components/Recommendations";
-import Gallery from "@/components/Gallery";
+// import Gallery from "@/components/Gallery";
 import Footer from "@/components/Footer";
 import SectionNav from "@/components/SectionNav";
 import usePageTitle from "@/hooks/usePageTitle";
@@ -18,7 +18,7 @@ import {
   projects,
   certifications,
   recommendations,
-  galleryImages,
+  // galleryImages,
   socialLinks,
   memberships,
   contactEmail,
@@ -66,35 +66,35 @@ export default function Home() {
           </section>
         </div>
 
-        {/* Section 04 & 05: Projects & Certifications side-by-side with vertical rule divider */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 animate-fade-in-up">
-          <section id="projects" className="scroll-mt-28">
-            <Projects
-              projects={projects}
-              limit={2}
-              showViewAll
-              compact
-            />
-          </section>
-          <section id="certifications" className="scroll-mt-28 lg:border-l border-border lg:pl-10">
-            <Certifications
-              certifications={certifications}
-              limit={5}
-              showViewAll
-              compact
-            />
-          </section>
-        </div>
+        {/* Section 04: Projects (Full-width horizontal section) */}
+        <section id="projects" className="scroll-mt-28 animate-fade-in-up">
+          <Projects
+            projects={projects}
+            limit={4}
+            showViewAll
+          />
+        </section>
+
+        {/* Section 05: Certifications (Full-width horizontal section) */}
+        <section id="certifications" className="scroll-mt-28 animate-fade-in-up border-t border-border pt-10">
+          <Certifications
+            certifications={certifications}
+            limit={5}
+            showViewAll
+          />
+        </section>
 
         {/* Recommendations */}
         <section id="recommendations" className="scroll-mt-28 animate-fade-in-up">
           <Recommendations recommendations={recommendations} />
         </section>
 
-        {/* Gallery */}
+        {/* Gallery (Hidden for now) */}
+        {/*
         <section id="gallery" className="scroll-mt-28 animate-fade-in-up">
           <Gallery images={galleryImages} />
         </section>
+        */}
 
         {/* Newspaper Colophon Footer */}
         <Footer

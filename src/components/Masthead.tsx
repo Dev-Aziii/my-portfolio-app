@@ -14,7 +14,13 @@ export default function Masthead({ onNavigateSection }: MastheadProps) {
     const handleScroll = () => {
       cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(() => {
-        setIsScrolled(window.scrollY > 120);
+        const scrollY = window.scrollY;
+        // Hysteresis threshold gap (150px vs 50px) to ensure zero flickering during scroll
+        if (scrollY > 150) {
+          setIsScrolled(true);
+        } else if (scrollY < 50) {
+          setIsScrolled(false);
+        }
       });
     };
 
@@ -41,7 +47,6 @@ export default function Masthead({ onNavigateSection }: MastheadProps) {
     { id: "techstack", label: "03. TECH STACK", shortLabel: "03. STACK" },
     { id: "projects", label: "04. PROJECTS", shortLabel: "04. WORK" },
     { id: "certifications", label: "05. CERTIFICATIONS", shortLabel: "05. CERTS" },
-    { id: "gallery", label: "06. GALLERY", shortLabel: "06. PHOTOS" },
   ];
 
   const handleNavClick = (id: string, e: React.MouseEvent) => {
@@ -52,68 +57,75 @@ export default function Masthead({ onNavigateSection }: MastheadProps) {
   };
 
   return (
-    <header className="sticky top-0 z-30 w-full bg-background/95 backdrop-blur-md transition-all duration-300 border-b border-border mb-8">
-      {isScrolled ? (
-        /* Compact Sticky Newspaper Masthead */
-        <div className="flex items-center justify-between py-2 px-1 sm:px-2 gap-2 text-foreground animate-fade-in-up">
-          {/* Abbreviated Branding */}
-          <a
-            href="#home"
-            onClick={(e) => handleNavClick("home", e)}
-            className="font-serif font-bold text-base sm:text-lg tracking-tight uppercase hover:underline shrink-0 text-foreground"
-          >
-            ADZYL JIPOS
-          </a>
-
-          {/* Section Navigation Links */}
-          <nav aria-label="Compact Navigation" className="overflow-x-auto py-1 max-w-full">
-            <ul className="flex items-center gap-x-3 sm:gap-x-5 text-[11px] sm:text-xs font-mono uppercase tracking-wider whitespace-nowrap">
-              {navItems.map((item) => (
-                <li key={item.id}>
-                  <a
-                    href={`#${item.id}`}
-                    onClick={(e) => handleNavClick(item.id, e)}
-                    className="text-muted-foreground hover:text-foreground transition-colors hover:underline underline-offset-4"
-                  >
-                    <span className="hidden md:inline">{item.label}</span>
-                    <span className="md:hidden">{item.shortLabel}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          {/* Theme Toggle */}
-          <div className="shrink-0">
+    <header className="sticky top-0 z-40 w-full bg-background/95 backdrop-blur-md border-b border-border mb-8 transition-colors duration-300">
+      <div className="max-w-5xl mx-auto py-2 px-1 sm:px-2">
+        {/* Top Issue Bar (Smoothly collapses when scrolled) */}
+        <div
+          className={`transition-all duration-300 ease-in-out flex flex-wrap items-center justify-between text-xs font-mono tracking-widest text-muted-foreground gap-2 overflow-hidden ${
+            isScrolled
+              ? "max-h-0 opacity-0 pb-0 border-none pointer-events-none"
+              : "max-h-12 opacity-100 pb-2 border-b border-border pointer-events-auto"
+          }`}
+        >
+          <div className="flex items-center gap-3">
+            <span>{currentDate}</span>
+          </div>
+          <div className="flex items-center gap-4">
             <ThemeToggle />
           </div>
         </div>
-      ) : (
-        /* Full Top Editorial Masthead */
-        <div className="pt-2 pb-1 text-foreground">
-          {/* Top Issue Bar */}
-          <div className="flex flex-wrap items-center justify-between text-xs font-mono tracking-widest text-muted-foreground border-b border-border pb-2 gap-2">
-            <div className="flex items-center gap-3">
-              <span>{currentDate}</span>
-            </div>
-            <div className="flex items-center gap-4">
-              <ThemeToggle />
-            </div>
-          </div>
 
-          {/* Main Masthead Banner */}
-          <div className="py-4 sm:py-6 text-center rule-double my-3">
-            <h1 className="text-4xl sm:text-6xl md:text-7xl font-serif font-bold tracking-tight text-foreground uppercase mb-1">
-              Adzyl Jipos
-            </h1>
-            <p className="font-mono text-xs sm:text-sm tracking-widest text-muted-foreground uppercase">
-              Software Developer
-            </p>
-          </div>
+        {/* Main Title Banner (Smoothly collapses when scrolled) */}
+        <div
+          className={`transition-all duration-300 ease-in-out text-center rule-double overflow-hidden ${
+            isScrolled
+              ? "max-h-0 opacity-0 my-0 py-0 pointer-events-none"
+              : "max-h-40 opacity-100 my-3 py-4 sm:py-6 pointer-events-auto"
+          }`}
+        >
+          <h1 className="text-4xl sm:text-6xl md:text-7xl font-serif font-bold tracking-tight text-foreground uppercase mb-1">
+            Adzyl Jipos
+          </h1>
+          <p className="font-mono text-xs sm:text-sm tracking-widest text-muted-foreground uppercase">
+            Software Developer
+          </p>
+        </div>
 
-          {/* Editorial Navigation Bar */}
-          <nav aria-label="Masthead Navigation" className="border-t border-b border-border py-2">
-            <ul className="flex flex-wrap justify-center items-center gap-x-5 sm:gap-x-6 gap-y-2 text-xs font-mono uppercase tracking-wider">
+        {/* Dynamic Navigation Bar (Transitions into compact navbar on scroll) */}
+        <div
+          className={`transition-all duration-300 ease-in-out flex items-center gap-4 ${
+            isScrolled
+              ? "justify-between py-1 border-none"
+              : "justify-center py-2 border-t border-b border-border"
+          }`}
+        >
+          {/* Scrolled Logo Only (Fades and scales in on scroll) */}
+          <a
+            href="#home"
+            onClick={(e) => handleNavClick("home", e)}
+            className={`transition-all duration-300 ease-in-out shrink-0 group flex items-center ${
+              isScrolled
+                ? "opacity-100 scale-100 w-auto pointer-events-auto"
+                : "opacity-0 scale-75 w-0 pointer-events-none overflow-hidden"
+            }`}
+            title="Adzyl Jipos - Home"
+          >
+            <img
+              src="/logo.webp"
+              alt="<AZI> Logo"
+              className="h-10 sm:h-11 w-auto object-contain dark:invert-0 invert transition-transform group-hover:scale-105"
+            />
+          </a>
+
+          {/* Section Navigation Links */}
+          <nav aria-label="Masthead Navigation" className="overflow-x-auto py-1 max-w-full">
+            <ul
+              className={`flex items-center text-xs font-mono uppercase tracking-wider transition-all duration-300 ${
+                isScrolled
+                  ? "gap-x-3 sm:gap-x-6 text-[11px] sm:text-xs whitespace-nowrap"
+                  : "flex-wrap justify-center gap-x-5 sm:gap-x-6 gap-y-2"
+              }`}
+            >
               {navItems.map((item) => (
                 <li key={item.id}>
                   <a
@@ -121,14 +133,30 @@ export default function Masthead({ onNavigateSection }: MastheadProps) {
                     onClick={(e) => handleNavClick(item.id, e)}
                     className="hover:underline underline-offset-4 transition-all hover:text-foreground text-muted-foreground"
                   >
-                    {item.label}
+                    <span className={isScrolled ? "hidden md:inline" : ""}>
+                      {item.label}
+                    </span>
+                    {isScrolled && (
+                      <span className="md:hidden">{item.shortLabel}</span>
+                    )}
                   </a>
                 </li>
               ))}
             </ul>
           </nav>
+
+          {/* Theme Toggle (Visible only in scrolled mode on the right) */}
+          <div
+            className={`transition-all duration-300 shrink-0 ${
+              isScrolled
+                ? "opacity-100 scale-100 pointer-events-auto"
+                : "opacity-0 scale-75 pointer-events-none hidden"
+            }`}
+          >
+            <ThemeToggle />
+          </div>
         </div>
-      )}
+      </div>
     </header>
   );
 }
