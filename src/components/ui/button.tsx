@@ -5,27 +5,27 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-none text-xs font-mono uppercase tracking-wider font-bold transition-colors disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-foreground",
   {
     variants: {
       variant: {
         default:
-          "bg-text-light dark:bg-white text-white dark:text-text-light shadow-md hover:shadow-lg hover:bg-gray-800 dark:hover:bg-gray-100 hover:-translate-y-0.5 transform",
+          "bg-foreground text-background border border-foreground hover:bg-background hover:text-foreground shadow-none cursor-pointer",
         destructive:
-          "bg-red-500 text-white shadow-sm hover:bg-red-600",
+          "bg-destructive text-white border border-destructive hover:bg-destructive/90 shadow-none cursor-pointer",
         outline:
-          "border border-border-light dark:border-border-dark bg-white dark:bg-surface-dark hover:bg-gray-50 dark:hover:bg-gray-800",
+          "bg-card text-foreground border border-border hover:border-foreground transition-colors shadow-none cursor-pointer",
         secondary:
-          "bg-gray-100 dark:bg-gray-800 text-foreground shadow-sm hover:bg-gray-200 dark:hover:bg-gray-700",
+          "bg-card/80 text-foreground border border-border hover:border-foreground hover:bg-card transition-colors cursor-pointer",
         ghost:
-          "hover:bg-gray-100 dark:hover:bg-gray-800 text-foreground",
-        link: "text-text-light dark:text-white underline-offset-4 hover:underline",
+          "hover:bg-card hover:text-foreground text-muted-foreground transition-colors cursor-pointer",
+        link: "text-muted-foreground hover:text-foreground underline-offset-4 hover:underline transition-colors",
       },
       size: {
-        default: "h-10 px-5 py-2.5",
-        sm: "h-8 rounded-md gap-1.5 px-3 text-xs",
-        lg: "h-12 rounded-lg px-8",
-        icon: "h-10 w-10",
+        default: "h-9 px-4 py-2",
+        sm: "h-7 gap-1.5 px-2.5 text-[11px]",
+        lg: "h-11 px-6 text-sm",
+        icon: "h-9 w-9",
       },
     },
     defaultVariants: {

@@ -9,78 +9,78 @@ interface FooterProps {
 
 export default function Footer({ socialLinks, memberships, email }: FooterProps) {
   return (
-    <>
-      {/* Footer Section */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8 border-t border-border-light dark:border-border-dark">
+    <footer className="w-full pt-8 pb-12 border-t-4 border-double border-border mt-12 text-foreground">
+      {/* Editorial Columns */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pb-8 border-b border-border">
         {/* Memberships */}
-        <div>
-          <h3 className="font-bold text-text-light dark:text-white mb-4">
-            A member of
-          </h3>
-          <div className="space-y-4 text-sm text-text-muted-light dark:text-text-muted-dark">
+        <div className="space-y-3 md:border-r border-border md:pr-6">
+          <h4 className="font-mono text-xs uppercase tracking-widest text-muted-foreground font-bold">
+            [ AFFILIATIONS &amp; MEMBERSHIPS ]
+          </h4>
+          <div className="space-y-2 text-xs font-mono">
             {memberships.map((m) => (
               <a
                 key={m.name}
-                className="flex items-start justify-between hover:text-text-light dark:hover:text-white transition-colors"
+                className="flex items-center justify-between text-muted-foreground hover:text-foreground transition-colors py-1 border-b border-border/50"
                 href={m.href}
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <span>{m.name}</span>
-                <ExternalLink className="size-3.5 shrink-0 ml-2 mt-0.5" />
+                <ExternalLink className="size-3 shrink-0 ml-2" />
               </a>
             ))}
           </div>
         </div>
 
         {/* Social Links */}
-        <div>
-          <h3 className="font-bold text-text-light dark:text-white mb-4">
-            Social Links
-          </h3>
-          <div className="space-y-3">
+        <div className="space-y-3 md:border-r border-border md:px-6">
+          <h4 className="font-mono text-xs uppercase tracking-widest text-muted-foreground font-bold">
+            [ NETWORK &amp; SOCIAL DISPATCH ]
+          </h4>
+          <div className="space-y-2 text-xs font-mono">
             {socialLinks.map((link) => {
               const Icon = link.icon;
               return (
                 <a
                   key={link.name}
-                  className="flex items-center gap-2 text-text-muted-light dark:text-text-muted-dark hover:text-text-light dark:hover:text-white transition-colors"
+                  className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors py-1 border-b border-border/50"
                   href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
                   <Icon />
-                  {link.name}
+                  <span>{link.name}</span>
                 </a>
               );
             })}
           </div>
         </div>
 
-        {/* Contact */}
-        <div>
-          <h3 className="font-bold text-text-light dark:text-white mb-4">
-            Contact
-          </h3>
-          <div className="space-y-4">
+        {/* Contact / Inquiries */}
+        <div className="space-y-3 md:pl-6">
+          <h4 className="font-mono text-xs uppercase tracking-widest text-muted-foreground font-bold">
+            [ CORRESPONDENCE &amp; INQUIRIES ]
+          </h4>
+          <div className="bg-card border border-border p-3 space-y-1">
+            <div className="flex items-center gap-1.5 text-xs font-mono text-muted-foreground">
+              <Mail className="size-3.5 text-foreground" />
+              <span>DIRECT EMAIL</span>
+            </div>
             <a
-              className="block p-3 bg-surface-light dark:bg-surface-dark rounded-lg border border-border-light dark:border-border-dark hover:border-text-light dark:hover:border-white transition-colors"
               href={`mailto:${email}`}
+              className="block font-mono text-xs font-bold text-foreground hover:underline truncate"
             >
-              <div className="flex items-center gap-2 mb-1">
-                <Mail className="size-3.5 text-text-light dark:text-white" />
-                <span className="text-xs font-bold uppercase tracking-wide text-text-muted-light dark:text-text-muted-dark">
-                  Email
-                </span>
-              </div>
-              <p className="text-sm font-medium text-text-light dark:text-text-dark">
-                {email}
-              </p>
-            </a>            
+              {email}
+            </a>
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* Copyright */}
-      <footer className="text-center mt-15 text-sm text-text-muted-light dark:text-text-muted-dark">
-        <p>&copy; 2026 Adzyl Jipos. All rights reserved.</p>
-      </footer>
-    </>
+      {/* Colophon & Copyright */}
+      <div className="pt-6 text-center space-y-2 font-mono text-[11px] text-muted-foreground">
+        <p>&copy; {new Date().getFullYear()} ADZYL JIPOS. ALL RIGHTS RESERVED.</p>
+      </div>
+    </footer>
   );
 }

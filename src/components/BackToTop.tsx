@@ -18,13 +18,14 @@ export default function BackToTop() {
       aria-label="Back to top"
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       className={cn(
-        "fixed bottom-6 right-6 z-40 flex size-10 items-center justify-center rounded-full border border-border-light dark:border-border-dark bg-white dark:bg-surface-dark text-text-light dark:text-text-dark shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300",
+        "fixed bottom-6 right-6 z-40 flex items-center gap-1 px-2.5 py-1.5 border border-border bg-card text-foreground font-mono text-xs uppercase tracking-wider hover:border-foreground transition-all duration-200 cursor-pointer shadow-sm",
         visible
           ? "opacity-100 translate-y-0"
           : "pointer-events-none opacity-0 translate-y-2"
       )}
     >
-      <ArrowUp className="size-4" />
+      <ArrowUp className="size-3.5" />
+      <span className="hidden sm:inline">TOP</span>
     </button>
   );
 }

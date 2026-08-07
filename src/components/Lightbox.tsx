@@ -145,7 +145,7 @@ export default function Lightbox({
 
   return createPortal(
     <div
-      className="fixed inset-0 z-9999 flex items-center justify-center bg-gray-900/80 backdrop-blur-md select-none touch-none"
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-md select-none touch-none"
       onClick={onClose}
       onWheel={handleWheel}
       onTouchStart={handleTouchStart}

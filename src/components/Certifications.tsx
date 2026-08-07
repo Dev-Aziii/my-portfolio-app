@@ -10,59 +10,63 @@ interface CertificationsProps {
   hideTitle?: boolean;
 }
 
-export default function Certifications({ certifications, limit, showViewAll, compact, hideTitle }: CertificationsProps) {
+export default function Certifications({
+  certifications,
+  limit,
+  showViewAll,
+  compact,
+  hideTitle,
+}: CertificationsProps) {
   const displayed = limit ? certifications.slice(0, limit) : certifications;
-  const animateItems = hideTitle;
 
   return (
-    <section>
-      {!hideTitle && (
-        <div className="flex justify-between items-center mb-6">
-          <h2 className={`${compact ? "text-xl" : "text-2xl"} font-bold text-text-light dark:text-white`}>
-            {compact ? "Certifications" : "Recent Certifications"}
-          </h2>
-          {showViewAll && (
-            <Link
-              className="text-sm font-medium text-text-light dark:text-text-dark hover:text-gray-500 transition-colors flex items-center"
-              to="/certifications"
-            >
-              View All
-              <ChevronRight className="size-4 ml-1" />
-            </Link>
-          )}
-        </div>
-      )}
+    <section className="h-full flex flex-col justify-between">
+      <div>
+        {!hideTitle && (
+          <div className="flex justify-between items-center border-b border-border pb-2 mb-4">
+            <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground font-bold">
+              [ SECTION 05 // CERTIFICATIONS ]
+            </h3>
+            {showViewAll && (
+              <Link
+                className="font-mono text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center uppercase tracking-wider"
+                to="/certifications"
+              >
+                VIEW ALL
+                <ChevronRight className="size-3.5 ml-0.5" />
+              </Link>
+            )}
+          </div>
+        )}
 
-      {displayed.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-text-muted-light dark:text-text-muted-dark">No certifications added yet.</p>
-        </div>
-      ) : (
-      <div className="space-y-2.5">
-        {displayed.map((cert, index) => (
-          <a
-            key={cert.title}
-            className={`block bg-surface-light dark:bg-surface-dark p-3.5 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors group ${animateItems ? "animate-fade-in-up" : ""}`}
-            style={animateItems ? { animationDelay: `${index * 120}ms` } : undefined}
-            href={cert.href}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <h4 className="font-semibold text-text-light dark:text-white text-sm">
-                  {cert.title}
-                </h4>
-                <p className="text-xs text-text-muted-light dark:text-text-muted-dark mt-0.5">
-                  {cert.issuer}
-                </p>
-              </div>
-              <BadgeCheck className="size-5 text-gray-300 dark:text-gray-600 group-hover:text-text-light dark:group-hover:text-white transition-colors shrink-0 ml-3" />
-            </div>
-          </a>
-        ))}
+        {displayed.length === 0 ? (
+          <div className="text-center py-8 font-mono text-xs text-muted-foreground">
+            NO CERTIFICATIONS RECORDED.
+          </div>
+        ) : (
+          <div className="divide-y divide-border border-t border-b border-border">
+            {displayed.map((cert) => (
+              <a
+                key={cert.title}
+                href={cert.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="py-3 flex items-center justify-between group hover:bg-card px-2 transition-colors"
+              >
+                <div>
+                  <h4 className="font-serif font-bold text-sm text-foreground group-hover:underline underline-offset-2">
+                    {cert.title}
+                  </h4>
+                  <p className="font-mono text-xs text-muted-foreground mt-0.5">
+                    ISSUER: {cert.issuer}
+                  </p>
+                </div>
+                <BadgeCheck className="size-4 text-muted-foreground group-hover:text-foreground transition-colors shrink-0 ml-3" />
+              </a>
+            ))}
+          </div>
+        )}
       </div>
-      )}
     </section>
   );
 }

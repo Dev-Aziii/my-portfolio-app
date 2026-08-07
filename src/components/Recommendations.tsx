@@ -1,56 +1,51 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import type { Recommendation } from "@/data/types";
 
 interface RecommendationsProps {
   recommendations: Recommendation[];
 }
 
-export default function Recommendations({ recommendations }: RecommendationsProps) {
+export default function Recommendations({
+  recommendations,
+}: RecommendationsProps) {
   return (
-    <section className="text-center py-8">
-      <h2 className="text-2xl font-bold text-text-light dark:text-white mb-8">
-        Recommendations
-      </h2>
+    <section className="py-4 border-b border-border">
+      <div className="flex items-center justify-between border-b border-border pb-2 mb-4">
+        <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground font-bold">
+          [ RECOMMENDATION &amp; ENDORSEMENT ]
+        </h3>
+        <span className="font-mono text-[10px] text-muted-foreground uppercase">
+          TESTIMONIAL
+        </span>
+      </div>
+
       {recommendations.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-text-muted-light dark:text-text-muted-dark">No recommendations yet.</p>
+        <div className="text-center py-8 font-mono text-xs text-muted-foreground">
+          NO RECOMMENDATIONS YET.
         </div>
       ) : (
-      <div className="max-w-2xl mx-auto bg-surface-light dark:bg-surface-dark p-8 rounded-2xl shadow-lg border border-border-light dark:border-border-dark relative">
-        {/* Decorative quote mark */}
-        <span className="absolute top-6 left-6 text-6xl text-text-light dark:text-white opacity-20 font-serif leading-none select-none">
-          &ldquo;
-        </span>
-
-        <p className="text-lg italic text-text-light dark:text-gray-300 leading-relaxed mb-6 z-10 relative">
-          {recommendations[0].quote}
-        </p>
-
-        <div className="flex items-center justify-center gap-4">
-          <Avatar className="w-10 h-10">
-            <AvatarFallback>{recommendations[0].initials}</AvatarFallback>
-          </Avatar>
-          <div className="text-left">
-            <p className="font-bold text-sm text-text-light dark:text-white">
-              {recommendations[0].author}
+        <div className="bg-card border border-border p-6 relative my-2">
+          <span className="font-serif text-5xl text-muted-foreground/30 absolute top-2 left-4 select-none leading-none">
+            &ldquo;
+          </span>
+          <blockquote className="relative z-10 space-y-4">
+            <p className="font-serif italic text-base sm:text-lg text-foreground leading-relaxed">
+              {recommendations[0].quote}
             </p>
-            <p className="text-xs text-text-muted-light dark:text-text-muted-dark">
-              {recommendations[0].title}
-            </p>
-          </div>
+            <footer className="pt-3 border-t border-border flex items-center justify-between">
+              <div>
+                <p className="font-serif font-bold text-sm text-foreground">
+                  {recommendations[0].author}
+                </p>
+                <p className="font-mono text-xs text-muted-foreground uppercase">
+                  {recommendations[0].title}
+                </p>
+              </div>
+              <div className="w-8 h-8 border border-border flex items-center justify-center font-mono text-xs font-bold text-foreground bg-background">
+                {recommendations[0].initials}
+              </div>
+            </footer>
+          </blockquote>
         </div>
-
-        {/* Pagination dots */}
-        <div className="flex justify-center mt-6 gap-2">
-          <span className="w-2 h-2 bg-text-light dark:bg-white rounded-full cursor-pointer" />
-          {[...Array(3)].map((_, i) => (
-            <span
-              key={i}
-              className="w-2 h-2 bg-gray-300 dark:bg-gray-700 rounded-full cursor-pointer hover:bg-gray-500 transition-colors"
-            />
-          ))}
-        </div>
-      </div>
       )}
     </section>
   );

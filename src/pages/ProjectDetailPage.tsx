@@ -41,95 +41,114 @@ export default function ProjectDetailPage() {
 
   return (
     <PageLayout title={project.title} backTo="/projects" backLabel="Back to Projects">
-      {/* Hero Image */}
-      <div className="animate-fade-in-up rounded-xl overflow-hidden mb-4 shadow-sm border border-border-light dark:border-border-dark" style={{ animationDelay: '480ms' }}>
-        <img
-          src={details.heroImage}
-          alt={project.title}
-          className="w-full h-auto object-contain"
-        />
+      {/* Hero Image in printed newspaper framing */}
+      <div className="border border-border p-2 bg-card mb-6">
+        <div className="w-full overflow-hidden border border-border">
+          <img
+            src={details.heroImage}
+            alt={project.title}
+            className="w-full h-auto object-contain newspaper-photo"
+          />
+        </div>
+        <p className="font-mono text-xs text-muted-foreground mt-2 text-center uppercase">
+          PLATE I: PRIMARY INTERFACE DEMONSTRATION — {project.title}
+        </p>
       </div>
 
       {/* Project Description under Hero */}
-      <p className="animate-fade-in-up text-text-muted-light dark:text-text-muted-dark leading-relaxed text-sm mb-8" style={{ animationDelay: '600ms' }}>
+      <p className="text-base text-foreground leading-relaxed font-sans mb-8">
+        <span className="font-serif text-2xl font-bold float-left mr-2 leading-none text-foreground">
+          T
+        </span>
         {project.description}
       </p>
 
       {/* Tech Stack & Link */}
-      <div className="mb-8 animate-fade-in-up" style={{ animationDelay: '720ms' }}>
-        {project.url !== "#" && (
-          <a
-            href={project.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-text-muted-light dark:text-text-muted-dark hover:text-text-light dark:hover:text-white transition-colors mb-4"
-          >
-            <ExternalLink className="size-4" />
-            View Project
-          </a>
-        )}
-        <div className="flex flex-wrap gap-2">
-          {details.techs.map((tech) => (
-            <span
-              key={tech}
-              className="px-3 py-1 text-sm font-medium bg-surface-light dark:bg-surface-dark text-text-light dark:text-text-dark rounded-full border border-border-light dark:border-border-dark"
+      <div className="mb-8 border-t border-b border-border py-4">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex flex-wrap gap-1.5">
+            {details.techs.map((tech) => (
+              <span key={tech} className="mono-tag">
+                {tech}
+              </span>
+            ))}
+          </div>
+
+          {project.url !== "#" && (
+            <a
+              href={project.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 font-mono text-xs font-bold text-foreground hover:underline border border-border px-3 py-1 bg-background"
             >
-              {tech}
-            </span>
-          ))}
+              <ExternalLink className="size-3.5" />
+              VISIT PROJECT DEMO
+            </a>
+          )}
         </div>
       </div>
 
       {/* The Gist */}
-      <section className="mb-10 animate-fade-in-up" style={{ animationDelay: '840ms' }}>
-        <h2 className="text-xl font-bold text-text-light dark:text-white mb-3">
+      <section className="mb-8 border-b border-border pb-6">
+        <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground font-bold mb-2">
+          [ I. EXECUTIVE OVERVIEW &amp; GIST ]
+        </h3>
+        <h2 className="text-xl font-serif font-bold text-foreground mb-2">
           {details.gist.title}
         </h2>
-        <p className="text-text-muted-light dark:text-text-muted-dark leading-relaxed text-sm">
+        <p className="text-sm text-muted-foreground leading-relaxed">
           {details.gist.description}
         </p>
       </section>
 
       {/* The Problem */}
-      <section className="mb-10 animate-fade-in-up" style={{ animationDelay: '960ms' }}>
-        <h2 className="text-xl font-bold text-text-light dark:text-white mb-3">
+      <section className="mb-8 border-b border-border pb-6">
+        <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground font-bold mb-2">
+          [ II. PROBLEM STATEMENT ]
+        </h3>
+        <h2 className="text-xl font-serif font-bold text-foreground mb-2">
           {details.problem.title}
         </h2>
-        <p className="text-text-muted-light dark:text-text-muted-dark leading-relaxed text-sm">
+        <p className="text-sm text-muted-foreground leading-relaxed">
           {details.problem.description}
         </p>
       </section>
 
       {/* The Solution */}
-      <section className="mb-10 animate-fade-in-up" style={{ animationDelay: '1080ms' }}>
-        <h2 className="text-xl font-bold text-text-light dark:text-white mb-3">
+      <section className="mb-8 border-b border-border pb-6">
+        <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground font-bold mb-2">
+          [ III. IMPLEMENTED ARCHITECTURAL SOLUTION ]
+        </h3>
+        <h2 className="text-xl font-serif font-bold text-foreground mb-2">
           {details.solution.title}
         </h2>
-        <p className="text-text-muted-light dark:text-text-muted-dark leading-relaxed text-sm">
+        <p className="text-sm text-muted-foreground leading-relaxed">
           {details.solution.description}
         </p>
       </section>
 
       {/* Additional Images Carousel */}
       {details.additionalImages && details.additionalImages.length > 0 && (
-        <section className="mb-10 animate-fade-in-up" style={{ animationDelay: '1200ms' }}>
-          <h2 className="text-xl font-bold text-text-light dark:text-white mb-4">
-            Project Gallery
-          </h2>
+        <section className="mb-8">
+          <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground font-bold mb-4">
+            [ IV. ADDITIONAL EXHIBITS &amp; GALLERY ]
+          </h3>
           <div className="relative">
             {/* Main Image Container */}
             <div
               onClick={() => setLightboxIndex(currentIndex)}
-              className="relative group cursor-pointer rounded-xl overflow-hidden shadow-sm border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark"
+              className="relative group cursor-pointer border border-border bg-card p-2"
             >
-              <img
-                src={details.additionalImages[currentIndex]}
-                alt={`Slide ${currentIndex + 1}`}
-                className="w-full h-[500px] object-cover transform group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition-all duration-300 flex items-center justify-center">
-                <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/50 p-3 rounded-full text-white backdrop-blur-xs shadow-lg">
-                  <Maximize2 className="size-6" />
+              <div className="w-full h-[400px] sm:h-[500px] overflow-hidden border border-border">
+                <img
+                  src={details.additionalImages[currentIndex]}
+                  alt={`Slide ${currentIndex + 1}`}
+                  className="w-full h-full object-cover newspaper-photo"
+                />
+              </div>
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all flex items-center justify-center">
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-background border border-border px-3 py-1 font-mono text-xs text-foreground">
+                  <Maximize2 className="size-4 inline mr-1" /> EXPAND EXHIBIT
                 </div>
               </div>
 
@@ -141,47 +160,47 @@ export default function ProjectDetailPage() {
                       e.stopPropagation();
                       goToPrevious();
                     }}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-surface-light/90 dark:bg-surface-dark/90 hover:bg-surface-light dark:hover:bg-surface-dark transition-colors shadow-sm border border-border-light dark:border-border-dark cursor-pointer z-10"
+                    className="absolute left-4 top-1/2 -translate-y-1/2 p-2 bg-background border border-border text-foreground hover:bg-card transition-colors cursor-pointer z-10"
                     aria-label="Previous image"
                   >
-                    <ChevronLeft className="size-5 text-text-light dark:text-white" />
+                    <ChevronLeft className="size-4" />
                   </button>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       goToNext();
                     }}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-surface-light/90 dark:bg-surface-dark/90 hover:bg-surface-light dark:hover:bg-surface-dark transition-colors shadow-sm border border-border-light dark:border-border-dark cursor-pointer z-10"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-background border border-border text-foreground hover:bg-card transition-colors cursor-pointer z-10"
                     aria-label="Next image"
                   >
-                    <ChevronRight className="size-5 text-text-light dark:text-white" />
+                    <ChevronRight className="size-4" />
                   </button>
                 </>
               )}
 
               {/* Image Counter */}
-              <div className="absolute bottom-4 right-4 px-3 py-1 rounded-full bg-black/60 text-white text-xs font-medium z-10">
-                {currentIndex + 1} / {details.additionalImages.length}
+              <div className="absolute bottom-4 right-4 px-2 py-0.5 bg-background border border-border font-mono text-[11px] text-foreground z-10">
+                EXHIBIT {currentIndex + 1} / {details.additionalImages.length}
               </div>
             </div>
 
             {/* Thumbnail Navigation */}
             {details.additionalImages.length > 1 && (
-              <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
+              <div className="flex gap-2 mt-3 overflow-x-auto pb-2">
                 {details.additionalImages.map((image, index) => (
                   <button
                     key={index}
                     onClick={() => goToSlide(index)}
-                    className={`shrink-0 rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${
+                    className={`shrink-0 border p-1 bg-card transition-all cursor-pointer ${
                       index === currentIndex
-                        ? "border-text-light dark:border-white"
-                        : "border-transparent hover:border-border-light dark:hover:border-border-dark"
+                        ? "border-foreground"
+                        : "border-border hover:border-muted-foreground"
                     }`}
                   >
                     <img
                       src={image}
                       alt={`Thumbnail ${index + 1}`}
-                      className="w-24 h-16 object-cover"
+                      className="w-20 h-14 object-cover newspaper-photo"
                     />
                   </button>
                 ))}

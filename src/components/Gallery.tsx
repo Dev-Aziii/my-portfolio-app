@@ -27,60 +27,63 @@ export default function Gallery({ images }: GalleryProps) {
   const closeLightbox = () => setLightboxIndex(null);
 
   return (
-    <section>
-      <h2 className="text-2xl font-bold text-text-light dark:text-white mb-6">
-        Gallery
-      </h2>
-
-      {images.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-text-muted-light dark:text-text-muted-dark">No gallery images yet.</p>
-        </div>
-      ) : (
-        <div className="relative group/gallery">
-          {/* Left nav */}
+    <section className="py-4 border-b border-border">
+      <div className="flex items-center justify-between border-b border-border pb-2 mb-4">
+        <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground font-bold">
+          [ SECTION 06 // PHOTOGRAPHIC ARCHIVE ]
+        </h3>
+        <div className="flex items-center gap-2">
           <button
             onClick={() => scroll("left")}
-            className="absolute left-2 sm:-left-5 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark shadow-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all opacity-100 sm:opacity-0 sm:group-hover/gallery:opacity-100 cursor-pointer"
+            className="p-1 border border-border hover:border-foreground text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
             aria-label="Scroll left"
           >
-            <ChevronLeft className="size-4 text-text-light dark:text-white" />
+            <ChevronLeft className="size-3.5" />
           </button>
+          <button
+            onClick={() => scroll("right")}
+            className="p-1 border border-border hover:border-foreground text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+            aria-label="Scroll right"
+          >
+            <ChevronRight className="size-3.5" />
+          </button>
+        </div>
+      </div>
 
-          {/* Scrollable image row */}
+      {images.length === 0 ? (
+        <div className="text-center py-8 font-mono text-xs text-muted-foreground">
+          NO GALLERY IMAGES RECORDED.
+        </div>
+      ) : (
+        <div className="relative">
           <div
             ref={scrollRef}
-            className="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory"
+            className="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory py-1"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {images.map((image, i) => (
               <button
                 key={i}
                 onClick={() => openLightbox(i)}
-                className="relative group shrink-0 w-full sm:w-[calc(50%-8px)] lg:w-[calc(25%-12px)] aspect-square rounded-xl overflow-hidden cursor-pointer snap-center focus:outline-none focus:ring-2 focus:ring-text-light dark:focus:ring-white focus:ring-offset-2"
+                className="relative group shrink-0 w-[240px] aspect-square border border-border bg-card overflow-hidden cursor-pointer snap-center focus:outline-none focus:border-foreground"
               >
                 <img
                   alt={image.alt}
-                  className="object-cover w-full h-full transform group-hover:scale-110 transition-transform duration-500"
+                  className="object-cover w-full h-full newspaper-photo"
                   src={image.src}
                 />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />
+                <div className="absolute inset-x-0 bottom-0 bg-background/90 border-t border-border p-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <p className="font-mono text-[10px] text-foreground truncate uppercase text-left">
+                    FIG {i + 1}: {image.alt}
+                  </p>
+                </div>
               </button>
             ))}
           </div>
-
-          {/* Right nav */}
-          <button
-            onClick={() => scroll("right")}
-            className="absolute right-2 sm:-right-5 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark shadow-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all opacity-100 sm:opacity-0 sm:group-hover/gallery:opacity-100 cursor-pointer"
-            aria-label="Scroll right"
-          >
-            <ChevronRight className="size-4 text-text-light dark:text-white" />
-          </button>
         </div>
       )}
 
-      {/* Lightbox */}
+      {/* Lightbox Modal Preserved */}
       <Lightbox
         images={images}
         currentIndex={lightboxIndex}

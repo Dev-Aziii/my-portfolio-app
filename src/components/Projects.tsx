@@ -11,10 +11,15 @@ interface ProjectsProps {
   hideTitle?: boolean;
 }
 
-export default function Projects({ projects, limit, showViewAll, compact, hideTitle }: ProjectsProps) {
+export default function Projects({
+  projects,
+  limit,
+  showViewAll,
+  compact,
+  hideTitle,
+}: ProjectsProps) {
   const displayed = limit ? projects.slice(0, limit) : projects;
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
-  const animateItems = hideTitle;
 
   const copyToClipboard = async (url: string, e: React.MouseEvent) => {
     e.preventDefault();
@@ -29,90 +34,96 @@ export default function Projects({ projects, limit, showViewAll, compact, hideTi
   };
 
   return (
-    <section>
-      {!hideTitle && (
-        <div className="flex justify-between items-center mb-6">
-          <h2 className={`${compact ? "text-xl" : "text-2xl"} font-bold text-text-light dark:text-white`}>
-            {compact ? "Projects" : "Recent Projects"}
-          </h2>
-          {showViewAll && (
-            <Link
-              className="text-sm font-medium text-text-light dark:text-text-dark hover:text-gray-500 transition-colors flex items-center"
-              to="/projects"
-            >
-              View All
-              <ChevronRight className="size-4 ml-1" />
-            </Link>
-          )}
-        </div>
-      )}
-
-      {displayed.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-text-muted-light dark:text-text-muted-dark">No projects added yet.</p>
-        </div>
-      ) : (
-        <div className={`grid grid-cols-1 ${compact ? "" : "md:grid-cols-2"} gap-4`}>
-          {displayed.map((project, index) => {
-            const Icon = project.icon;
-            const isCopied = copiedUrl === project.url;
-            const projectContent = (
-              <>
-                <div className="flex justify-between items-start mb-3">
-                  <div className="p-2.5 bg-gray-100 dark:bg-gray-800 rounded-lg group-hover:bg-gray-200 dark:group-hover:bg-gray-700 transition-colors">
-                    <Icon className="size-5 text-text-light dark:text-white" />
-                  </div>
-                  <ArrowUpRight className="size-5 text-text-muted-light dark:text-text-muted-dark transform group-hover:rotate-45 transition-transform duration-300" />
-                </div>
-                <h3 className="text-lg font-bold text-text-light dark:text-white mb-1.5">
-                  {project.title}
-                </h3>
-                <p className="text-text-muted-light dark:text-text-muted-dark text-sm mb-3">
-                  {project.description}
-                </p>
-                <div className="flex items-center gap-2">
-                  <code className="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-text-light dark:text-text-dark flex-1 truncate">
-                    {project.url}
-                  </code>
-                  <button
-                    onClick={(e) => copyToClipboard(project.url, e)}
-                    className="p-1.5 bg-gray-100 dark:bg-gray-800 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-                    aria-label="Copy URL"
-                    title={isCopied ? "Copied!" : "Copy URL"}
-                  >
-                    {isCopied ? (
-                      <Check className="size-3.5 text-green-600 dark:text-green-400" />
-                    ) : (
-                      <Copy className="size-3.5 text-text-light dark:text-text-dark" />
-                    )}
-                  </button>
-                </div>
-              </>
-            );
-
-            const cardClasses = `group bg-surface-light dark:bg-surface-dark rounded-xl p-5 border border-border-light dark:border-border-dark hover:border-text-light/50 dark:hover:border-white/50 transition-all shadow-sm hover:shadow-md ${animateItems ? "animate-fade-in-up" : ""}`;
-
-            return project.slug && project.details ? (
+    <section className="h-full flex flex-col justify-between">
+      <div>
+        {!hideTitle && (
+          <div className="flex justify-between items-center border-b border-border pb-2 mb-4">
+            <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground font-bold">
+              [ SECTION 04 // FEATURED PROJECTS ]
+            </h3>
+            {showViewAll && (
               <Link
-                key={project.title}
-                to={`/projects/${project.slug}`}
-                className={cardClasses}
-                style={animateItems ? { animationDelay: `${index * 120}ms` } : undefined}
+                className="font-mono text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center uppercase tracking-wider"
+                to="/projects"
               >
-                {projectContent}
+                VIEW ALL
+                <ChevronRight className="size-3.5 ml-0.5" />
               </Link>
-            ) : (
-              <div
-                key={project.title}
-                className={cardClasses}
-                style={animateItems ? { animationDelay: `${index * 120}ms` } : undefined}
-              >
-                {projectContent}
-              </div>
-            );
-          })}
-        </div>
-      )}
+            )}
+          </div>
+        )}
+
+        {displayed.length === 0 ? (
+          <div className="text-center py-8 font-mono text-xs text-muted-foreground">
+            NO PROJECTS RECORDED.
+          </div>
+        ) : (
+          <div className={`grid grid-cols-1 ${compact ? "" : "md:grid-cols-2"} gap-4`}>
+            {displayed.map((project) => {
+              const Icon = project.icon;
+              const isCopied = copiedUrl === project.url;
+              const hasHeroImage = project.details?.heroImage;
+
+              const cardContent = (
+                <div className="flex flex-col h-full justify-between p-4 bg-card border border-border hover:border-foreground transition-colors group">
+                  <div>
+                    {hasHeroImage ? (
+                      <div className="w-full h-36 overflow-hidden border border-border mb-3 bg-background relative">
+                        <img
+                          src={project.details!.heroImage}
+                          alt={project.title}
+                          className="w-full h-full object-cover newspaper-photo"
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-8 h-8 border border-border flex items-center justify-center bg-background mb-3">
+                        <Icon className="size-4 text-foreground" />
+                      </div>
+                    )}
+
+                    <div className="flex items-center justify-between mb-1">
+                      <h4 className="font-serif font-bold text-lg text-foreground group-hover:underline underline-offset-2">
+                        {project.title}
+                      </h4>
+                      <ArrowUpRight className="size-4 text-muted-foreground group-hover:text-foreground transition-colors shrink-0 ml-2" />
+                    </div>
+
+                    <p className="text-xs text-muted-foreground font-sans line-clamp-2 mb-3 leading-relaxed">
+                      {project.description}
+                    </p>
+                  </div>
+
+                  <div className="pt-2 border-t border-border flex items-center justify-between gap-2 mt-2">
+                    <code className="text-[11px] font-mono text-muted-foreground truncate flex-1">
+                      {project.url}
+                    </code>
+                    <button
+                      onClick={(e) => copyToClipboard(project.url, e)}
+                      className="p-1 border border-border hover:border-foreground transition-colors shrink-0"
+                      aria-label="Copy URL"
+                      title={isCopied ? "Copied!" : "Copy URL"}
+                    >
+                      {isCopied ? (
+                        <Check className="size-3 text-foreground" />
+                      ) : (
+                        <Copy className="size-3 text-muted-foreground" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+              );
+
+              return project.slug && project.details ? (
+                <Link key={project.title} to={`/projects/${project.slug}`}>
+                  {cardContent}
+                </Link>
+              ) : (
+                <div key={project.title}>{cardContent}</div>
+              );
+            })}
+          </div>
+        )}
+      </div>
     </section>
   );
 }

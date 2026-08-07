@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
 const sections = [
-  { id: "home", label: "Home" },
-  { id: "about", label: "About" },
-  { id: "experience", label: "Experience" },
-  { id: "projects", label: "Projects" },
-  { id: "recommendations", label: "Recommendations" },
-  { id: "gallery", label: "Gallery" },
+  { id: "home", label: "00. TOP" },
+  { id: "about", label: "01. ABOUT" },
+  { id: "experience", label: "02. EXP" },
+  { id: "techstack", label: "03. STACK" },
+  { id: "projects", label: "04. WORK" },
+  { id: "certifications", label: "05. CERTS" },
+  { id: "gallery", label: "06. PHOTOS" },
 ];
 
 export default function SectionNav() {
@@ -44,7 +45,7 @@ export default function SectionNav() {
   return (
     <nav
       aria-label="Section navigation"
-      className="fixed left-5 top-1/2 -translate-y-1/2 z-40 hidden xl:flex flex-col items-start gap-1"
+      className="fixed left-4 top-1/2 -translate-y-1/2 z-40 hidden 2xl:flex flex-col items-start gap-1 font-mono text-[10px]"
     >
       {sections.map(({ id, label }) => (
         <button
@@ -53,18 +54,18 @@ export default function SectionNav() {
           onClick={() => scrollTo(id)}
           aria-current={active === id ? "true" : undefined}
           className={cn(
-            "group flex items-center gap-2.5 px-2 py-1.5 text-xs font-medium uppercase tracking-wider rounded-md transition-colors duration-300",
+            "group flex items-center gap-2 px-2 py-1 tracking-wider uppercase transition-colors duration-200",
             active === id
-              ? "text-text-light dark:text-white"
-              : "text-text-muted-light dark:text-text-muted-dark hover:text-text-light dark:hover:text-white"
+              ? "text-foreground font-bold"
+              : "text-muted-foreground hover:text-foreground"
           )}
         >
           <span
             className={cn(
-              "h-px bg-border-light dark:bg-border-dark transition-all duration-300",
+              "h-px bg-border transition-all duration-200",
               active === id
-                ? "w-6 bg-text-light dark:bg-white"
-                : "w-3 group-hover:w-6 group-hover:bg-text-light dark:group-hover:bg-white"
+                ? "w-5 bg-foreground"
+                : "w-2 group-hover:w-5 group-hover:bg-foreground"
             )}
           />
           {label}
