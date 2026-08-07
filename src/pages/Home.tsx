@@ -6,7 +6,7 @@ import Experience from "@/components/Experience";
 import Projects from "@/components/Projects";
 import Certifications from "@/components/Certifications";
 import GitHubContributions from "@/components/GitHubContributions";
-import Recommendations from "@/components/Recommendations";
+// import Recommendations from "@/components/Recommendations";
 // import Gallery from "@/components/Gallery";
 import Footer from "@/components/Footer";
 // import SectionNav from "@/components/SectionNav";
@@ -18,7 +18,7 @@ import {
   experiences,
   projects,
   certifications,
-  recommendations,
+  //recommendations,
   // galleryImages,
   socialLinks,
   memberships,
@@ -158,10 +158,12 @@ export default function Home() {
           <GitHubContributions />
         </section>
 
-        {/* Recommendations */}
+        {/* Recommendations (Hidden for now) */}
+        {/*
         <section id="recommendations" className="scroll-mt-28 animate-fade-in-up">
           <Recommendations recommendations={recommendations} />
         </section>
+        */}
 
         {/* Gallery (Hidden for now) */}
         {/*
