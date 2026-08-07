@@ -32,7 +32,7 @@ export default function Certifications({
                 className="font-mono text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center uppercase tracking-wider"
                 to="/certifications"
               >
-                VIEW ALL
+                ALL CERTIFICATIONS
                 <ChevronRight className="size-3.5 ml-0.5" />
               </Link>
             )}

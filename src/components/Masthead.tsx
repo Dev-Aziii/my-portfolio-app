@@ -16,23 +16,7 @@ export default function Masthead({ onNavigateSection }: MastheadProps) {
   const lockTimerRef = useRef<ReturnType<typeof setTimeout>>();
 
   useEffect(() => {
-    /*
-     * Disable scroll anchoring on the document element.
-     *
-     * Root cause of the oscillation bug:
-     *   1. User scrolls past 150 px → header collapses (isScrolled = true)
-     *   2. Sticky header height shrinks ~150-180 px → content shifts up in
-     *      the document flow
-     *   3. Browser scroll anchoring adjusts scrollY downward to compensate
-     *      → scrollY drops below the 50 px return-threshold
-     *   4. Header re-expands → scroll anchoring adjusts scrollY back up
-     *      → crosses the 150 px threshold again → infinite loop
-     *
-     * Setting overflow-anchor: none prevents the browser from adjusting
-     * scrollY when the header height changes. scrollY stays constant
-     * during the collapse/expand transition, so the hysteresis thresholds
-     * work deterministically.
-     */
+    /* Disable scroll anchoring on the document element. */
     const htmlEl = document.documentElement;
     const prevOverflowAnchor = htmlEl.style.overflowAnchor;
     htmlEl.style.overflowAnchor = "none";
@@ -40,9 +24,6 @@ export default function Masthead({ onNavigateSection }: MastheadProps) {
     /* Detect reduced-motion preference (read live via closure) */
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-    /* CSS transition is 300 ms; lock for 350 ms (+ 50 ms safety buffer).
-     * When prefers-reduced-motion is active the CSS duration is 0 ms
-     * (via motion-reduce:transition-none), so a minimal lock suffices. */
     const getLockMs = () => (motionQuery.matches ? 20 : 350);
 
     /**
@@ -77,8 +58,6 @@ export default function Masthead({ onNavigateSection }: MastheadProps) {
       });
     };
 
-    /* Set the initial state synchronously (no lock needed because
-       there is no CSS transition on the very first render). */
     if (window.scrollY > 150) {
       committedRef.current = true;
       setIsScrolled(true);
@@ -119,10 +98,11 @@ export default function Masthead({ onNavigateSection }: MastheadProps) {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-background/95 backdrop-blur-md border-b border-border mb-8 transition-colors duration-300">
+    <header id="masthead" className="sticky top-0 z-40 w-full bg-background/95 backdrop-blur-md border-b border-border mb-8 transition-colors duration-300">
       <div className="max-w-5xl mx-auto py-2 px-1 sm:px-2">
         {/* Top Issue Bar (Smoothly collapses when scrolled) */}
         <div
+          id="masthead-top"
           className={`transition-all duration-300 ease-in-out motion-reduce:transition-none flex flex-wrap items-center justify-between text-xs font-mono tracking-widest text-muted-foreground gap-2 overflow-hidden ${
             isScrolled
               ? "max-h-0 opacity-0 pb-0 border-none pointer-events-none"
@@ -139,6 +119,7 @@ export default function Masthead({ onNavigateSection }: MastheadProps) {
 
         {/* Main Title Banner (Smoothly collapses when scrolled) */}
         <div
+          id="masthead-banner"
           className={`transition-all duration-300 ease-in-out motion-reduce:transition-none text-center rule-double overflow-hidden ${
             isScrolled
               ? "max-h-0 opacity-0 my-0 py-0 pointer-events-none"
