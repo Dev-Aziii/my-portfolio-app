@@ -25,7 +25,7 @@ import {
 } from "@/data";
 
 export default function Home() {
-  usePageTitle("Adzyl Jipos — Editorial Portfolio & Gazette");
+  usePageTitle("Adzyl Jipos — Editorial Portfolio");
 
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
