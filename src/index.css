@@ -30,6 +30,7 @@
   --radius: 0px;
 
   --animate-fade-in-up: fade-in-up 0.5s ease-out both;
+  --animate-theme-pulse: theme-pulse 2.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 
   @keyframes fade-in-up {
     from {
@@ -39,6 +40,18 @@
     to {
       opacity: 1;
       transform: translateY(0);
+    }
+  }
+
+  @keyframes theme-pulse {
+    0% {
+      transform: scale(1);
+      opacity: 0.6;
+    }
+    70%,
+    100% {
+      transform: scale(1.45);
+      opacity: 0;
     }
   }
 }
@@ -103,7 +116,21 @@
     min-height: 100vh;
     position: relative;
     -webkit-font-smoothing: antialiased;
-    transition: background-color 300ms ease, color 300ms ease;
+  }
+
+  /* View Transitions API overrides for smooth hardware-accelerated theme circular ripple */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  ::view-transition-old(root) {
+    z-index: 1;
+  }
+
+  ::view-transition-new(root) {
+    z-index: 9999;
   }
 
   /* Subtle Paper Grain Texture Overlay */
