@@ -23,10 +23,21 @@ export interface TechCategory {
   items: TechItem[];
 }
 
-export interface ExperienceEntry {
+export interface PositionEntry {
   title: string;
-  year: string;
+  timeSpan: string;
+  description?: string | string[];
+  skills?: string[];
+}
+
+export interface ExperienceEntry {
+  title?: string;
   company: string;
+  year: string;
+  logoInitials?: string;
+  schedule?: string;
+  location?: string;
+  positions?: PositionEntry[];
   emoji?: string;
   isCurrent?: boolean;
 }

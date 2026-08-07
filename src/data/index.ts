@@ -2,6 +2,7 @@ export type {
   HeroData,
   TechCategory,
   ExperienceEntry,
+  PositionEntry,
   Project,
   Certification,
   Recommendation,

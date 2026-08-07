@@ -3,6 +3,7 @@ import Home from "@/pages/Home";
 import TechStackPage from "@/pages/TechStackPage";
 import ProjectsPage from "@/pages/ProjectsPage";
 import ProjectDetailPage from "@/pages/ProjectDetailPage";
+import ExperiencePage from "@/pages/ExperiencePage";
 import CertificationsPage from "@/pages/CertificationsPage";
 import NotFound from "@/pages/NotFound";
 import ScrollToTop from "./components/ScrollToTop";
@@ -15,6 +16,7 @@ function App() {
         <ScrollToTop />
         <Routes>
           <Route index element={<Home />} />
+          <Route path="/experience" element={<ExperiencePage />} />
           <Route path="/tech-stack" element={<TechStackPage />} />
           <Route path="/projects" element={<ProjectsPage />} />
           <Route path="/projects/:slug" element={<ProjectDetailPage />} />
