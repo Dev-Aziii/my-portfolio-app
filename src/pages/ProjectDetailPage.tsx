@@ -42,7 +42,7 @@ export default function ProjectDetailPage() {
   return (
     <PageLayout title={project.title} backTo="/projects" backLabel="Back to Projects">
       {/* Hero Image */}
-      <div className="animate-fade-in-up style={{ animationDelay: '480ms' }} rounded-xl overflow-hidden mb-4 shadow-sm border border-border-light dark:border-border-dark">
+      <div className="animate-fade-in-up rounded-xl overflow-hidden mb-4 shadow-sm border border-border-light dark:border-border-dark" style={{ animationDelay: '480ms' }}>
         <img
           src={details.heroImage}
           alt={project.title}
@@ -51,12 +51,12 @@ export default function ProjectDetailPage() {
       </div>
 
       {/* Project Description under Hero */}
-      <p className="animate-fade-in-up style={{ animationDelay: '600ms' }}text-text-muted-light dark:text-text-muted-dark leading-relaxed text-sm mb-8">
-    {project.description}
+      <p className="animate-fade-in-up text-text-muted-light dark:text-text-muted-dark leading-relaxed text-sm mb-8" style={{ animationDelay: '600ms' }}>
+        {project.description}
       </p>
 
       {/* Tech Stack & Link */}
-      <div className="mb-8 animate-fade-in-up style={{ animationDelay: '720ms' }}">
+      <div className="mb-8 animate-fade-in-up" style={{ animationDelay: '720ms' }}>
         {project.url !== "#" && (
           <a
             href={project.url}
@@ -81,7 +81,7 @@ export default function ProjectDetailPage() {
       </div>
 
       {/* The Gist */}
-      <section className="mb-10 animate-fade-in-up style={{ animationDelay: '840ms' }}">
+      <section className="mb-10 animate-fade-in-up" style={{ animationDelay: '840ms' }}>
         <h2 className="text-xl font-bold text-text-light dark:text-white mb-3">
           {details.gist.title}
         </h2>
@@ -91,7 +91,7 @@ export default function ProjectDetailPage() {
       </section>
 
       {/* The Problem */}
-      <section className="mb-10 animate-fade-in-up style={{ animationDelay: '960ms' }}">
+      <section className="mb-10 animate-fade-in-up" style={{ animationDelay: '960ms' }}>
         <h2 className="text-xl font-bold text-text-light dark:text-white mb-3">
           {details.problem.title}
         </h2>
@@ -101,7 +101,7 @@ export default function ProjectDetailPage() {
       </section>
 
       {/* The Solution */}
-      <section className="mb-10 animate-fade-in-up style={{ animationDelay: '1080ms' }}">
+      <section className="mb-10 animate-fade-in-up" style={{ animationDelay: '1080ms' }}>
         <h2 className="text-xl font-bold text-text-light dark:text-white mb-3">
           {details.solution.title}
         </h2>
@@ -112,7 +112,7 @@ export default function ProjectDetailPage() {
 
       {/* Additional Images Carousel */}
       {details.additionalImages && details.additionalImages.length > 0 && (
-        <section className="mb-10 animate-fade-in-up style={{ animationDelay: '1200ms' }}">
+        <section className="mb-10 animate-fade-in-up" style={{ animationDelay: '1200ms' }}>
           <h2 className="text-xl font-bold text-text-light dark:text-white mb-4">
             Project Gallery
           </h2>
