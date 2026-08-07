@@ -43,15 +43,15 @@ export interface Project {
 export interface ProjectDetails {
   heroImage: string;
   techs: string[];
-  gist: {
-    title: string;
-    description: string;
-  };
   problem: {
     title: string;
     description: string;
   };
   solution: {
+    title: string;
+    description: string;
+  };
+  impact: {
     title: string;
     description: string;
   };

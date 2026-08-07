@@ -57,9 +57,6 @@ export default function ProjectDetailPage() {
 
       {/* Project Description under Hero */}
       <p className="text-base text-foreground leading-relaxed font-sans mb-8">
-        <span className="font-serif text-2xl font-bold float-left mr-2 leading-none text-foreground">
-          T
-        </span>
         {project.description}
       </p>
 
@@ -88,23 +85,10 @@ export default function ProjectDetailPage() {
         </div>
       </div>
 
-      {/* The Gist */}
-      <section className="mb-8 border-b border-border pb-6">
-        <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground font-bold mb-2">
-          [ I. EXECUTIVE OVERVIEW &amp; GIST ]
-        </h3>
-        <h2 className="text-xl font-serif font-bold text-foreground mb-2">
-          {details.gist.title}
-        </h2>
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          {details.gist.description}
-        </p>
-      </section>
-
       {/* The Problem */}
       <section className="mb-8 border-b border-border pb-6">
         <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground font-bold mb-2">
-          [ II. PROBLEM STATEMENT ]
+          [ 01 — PROBLEM ]
         </h3>
         <h2 className="text-xl font-serif font-bold text-foreground mb-2">
           {details.problem.title}
@@ -117,7 +101,7 @@ export default function ProjectDetailPage() {
       {/* The Solution */}
       <section className="mb-8 border-b border-border pb-6">
         <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground font-bold mb-2">
-          [ III. IMPLEMENTED ARCHITECTURAL SOLUTION ]
+          [ 02 — SOLUTION ]
         </h3>
         <h2 className="text-xl font-serif font-bold text-foreground mb-2">
           {details.solution.title}
@@ -127,11 +111,24 @@ export default function ProjectDetailPage() {
         </p>
       </section>
 
+      {/* The Impact */}
+      <section className="mb-8 border-b border-border pb-6">
+        <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground font-bold mb-2">
+          [ 03 — IMPACT ]
+        </h3>
+        <h2 className="text-xl font-serif font-bold text-foreground mb-2">
+          {details.impact.title}
+        </h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          {details.impact.description}
+        </p>
+      </section>
+
       {/* Additional Images Carousel */}
       {details.additionalImages && details.additionalImages.length > 0 && (
         <section className="mb-8">
           <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground font-bold mb-4">
-            [ IV. ADDITIONAL EXHIBITS &amp; GALLERY ]
+            [ 04 — GALLERY ]
           </h3>
           <div className="relative">
             {/* Main Image Container */}

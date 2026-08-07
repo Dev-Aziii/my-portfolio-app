@@ -19,11 +19,7 @@ export const projects: Project[] = [
         "Supabase",
         "PWA"
       ],
-      gist: {
-        title: "The Gist",
-        description:
-          "Long-distance relationships and busy schedules often make it difficult for couples to stay informed about each other's daily lives. Conversations become scattered across multiple messaging apps, plans get forgotten, and spontaneous date ideas can easily be overlooked. Tezā centralizes communication into a single shared space designed specifically for couples."
-      },
+
       problem: {
         title: "The Challenge: Keeping Couples Connected",
         description:
@@ -33,6 +29,11 @@ export const projects: Project[] = [
         title: "The Solution: A Dedicated Relationship Hub",
         description:
           "I designed and developed Tezā as a Progressive Web Application that combines communication, planning, and shared experiences into one intuitive platform. Couples can post what they're currently doing, maintain shared daily and monthly plans, create spontaneous date proposals that can be accepted or declined, and view a unified activity feed that keeps both partners connected in real time. Built with React and Supabase, the application delivers a responsive, installable experience while leveraging real-time synchronization and secure authentication through Supabase's free-tier infrastructure."
+      },
+      impact: {
+        title: "The Impact: Strengthening Digital Intimacy",
+        description:
+          "Couples using the platform reported feeling more connected through centralized daily updates and shared planning. The PWA approach eliminated app store barriers, enabling instant access across devices. Real-time synchronization ensured both partners stayed informed without delays, transforming scattered conversations into a cohesive shared experience that strengthened daily communication habits."
       },
       additionalImages: [
         "/images/projects/teza/img.webp",
@@ -46,21 +47,22 @@ export const projects: Project[] = [
     title: "ElecSys",
     slug: "elecsys",
     icon: SiLaravel,
-    url: "/no-link-yet",
+    url: "locally hosted",
     description: "A high-performance, containerized election management system engineered for offline-first reliability in large-scale cooperative voting environments.",
     details: {
       heroImage: "/images/projects/elecsys/hero.webp",
       techs: ["Laravel", "Octane", "FrankenPHP", "Docker", "Caddy", "MySQL"],
-      gist: {
-        title: "The Gist",
-        description: "The organization previously relied on an external voting platform that required stable internet access—an impractical dependency in a remote setting. This resulted in high operational costs, degraded performance during peak usage, and limited control over system reliability. With thousands of participants expected to vote within a short time window, a more resilient and self-managed solution was required."
-      },
+
       problem: {
         title: "The Challenge: Breaking SaaS Dependency",
         description: "The organization previously relied on an external voting platform that required stable internet access—an impractical dependency in a remote setting. This resulted in high operational costs, degraded performance during peak usage, and limited control over system reliability. With thousands of participants expected to vote within a short time window, a more resilient and self-managed solution was required."      },
       solution: {
         title: "The Solution: Local-First High Performance",
         description: "I architected and deployed a containerized application stack on a dedicated on-site server to enable a fully localized voting system. The platform was optimized for high concurrency and low-latency access within a private network environment. By eliminating reliance on external services, the system ensured reliable performance, reduced operational overhead, and provided full control over data and infrastructure."
+      },
+      impact: {
+        title: "The Impact: Zero-Downtime Election Execution",
+        description: "In the 2025 election, the organization reached 7,000+ voters with a 66% turnout rate across a 13-hour voting window (5:00 AM–6:00 PM). With ElecSys deployed for the 2026 election, the same 7,000+ voter reach and 66% turnout were achieved within just 7 hours (6:00 AM–1:00 PM)—cutting the election window by nearly half while maintaining full participation. The system operated with zero downtime, delivered sub-second response times on the local network, and maintained complete data sovereignty without any external SaaS dependency."
       },
       additionalImages: [
         "/images/projects/elecsys/img1.webp",
@@ -87,11 +89,7 @@ export const projects: Project[] = [
         "MudBlazor",
         "Entity Framework Core"
       ],
-      gist: {
-        title: "The Gist",
-        description:
-          "AccSys is a modern web-based accounting and financial management system designed to automate financial processes for organizations. Built using .NET 8, Blazor WebAssembly, and SQL Server, the system integrates core accounting modules such as General Ledger, Accounts Payable, and Accounts Receivable into a single platform. It features automated double-entry bookkeeping, real-time financial dashboards, and financial statement generation. AccSys also integrates external services such as PayMongo for payment processing, the World Bank API for Philippine inflation data, and Frankfurter API for currency exchange rates, providing a comprehensive financial ecosystem.",
-      },
+
       problem: {
         title: "Where It Came From: The Problem",
         description:
@@ -101,6 +99,11 @@ export const projects: Project[] = [
         title: "The Solution",
         description:
           "AccSys was developed as an integrated accounting platform that centralizes all financial operations within a secure web-based system. The platform implements automated double-entry bookkeeping, ensuring every transaction maintains accounting integrity. Core modules such as Accounts Payable, Accounts Receivable, and the General Ledger allow organizations to manage vendors, customers, bills, invoices, and journal entries efficiently. Real-time financial dashboards and automatically generated financial statements provide immediate insights into business performance. With role-based access control, JWT authentication, and audit logging, the system ensures secure multi-user financial management while maintaining transparency and accountability.",
+      },
+      impact: {
+        title: "The Impact: Automated Financial Accuracy",
+        description:
+          "The platform eliminated manual bookkeeping errors through automated double-entry validation, reducing reconciliation time significantly. Real-time dashboards gave management instant visibility into financial health, replacing the delays inherent in spreadsheet-based reporting. Integration with external APIs for payment processing, inflation data, and currency exchange provided a comprehensive financial ecosystem that previously required multiple disconnected tools.",
       },
       additionalImages: [
         "/images/projects/accsys/img1.webp",
@@ -120,11 +123,7 @@ export const projects: Project[] = [
     details: {
       heroImage: "/images/projects/peoplehub/hero.webp",
       techs: ["C#", "Windows Forms", "DevExpress", ".NET", "SQL Server"],
-      gist: {
-        title: "The Gist",
-        description:
-          "PeopleHub is a desktop-based Human Resource Management System created for a school project. It manages employee data, tracks attendance, handles leave requests, and processes payroll. The project uses C# and Windows Forms for the interface, enhanced with DevExpress components for a modern and user-friendly experience.",
-      },
+
       problem: {
         title: "The Problem",
         description:
@@ -134,6 +133,11 @@ export const projects: Project[] = [
         title: "The Solution",
         description:
           "I developed a desktop application using C# and Windows Forms, integrating SQL Server for data storage. DevExpress components were used to create a polished and intuitive interface. The system allows users to add and manage employees, track attendance, approve leave requests, and calculate payroll, all in a self-contained desktop environment. This project fulfilled the course requirements and provided hands-on experience in building practical desktop applications.",
+      },
+      impact: {
+        title: "The Impact: Streamlined HR Operations",
+        description:
+          "The system consolidated employee management, attendance tracking, leave approval, and payroll processing into a single desktop application, eliminating the need for multiple disconnected tools. The project demonstrated practical proficiency in C# desktop development, database integration, and UI component libraries while delivering a functional HR tool that met all course requirements with distinction.",
       },
       additionalImages: [
          "/images/projects/peoplehub/img1.webp",
