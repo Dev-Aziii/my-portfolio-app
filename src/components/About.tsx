@@ -15,11 +15,6 @@ export default function About({ paragraphs }: AboutProps) {
         {paragraphs.map((text, i) => (
           <div key={i} className="space-y-2">
             <p className="text-sm leading-relaxed text-muted-foreground font-sans">
-              {i === 0 && (
-                <span className="font-serif text-2xl font-bold float-left mr-2 leading-none text-foreground">
-                  I
-                </span>
-              )}
               {text}
             </p>
           </div>

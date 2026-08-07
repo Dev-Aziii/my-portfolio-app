@@ -70,7 +70,7 @@ export default function Home() {
         <section id="projects" className="scroll-mt-28 animate-fade-in-up">
           <Projects
             projects={projects}
-            limit={4}
+            limit={3}
             showViewAll
           />
         </section>
