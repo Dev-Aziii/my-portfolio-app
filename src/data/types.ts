@@ -51,9 +51,21 @@ export interface Project {
   details?: ProjectDetails;
 }
 
+export interface ProjectHighlight {
+  label: string;
+  icon?: LucideIcon | IconType | FunctionComponent<SVGProps<SVGSVGElement>>;
+}
+
+export interface ProjectMetric {
+  value: string;
+  label: string;
+}
+
 export interface ProjectDetails {
   heroImage: string;
   techs: string[];
+  version?: string;
+  year?: string;
   problem: {
     title: string;
     description: string;
@@ -66,6 +78,8 @@ export interface ProjectDetails {
     title: string;
     description: string;
   };
+  highlights?: ProjectHighlight[];
+  metrics?: ProjectMetric[];
   additionalImages?: string[];
 }
 

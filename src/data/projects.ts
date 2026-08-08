@@ -10,6 +10,8 @@ export const projects: Project[] = [
     description: "A modern progressive web application that helps couples stay connected through shared updates, plans, spontaneous proposals, and meaningful daily interactions.",
     details: {
       heroImage: "/images/projects/teza/hero.webp",
+      version: "v1.0",
+      year: "2026",
       techs: [
         "React",
         "TypeScript",
@@ -17,9 +19,14 @@ export const projects: Project[] = [
         "Tailwind CSS",
         "Vercel",
         "Supabase",
-        "PWA"
+        "PostgreSQL",
       ],
-
+      highlights: [
+        { label: "Real-time couple activity feed" },
+        { label: "Spontaneous date proposals & response tracking" },
+        { label: "Shared daily and monthly schedule planning" },
+        { label: "Cross-platform installable PWA experience" }
+      ],
       problem: {
         title: "The Challenge: Keeping Couples Connected",
         description:
@@ -51,8 +58,21 @@ export const projects: Project[] = [
     description: "A high-performance, containerized election management system engineered for offline-first reliability in large-scale cooperative voting environments.",
     details: {
       heroImage: "/images/projects/elecsys/hero.webp",
-      techs: ["Laravel", "Octane", "FrankenPHP", "Docker", "Caddy", "MySQL"],
-
+      version: "v1.0",
+      year: "2026",
+      techs: ["Laravel", "PHP", "JavaScript", "Octane", "FrankenPHP", "Docker", "Caddy", "MySQL"],
+      highlights: [
+        { label: "Offline-first voting with data sync" },
+        { label: "Role-based access control" },
+        { label: "Audit logs and transparency" },
+        { label: "Real-time results and analytics" }
+      ],
+      metrics: [
+        { value: "7,000+", label: "Voters Supported" },
+        { value: "66%", label: "Turnout Rate" },
+        { value: "7 Hours", label: "Execution Window" },
+        { value: "100%", label: "Data Sovereignty" }
+      ],
       problem: {
         title: "The Challenge: Breaking SaaS Dependency",
         description: "The organization previously relied on an external voting platform that required stable internet access—an impractical dependency in a remote setting. This resulted in high operational costs, degraded performance during peak usage, and limited control over system reliability. With thousands of participants expected to vote within a short time window, a more resilient and self-managed solution was required."      },
@@ -81,15 +101,23 @@ export const projects: Project[] = [
     slug: "accsys",
     details: {
       heroImage: "/images/projects/accsys/hero.webp",
+      version: "v1.0",
+      year: "2025",
       techs: [
         ".NET 8",
         "Blazor WebAssembly",
         "ASP.NET Core Web API",
         "SQL Server 2022",
-        "MudBlazor",
-        "Entity Framework Core"
+        "EF Core", "Swagger"
       ],
-
+      highlights: [
+        { label: "Automated double-entry bookkeeping validation" },
+        { label: "Accounts Payable, Receivable & General Ledger" },
+        { label: "Real-time automated financial statements" },
+        { label: "JWT Auth with detailed audit logging" }
+      ],
+      metrics: [
+      ],
       problem: {
         title: "Where It Came From: The Problem",
         description:
@@ -122,8 +150,17 @@ export const projects: Project[] = [
     slug: "peoplehub-hrms",
     details: {
       heroImage: "/images/projects/peoplehub/hero.webp",
+      version: "v1.0",
+      year: "2024",
       techs: ["C#", "Windows Forms", "DevExpress", ".NET", "SQL Server"],
-
+      highlights: [
+        { label: "Centralized employee record management" },
+        { label: "Attendance tracking & leave approval flow" },
+        { label: "Automated payroll calculation engine" },
+        { label: "DevExpress UI dashboard controls" }
+      ],
+      metrics: [
+      ],
       problem: {
         title: "The Problem",
         description:

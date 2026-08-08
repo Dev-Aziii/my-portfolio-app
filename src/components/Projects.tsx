@@ -1,4 +1,4 @@
-import { ArrowUpRight, ChevronRight, Copy, Check, ExternalLink } from "lucide-react";
+import { ArrowUpRight, Copy, Check, ExternalLink, ChevronUp, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import type { Project } from "@/data/types";
@@ -25,14 +25,21 @@ export default function Projects({
   const displayed = effectiveLimit ? projects.slice(0, effectiveLimit) : projects;
   const [activeIndex, setActiveIndex] = useState(0);
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
 
+  // Keep active index safely within bounds if projects change
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 640);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+    if (activeIndex >= displayed.length && displayed.length > 0) {
+      setActiveIndex(0);
+    }
+  }, [displayed.length, activeIndex]);
+
+  const handlePrev = () => {
+    setActiveIndex((prev) => (prev === 0 ? displayed.length - 1 : prev - 1));
+  };
+
+  const handleNext = () => {
+    setActiveIndex((prev) => (prev === displayed.length - 1 ? 0 : prev + 1));
+  };
 
   const copyToClipboard = async (url: string, e: React.MouseEvent) => {
     e.preventDefault();
@@ -46,12 +53,16 @@ export default function Projects({
     }
   };
 
+  const activeProject = displayed[activeIndex] || displayed[0];
+
   return (
     <section className="h-full flex flex-col justify-between">
       <div>
+        {/* Header Section with Double Rule border */}
         {!hideTitle && (
-          <div className="flex justify-between items-center border-b border-border pb-2 mb-6">
-            <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground font-bold">
+          <div className="flex justify-between items-center border-b border-border pb-3 mb-6">
+            <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground font-bold flex items-center gap-2">
+              <span className="w-2 h-2 bg-foreground inline-block" />
               [ SECTION 04 // PROJECTS ]
             </h3>
             {showViewAll && (
@@ -59,30 +70,30 @@ export default function Projects({
                 className="font-mono text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center uppercase tracking-wider group"
                 to="/projects"
               >
-                ALL PROJECTS
-                <ChevronRight className="size-3.5 ml-0.5 group-hover:translate-x-0.5 transition-transform" />
+                VIEW ALL PROJECTS
+                <ArrowUpRight className="size-3.5 ml-1 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </Link>
             )}
           </div>
         )}
 
         {displayed.length === 0 ? (
-          <div className="text-center py-8 font-mono text-xs text-muted-foreground">
+          <div className="text-center py-8 font-mono text-xs text-muted-foreground border border-border">
             NO PROJECTS RECORDED.
           </div>
         ) : isGridView ? (
-          /* Grid View Layout (used on /projects page or when grid variant specified) */
-          <div className={`grid grid-cols-1 ${compact ? "" : "md:grid-cols-2"} gap-4`}>
+          /* Grid View Layout (used on /projects page) */
+          <div className={`grid grid-cols-1 ${compact ? "" : "md:grid-cols-2 lg:grid-cols-3"} gap-5`}>
             {displayed.map((project) => {
               const Icon = project.icon;
               const isCopied = copiedUrl === project.url;
               const hasHeroImage = project.details?.heroImage;
 
               const cardContent = (
-                <div className="flex flex-col h-full justify-between p-4 bg-card border border-border hover:border-foreground transition-colors group">
+                <div className="flex flex-col h-full justify-between p-5 bg-card border border-border hover:border-foreground transition-colors group">
                   <div>
                     {hasHeroImage ? (
-                      <div className="w-full h-36 overflow-hidden border border-border mb-3 bg-background relative">
+                      <div className="w-full h-44 overflow-hidden border border-border mb-4 bg-background relative">
                         <img
                           src={project.details!.heroImage}
                           alt={project.title}
@@ -90,37 +101,45 @@ export default function Projects({
                         />
                       </div>
                     ) : (
-                      <div className="w-8 h-8 border border-border flex items-center justify-center bg-background mb-3">
-                        <Icon className="size-4 text-foreground" />
+                      <div className="w-10 h-10 border border-border flex items-center justify-center bg-background mb-4">
+                        <Icon className="size-5 text-foreground" />
                       </div>
                     )}
 
-                    <div className="flex items-center justify-between mb-1">
-                      <h4 className="font-serif font-bold text-lg text-foreground group-hover:underline underline-offset-2">
+                    <div className="flex items-center justify-between mb-2">
+                      <h4 className="font-serif font-bold text-xl text-foreground group-hover:underline underline-offset-4">
                         {project.title}
                       </h4>
                       <ArrowUpRight className="size-4 text-muted-foreground group-hover:text-foreground transition-colors shrink-0 ml-2" />
                     </div>
 
-                    <p className="text-xs text-muted-foreground font-sans line-clamp-2 mb-3 leading-relaxed">
+                    <p className="text-xs text-muted-foreground font-sans line-clamp-2 mb-4 leading-relaxed">
                       {project.description}
                     </p>
                   </div>
 
-                  <div className="pt-2 border-t border-border flex items-center justify-between gap-2 mt-2">
-                    <code className="text-[11px] font-mono text-muted-foreground truncate flex-1">
-                      {project.url}
-                    </code>
+                  <div className="pt-3 border-t border-border flex items-center justify-between gap-2 mt-2">
+                    <div className="flex items-center gap-1.5 overflow-hidden max-w-[70%]">
+                      {project.details?.techs?.slice(0, 2).map((tech) => (
+                        <span
+                          key={tech}
+                          className="font-mono text-[10px] uppercase font-semibold px-2 py-0.5 bg-background border border-border text-foreground shrink-0"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+
                     <button
                       onClick={(e) => copyToClipboard(project.url, e)}
-                      className="p-1 border border-border hover:border-foreground transition-colors shrink-0"
+                      className="p-1.5 border border-border hover:border-foreground transition-colors shrink-0"
                       aria-label="Copy URL"
                       title={isCopied ? "Copied!" : "Copy URL"}
                     >
                       {isCopied ? (
-                        <Check className="size-3 text-foreground" />
+                        <Check className="size-3.5 text-foreground" />
                       ) : (
-                        <Copy className="size-3 text-muted-foreground" />
+                        <Copy className="size-3.5 text-muted-foreground hover:text-foreground" />
                       )}
                     </button>
                   </div>
@@ -137,183 +156,272 @@ export default function Projects({
             })}
           </div>
         ) : (
-          /* Interactive 3D Fanned Stack Layout */
-          <div className="relative py-6 sm:py-8 md:py-12 my-2 flex flex-col items-center w-full overflow-hidden sm:overflow-visible">
-            {/* Stack Container */}
-            <div className="relative w-full max-w-xl h-[400px] sm:h-[440px] md:h-[460px] flex items-center justify-center perspective-[1000px] select-none">
-              {displayed.map((project, idx) => {
-                const total = displayed.length;
-                // Calculate position relative to active index
-                const diff = (idx - activeIndex + total) % total;
+          /* Split Featured Layout (Old Newspaper Style) */
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            {/* Left Selector List Column */}
+            <div className="lg:col-span-4 flex flex-col gap-3">
+              {/* List Cards */}
+              <div className="flex flex-col sm:flex-row lg:flex-col gap-3 overflow-x-auto lg:overflow-visible pb-2 sm:pb-0 no-scrollbar">
+                {displayed.map((project, idx) => {
+                  const isActive = idx === activeIndex;
+                  const Icon = project.icon;
+                  const primaryTech = project.details?.techs?.[0] || "Project";
+                  const numberFormatted = String(idx + 1).padStart(2, "0");
 
-                // Assign positions: 0 = center, 1 = right, total-1 = left
-                let position: "center" | "left" | "right" | "back" = "back";
-                if (diff === 0) position = "center";
-                else if (diff === 1) position = "right";
-                else if (diff === total - 1) position = "left";
+                  return (
+                    <div
+                      key={project.title}
+                      onClick={() => setActiveIndex(idx)}
+                      className={`cursor-pointer transition-all duration-200 p-4 border relative flex-1 min-w-[260px] sm:min-w-[280px] lg:min-w-0 ${
+                        isActive
+                          ? "bg-card border-2 border-foreground shadow-sm"
+                          : "bg-card/50 border border-border hover:border-foreground/60 hover:bg-card"
+                      }`}
+                    >
+                      <div className="flex items-start gap-3">
+                        {/* Number Badge & Vertical Indicator */}
+                        <div className="flex flex-col items-center shrink-0">
+                          <span
+                            className={`font-mono text-xs font-bold ${
+                              isActive ? "text-foreground" : "text-muted-foreground"
+                            }`}
+                          >
+                            {numberFormatted}
+                          </span>
+                          <div
+                            className={`w-1 h-8 mt-1.5 transition-colors ${
+                              isActive ? "bg-foreground" : "bg-border"
+                            }`}
+                          />
+                        </div>
 
-                const Icon = project.icon;
-                const isCopied = copiedUrl === project.url;
-                const hasHeroImage = project.details?.heroImage;
-                const techs = project.details?.techs || [];
+                        {/* Content */}
+                        <div className="flex-1 min-w-0">
+                          {isActive && project.details?.heroImage && (
+                            <div className="w-full h-24 overflow-hidden border border-border mb-2.5 bg-background relative">
+                              <img
+                                src={project.details.heroImage}
+                                alt={project.title}
+                                className="w-full h-full object-cover newspaper-photo"
+                              />
+                            </div>
+                          )}
 
-                // Styling variations per position (responsive transform translation)
-                let transformStyle = "";
-                let zIndex = 0;
-                let opacity = "opacity-0 pointer-events-none";
-                let cursor = "";
+                          <div className="flex items-center justify-between gap-1">
+                            <h4
+                              className={`font-serif font-bold text-base truncate ${
+                                isActive ? "text-foreground underline underline-offset-2" : "text-muted-foreground"
+                              }`}
+                            >
+                              {project.title}
+                            </h4>
+                            <ArrowUpRight
+                              className={`size-4 shrink-0 transition-colors ${
+                                isActive ? "text-foreground" : "text-muted-foreground/60"
+                              }`}
+                            />
+                          </div>
 
-                if (position === "center") {
-                  transformStyle = "translate3d(0, 0, 0) rotate(0deg) scale(1)";
-                  zIndex = 30;
-                  opacity = "opacity-100 shadow-2xl shadow-black/20 dark:shadow-black/70 border-foreground/40";
-                  cursor = "cursor-default";
-                } else if (position === "left") {
-                  transformStyle = isMobile
-                    ? "translate3d(-18%, 6px, -20px) rotate(-6deg) scale(0.92)"
-                    : "translate3d(-34%, 10px, -30px) rotate(-8deg) scale(0.9)";
-                  zIndex = 10;
-                  opacity = "opacity-85 hover:opacity-100 hover:scale-[0.92] border-border hover:border-foreground/50 transition-all duration-300";
-                  cursor = "cursor-pointer";
-                } else if (position === "right") {
-                  transformStyle = isMobile
-                    ? "translate3d(18%, 6px, -20px) rotate(6deg) scale(0.92)"
-                    : "translate3d(34%, 10px, -30px) rotate(8deg) scale(0.9)";
-                  zIndex = 10;
-                  opacity = "opacity-85 hover:opacity-100 hover:scale-[0.92] border-border hover:border-foreground/50 transition-all duration-300";
-                  cursor = "cursor-pointer";
-                } else {
-                  transformStyle = "translate3d(0, 24px, -80px) rotate(0deg) scale(0.8)";
-                  zIndex = 0;
-                  opacity = "opacity-0 pointer-events-none";
-                }
+                          <p className="text-xs text-muted-foreground font-sans line-clamp-2 mt-1 leading-relaxed">
+                            {project.description}
+                          </p>
 
-                return (
-                  <div
-                    key={project.title}
-                    onClick={() => {
-                      if (position !== "center") {
-                        setActiveIndex(idx);
-                      }
-                    }}
-                    style={{
-                      transform: transformStyle,
-                      zIndex: zIndex,
-                    }}
-                    className={`absolute inset-x-0 mx-auto w-full max-w-[285px] xs:max-w-[320px] sm:max-w-[400px] md:max-w-[440px] bg-card border transition-all duration-500 ease-out p-3.5 sm:p-5 flex flex-col justify-between h-[395px] xs:h-[415px] sm:h-[430px] md:h-[440px] overflow-hidden ${opacity} ${cursor}`}
+                          <div className="mt-2.5 flex items-center gap-2">
+                            <span className="font-mono text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 border border-border bg-background text-foreground flex items-center gap-1">
+                              <Icon className="size-3 text-foreground" />
+                              {primaryTech}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Scroll / Nav Controls (Bottom of Left Column) */}
+              <div className="hidden lg:flex items-center gap-3 pt-2 px-1">
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={handlePrev}
+                    className="p-1.5 border border-border bg-background hover:bg-foreground hover:text-background transition-colors text-foreground font-mono"
+                    aria-label="Previous project"
+                    title="Previous project"
                   >
-                    <div>
-                      {/* Top Tech Badges Bar */}
-                      <div className="flex items-center justify-between gap-1.5 mb-2 overflow-hidden">
-                        <div className="flex items-center gap-1 overflow-x-auto no-scrollbar max-w-[78%] whitespace-nowrap">
-                          {(isMobile ? techs.slice(0, 2) : techs.slice(0, 3)).map((tech) => (
+                    <ChevronUp className="size-4" />
+                  </button>
+                  <button
+                    onClick={handleNext}
+                    className="p-1.5 border border-border bg-background hover:bg-foreground hover:text-background transition-colors text-foreground font-mono"
+                    aria-label="Next project"
+                    title="Next project"
+                  >
+                    <ChevronDown className="size-4" />
+                  </button>
+                </div>
+                <span className="font-mono text-xs text-muted-foreground uppercase tracking-wider font-semibold">
+                  Scroll to explore
+                </span>
+              </div>
+            </div>
+
+            {/* Right Featured Project Panel */}
+            {activeProject && (
+              <div className="lg:col-span-8 bg-card border-2 border-border p-5 sm:p-7 flex flex-col justify-between shadow-sm">
+                <div>
+                  {/* Top Featured Tag & Meta Header */}
+                  <div className="flex items-center justify-between gap-2 mb-4 pb-3 border-b border-border">
+                    <span className="font-mono text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 border border-border bg-foreground text-background flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 bg-background" />
+                      FEATURED PROJECT
+                    </span>
+
+                    {/* Metadata (vX.X • YYYY) */}
+                    {(activeProject.details?.version || activeProject.details?.year) && (
+                      <span className="font-mono text-xs text-muted-foreground uppercase tracking-wider font-bold">
+                        {activeProject.details?.version && `• ${activeProject.details.version}`}
+                        {activeProject.details?.year && ` • ${activeProject.details.year}`}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Title & Description Grid */}
+                  <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start mb-6">
+                    <div className="xl:col-span-6 space-y-4">
+                      <div>
+                        <h3 className="font-serif font-bold text-3xl sm:text-4xl text-foreground tracking-tight">
+                          {activeProject.title}
+                        </h3>
+                        {/* Render concise description directly from projects.ts */}
+                        <p className="text-xs sm:text-sm text-muted-foreground font-sans leading-relaxed mt-3">
+                          {activeProject.description}
+                        </p>
+                      </div>
+
+                      {/* Tech Stack Pills */}
+                      <div>
+                        <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground block mb-2 font-bold">
+                          TECH STACK
+                        </span>
+                        <div className="flex flex-wrap gap-1.5">
+                          {activeProject.details?.techs?.map((tech) => (
                             <span
                               key={tech}
-                              className="font-mono text-[9px] sm:text-[10px] uppercase font-semibold tracking-wider px-1.5 py-0.5 border border-border bg-background/80 text-foreground shrink-0"
+                              className="font-mono text-xs px-2 py-0.5 border border-border bg-background text-foreground font-semibold uppercase"
                             >
                               {tech}
                             </span>
                           ))}
                         </div>
-                        <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest shrink-0 font-bold">
-                          0{idx + 1} / 0{total}
-                        </span>
                       </div>
 
-                      {/* Hero Image or Icon */}
-                      {hasHeroImage ? (
-                        <div className="w-full h-32 xs:h-36 sm:h-44 overflow-hidden border border-border mb-2.5 bg-background relative group shrink-0">
-                          <img
-                            src={project.details!.heroImage}
-                            alt={project.title}
-                            className="w-full h-full object-cover newspaper-photo"
-                          />
-                        </div>
-                      ) : (
-                        <div className="w-9 h-9 border border-border flex items-center justify-center bg-background mb-2.5 shrink-0">
-                          <Icon className="size-4 text-foreground" />
+                      {/* Feature Highlights */}
+                      {activeProject.details?.highlights && activeProject.details.highlights.length > 0 && (
+                        <div className="pt-2">
+                          <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground block mb-2 font-bold">
+                            KEY HIGHLIGHTS
+                          </span>
+                          <ul className="space-y-2">
+                            {activeProject.details.highlights.map((highlight, idx) => (
+                              <li key={idx} className="flex items-start gap-2 text-xs text-foreground font-mono">
+                                <span className="w-1.5 h-1.5 bg-foreground shrink-0 mt-1.5 inline-block" />
+                                <span>{highlight.label}</span>
+                              </li>
+                            ))}
+                          </ul>
                         </div>
                       )}
-
-                      {/* Title & Description */}
-                      <h4 className="font-serif font-bold text-lg sm:text-xl md:text-2xl text-foreground mb-1 line-clamp-1">
-                        {project.title}
-                      </h4>
-                      <p className="text-[11px] sm:text-xs text-muted-foreground font-sans line-clamp-2 leading-relaxed mb-2">
-                        {project.description}
-                      </p>
                     </div>
 
-                    {/* Bottom Action Footer */}
-                    <div className="pt-2.5 border-t border-border flex items-center justify-between gap-2 shrink-0 mt-auto">
-                      {project.slug && project.details ? (
-                        <Link
-                          to={`/projects/${project.slug}`}
-                          onClick={(e) => {
-                            // Ensure click triggers navigation if it's the center card
-                            if (position !== "center") {
-                              e.preventDefault();
-                              setActiveIndex(idx);
-                            }
-                          }}
-                          className="inline-flex items-center gap-1 px-2.5 sm:px-3 py-1.5 bg-foreground text-background font-mono text-[11px] sm:text-xs font-bold uppercase tracking-wider hover:bg-foreground/80 transition-colors shrink-0"
-                        >
-                          MORE DETAILS
-                          <ArrowUpRight className="size-3 sm:size-3.5" />
-                        </Link>
-                      ) : (
-                        <span className="font-mono text-[11px] sm:text-xs text-muted-foreground">IN DEVELOPMENT</span>
-                      )}
+                    {/* Static Newspaper Mockup Frame with Action Button */}
+                    <div className="xl:col-span-6">
+                      <div className="border border-border bg-background relative group">
+                        {/* Browser Window Header */}
+                        <div className="bg-muted border-b border-border px-3 py-1.5 flex items-center justify-between font-mono text-[10px] text-muted-foreground">
+                          <div className="flex items-center gap-1">
+                            <span className="w-2 h-2 bg-foreground/40 inline-block" />
+                            <span className="w-2 h-2 bg-foreground/40 inline-block" />
+                            <span className="w-2 h-2 bg-foreground/40 inline-block" />
+                          </div>
+                          <code className="text-[10px] font-mono text-muted-foreground truncate max-w-[180px]">
+                            {activeProject.url}
+                          </code>
+                          <div className="w-4" />
+                        </div>
 
-                      {/* Right-aligned URL / Copy controls */}
-                      <div className="flex items-center gap-1.5 shrink-0">
-                        {project.url && project.url.startsWith("http") ? (
-                          <a
-                            href={project.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                            className="p-1 sm:p-1.5 border border-border hover:border-foreground transition-colors shrink-0 text-muted-foreground hover:text-foreground"
-                            aria-label="Open project website"
-                            title="Visit Website"
-                          >
-                            <ExternalLink className="size-3 sm:size-3.5" />
-                          </a>
-                        ) : null}
-                        <button
-                          onClick={(e) => copyToClipboard(project.url, e)}
-                          className="p-1 sm:p-1.5 border border-border hover:border-foreground transition-colors shrink-0 text-muted-foreground hover:text-foreground"
-                          aria-label="Copy URL"
-                          title={isCopied ? "Copied!" : "Copy URL"}
-                        >
-                          {isCopied ? (
-                            <Check className="size-3 sm:size-3.5 text-foreground" />
+                        {/* Hero Image Container with Newspaper Photo filter */}
+                        <div className="relative aspect-[16/10] overflow-hidden bg-background">
+                          {activeProject.details?.heroImage ? (
+                            <img
+                              src={activeProject.details.heroImage}
+                              alt={activeProject.title}
+                              className="w-full h-full object-cover newspaper-photo"
+                            />
                           ) : (
-                            <Copy className="size-3 sm:size-3.5" />
+                            <div className="w-full h-full flex items-center justify-center bg-muted">
+                              <activeProject.icon className="size-12 text-muted-foreground" />
+                            </div>
                           )}
-                        </button>
+
+                          {/* Gradient Overlay for button contrast */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent opacity-85" />
+
+                          {/* Action Button inside mockup area */}
+                          <div className="absolute bottom-3 right-3 left-3 flex items-center justify-between gap-2">
+                            {activeProject.slug && activeProject.details ? (
+                              <Link
+                                to={`/projects/${activeProject.slug}`}
+                                className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-foreground text-background font-mono text-xs font-bold uppercase tracking-wider hover:bg-foreground/80 transition-colors border border-foreground"
+                              >
+                                MORE DETAILS
+                                <ArrowUpRight className="size-4" />
+                              </Link>
+                            ) : (
+                              <span className="font-mono text-xs text-muted-foreground bg-background px-3 py-1.5 border border-border">
+                                IN DEVELOPMENT
+                              </span>
+                            )}
+
+                            {activeProject.url && activeProject.url.startsWith("http") && (
+                              <a
+                                href={activeProject.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="p-2 bg-background hover:bg-foreground hover:text-background border border-border transition-colors text-foreground"
+                                title="Open Live Site"
+                              >
+                                <ExternalLink className="size-4" />
+                              </a>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                );
-              })}
-            </div>
+                </div>
 
-            {/* Pagination Stack Indicators */}
-            <div className="flex items-center gap-2 mt-4">
-              {displayed.map((_, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setActiveIndex(idx)}
-                  className={`h-1.5 transition-all duration-300 ${
-                    idx === activeIndex
-                      ? "w-8 bg-foreground"
-                      : "w-2 bg-border hover:bg-muted-foreground"
-                  }`}
-                  aria-label={`Go to project ${idx + 1}`}
-                />
-              ))}
-            </div>
+                {/* Bottom Impact / Metrics Grid */}
+                {activeProject.details?.metrics && activeProject.details.metrics.length > 0 && (
+                  <div className="pt-4 border-t-2 border-border mt-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                      {activeProject.details.metrics.map((metric, idx) => (
+                        <div
+                          key={idx}
+                          className="p-3 bg-background border border-border hover:border-foreground transition-colors"
+                        >
+                          <div className="font-mono font-bold text-xl sm:text-2xl text-foreground">
+                            {metric.value}
+                          </div>
+                          <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider mt-0.5 truncate">
+                            {metric.label}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         )}
       </div>

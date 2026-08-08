@@ -41,6 +41,28 @@ export default function GitHubContributions({
     return result;
   }, [data.days]);
 
+  const monthLabels = useMemo(() => {
+    const labels: { weekIdx: number; label: string }[] = [];
+    let previousMonth = "";
+
+    weeks.forEach((week, weekIdx) => {
+      const [year, month] = week[0].date.split("-").map(Number);
+      const monthKey = `${year}-${month}`;
+      if (monthKey !== previousMonth) {
+        previousMonth = monthKey;
+        labels.push({
+          weekIdx,
+          label: new Date(Date.UTC(year, month - 1, 1)).toLocaleDateString(
+            "en-US",
+            { month: "short", timeZone: "UTC" }
+          ),
+        });
+      }
+    });
+
+    return labels;
+  }, [weeks]);
+
   // Format date helper: "2025-08-03" -> "Aug 3, 2025"
   const formatDate = (dateStr: string) => {
     try {
@@ -56,6 +78,16 @@ export default function GitHubContributions({
       return dateStr;
     }
   };
+
+  const CELL_STYLES: Record<number, string> = {
+    0: "bg-transparent ring-1 ring-inset ring-border",
+    1: "bg-muted",
+    2: "bg-muted-foreground/55",
+    3: "bg-foreground/90",
+    4: "bg-destructive",
+  };
+
+  const cellClass = (level: number) => CELL_STYLES[level] ?? CELL_STYLES[0];
 
   // Determine tooltip transform alignment based on position to prevent edge clipping
   const getTooltipTransform = (weekIdx: number) => {
@@ -88,11 +120,37 @@ export default function GitHubContributions({
         </div>
 
         {/* Contribution Graph Container */}
-        <div className="bg-card/40 border border-border/60 rounded-lg p-4 sm:p-6">
+        <div className="bg-card/40 border border-border p-4 sm:p-6">
+          <div className="flex items-center justify-between border-b border-border pb-2 mb-4">
+            <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+              Contribution Record
+            </span>
+            <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground hidden sm:inline">
+              Last 12 Months
+            </span>
+          </div>
+
           {/* Scrollable Matrix */}
-          <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-border pb-2">
-            <div className="relative min-w-[720px] flex items-center justify-between gap-[3px] pt-9 pb-3 px-4 sm:px-6">
-              {/* Floating Dark Tooltip inside scrollable canvas container */}
+          <div className="overflow-x-auto pb-2">
+            <div className="flex gap-[3px] mb-2 px-4 sm:px-6">
+              {weeks.map((_, weekIdx) => {
+                const label = monthLabels.find(
+                  (l) => l.weekIdx === weekIdx
+                )?.label;
+                return (
+                  <div key={weekIdx} className="w-3 overflow-visible">
+                    {label && (
+                      <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground whitespace-nowrap">
+                        {label}
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="relative min-w-[720px] flex items-center justify-between gap-[3px] pt-14 pb-3 px-4 sm:px-6">
+              {/* Floating Tooltip inside scrollable canvas container */}
               {hoveredDay && (
                 <div
                   style={{
@@ -101,71 +159,59 @@ export default function GitHubContributions({
                     top: `${hoveredDay.y - 6}px`,
                     transform: getTooltipTransform(hoveredDay.weekIdx),
                   }}
-                  className="pointer-events-none z-30 px-2.5 py-1 bg-popover text-popover-foreground border border-border text-[11px] font-mono rounded shadow-md whitespace-nowrap animate-fade-in"
+                  className="pointer-events-none z-30 px-2.5 py-1.5 bg-popover text-popover-foreground border border-border shadow-[3px_3px_0_0_var(--border)] whitespace-nowrap animate-fade-in"
                 >
-                  <span className="font-semibold text-foreground">
+                  <p className="font-serif font-bold text-sm leading-tight text-foreground">
                     {hoveredDay.day.count === 0
                       ? "No contributions"
                       : `${hoveredDay.day.count} contribution${
                           hoveredDay.day.count === 1 ? "" : "s"
                         }`}
-                  </span>
-                  <span className="text-muted-foreground ml-1.5">
+                  </p>
+                  <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground mt-0.5">
                     on {formatDate(hoveredDay.day.date)}
-                  </span>
+                  </p>
                 </div>
               )}
 
               {weeks.map((week, weekIdx) => (
                 <div key={weekIdx} className="flex flex-col gap-[3px]">
-                  {week.map((day) => {
-                    // Determine dot size and glow based on level
-                    let dotStyle = "size-[3px] bg-muted-foreground/25";
-
-                    if (day.level === 1) {
-                      dotStyle = "size-[5px] bg-foreground/60";
-                    } else if (day.level === 2) {
-                      dotStyle = "size-[7px] bg-foreground/80";
-                    } else if (day.level === 3) {
-                      dotStyle = "size-[9px] bg-foreground shadow-sm";
-                    } else if (day.level >= 4) {
-                      dotStyle =
-                        "size-[11px] bg-foreground shadow-[0_0_8px_rgba(255,255,255,0.7)] dark:shadow-[0_0_8px_rgba(255,255,255,0.9)]";
-                    }
-
-                    return (
-                      <div
-                        key={day.date}
-                        className="size-3 flex items-center justify-center cursor-pointer group"
-                        onMouseEnter={(e) => {
-                          const target = e.currentTarget;
-                          setHoveredDay({
-                            day,
-                            x: target.offsetLeft + target.offsetWidth / 2,
-                            y: target.offsetTop,
-                            weekIdx,
-                          });
-                        }}
-                        onMouseLeave={() => setHoveredDay(null)}
-                      >
-                        <span
-                          className={`rounded-full transition-all duration-150 group-hover:scale-125 ${dotStyle}`}
-                        />
-                      </div>
-                    );
-                  })}
+                  {week.map((day) => (
+                    <div
+                      key={day.date}
+                      className="size-3 flex items-center justify-center cursor-pointer group"
+                      onMouseEnter={(e) => {
+                        const target = e.currentTarget;
+                        setHoveredDay({
+                          day,
+                          x: target.offsetLeft + target.offsetWidth / 2,
+                          y: target.offsetTop,
+                          weekIdx,
+                        });
+                      }}
+                      onMouseLeave={() => setHoveredDay(null)}
+                    >
+                      <span
+                        className={`size-[11px] transition-transform duration-150 group-hover:scale-110 ${cellClass(day.level)}`}
+                      />
+                    </div>
+                  ))}
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Footer Summary Count */}
-          <div className="mt-4 pt-4 border-t border-border/40 flex items-center justify-between text-xs font-mono tracking-wider text-muted-foreground uppercase">
+          {/* Footer Summary Count + Legend */}
+          <div className="mt-4 pt-4 border-t border-border/40 flex flex-wrap items-center justify-between gap-3 text-xs font-mono tracking-wider text-muted-foreground uppercase">
             <span>
               {data.totalContributions.toLocaleString()} CONTRIBUTIONS IN THE LAST YEAR
             </span>
-            <span className="text-[10px] opacity-75 hidden sm:inline">
-              SYNCED WITH GITHUB
+            <span className="flex items-center gap-1.5 text-[10px]">
+              LESS
+              {[0, 1, 2, 3, 4].map((level) => (
+                <span key={level} className={`size-2.5 ${cellClass(level)}`} />
+              ))}
+              MORE
             </span>
           </div>
         </div>
