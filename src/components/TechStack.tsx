@@ -16,7 +16,7 @@ export default function TechStack({
   limit,
   categoryLimit,
   showViewAll,
-  compact,
+  // compact,
   hideTitle,
 }: TechStackProps) {
   const displayCategories = categoryLimit
@@ -29,7 +29,7 @@ export default function TechStack({
         {!hideTitle && (
           <div className="flex justify-between items-center border-b border-border pb-2 mb-4">
             <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground font-bold">
-              [ SECTION 03 // TECHNICAL STACK ]
+              [ 03 // STACK ]
             </h3>
             {showViewAll && (
               <Link

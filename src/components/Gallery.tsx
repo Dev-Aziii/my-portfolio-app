@@ -65,7 +65,7 @@ export default function Gallery({ images }: GalleryProps) {
               <button
                 key={i}
                 onClick={() => openLightbox(i)}
-                className="relative group shrink-0 w-[240px] aspect-square border border-border bg-card overflow-hidden cursor-pointer snap-center focus:outline-none focus:border-foreground"
+                className="relative group shrink-0 w-60 aspect-square border border-border bg-card overflow-hidden cursor-pointer snap-center focus:outline-none focus:border-foreground"
               >
                 <img
                   alt={image.alt}

@@ -16,7 +16,7 @@ export default function Experience({ entries, compact, showViewAll = true }: Exp
       <div>
         <div className="flex items-center justify-between border-b border-border pb-2 mb-4">
           <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground font-bold">
-            [ SECTION 02 // EXPERIENCE ]
+            [ 02 // EXPERIENCE ]
           </h3>
           {showViewAll ? (
             <Link

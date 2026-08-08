@@ -74,7 +74,7 @@ export default function GitHubContributions({
         {/* Section Header */}
         <div className="flex justify-between items-center border-b border-border pb-2 mb-6">
           <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground font-bold">
-            [ SECTION 06 // GITHUB ]
+            [ 06 // GITHUB ]
           </h3>
           <a
             href={`https://github.com/${data.username}`}

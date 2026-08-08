@@ -14,7 +14,7 @@ export default function Certifications({
   certifications,
   limit,
   showViewAll,
-  compact,
+  // compact,
   hideTitle,
 }: CertificationsProps) {
   const displayed = limit ? certifications.slice(0, limit) : certifications;
@@ -25,7 +25,7 @@ export default function Certifications({
         {!hideTitle && (
           <div className="flex justify-between items-center border-b border-border pb-2 mb-4">
             <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground font-bold">
-              [ SECTION 05 // CERTIFICATIONS ]
+              [ 05 // CERTIFICATIONS ]
             </h3>
             {showViewAll && (
               <Link

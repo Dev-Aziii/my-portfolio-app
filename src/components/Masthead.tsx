@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { Menu, X } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
 
 interface MastheadProps {
@@ -8,6 +10,12 @@ interface MastheadProps {
 
 export default function Masthead({ onNavigateSection }: MastheadProps) {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   /* ── refs that guard against transition oscillation ──────────── */
   const committedRef = useRef(false); // the "settled" scroll state
@@ -73,6 +81,25 @@ export default function Masthead({ onNavigateSection }: MastheadProps) {
     };
   }, []);
 
+  // Lock body scroll when mobile drawer is open & handle Escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsDrawerOpen(false);
+    };
+
+    if (isDrawerOpen) {
+      document.body.style.overflow = "hidden";
+      window.addEventListener("keydown", handleKeyDown);
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isDrawerOpen]);
+
   const currentDate = new Date()
     .toLocaleDateString("en-US", {
       weekday: "long",
@@ -91,115 +118,223 @@ export default function Masthead({ onNavigateSection }: MastheadProps) {
   ];
 
   const handleNavClick = (id: string, e: React.MouseEvent) => {
+    setIsDrawerOpen(false);
     if (onNavigateSection) {
       e.preventDefault();
       onNavigateSection(id);
     }
   };
 
+  const drawerPortal = mounted ? (
+    createPortal(
+      <>
+        {/* Mobile Slide-Out Drawer Overlay */}
+        {isDrawerOpen && (
+          <div
+            className="fixed inset-0 bg-black/75 backdrop-blur-xs z-50 md:hidden transition-opacity"
+            onClick={() => setIsDrawerOpen(false)}
+            aria-hidden="true"
+          />
+        )}
+
+        {/* Mobile Side Drawer Content */}
+        <aside
+          aria-label="Mobile Navigation Drawer"
+          className={`fixed top-0 right-0 bottom-0 z-50 w-72 max-w-[85vw] bg-card border-l border-border md:hidden flex flex-col justify-between p-6 shadow-2xl transition-transform duration-300 ease-out ${
+            isDrawerOpen ? "translate-x-0" : "translate-x-full"
+          }`}
+          style={{ backgroundColor: "var(--card)" }}
+        >
+          <div>
+            {/* Drawer Header */}
+            <div className="flex items-center justify-between border-b border-border pb-4 mb-6">
+              <span className="font-mono text-xs font-bold tracking-widest text-muted-foreground uppercase">
+                [ NAVIGATION ]
+              </span>
+              <button
+                type="button"
+                onClick={() => setIsDrawerOpen(false)}
+                className="p-1 border border-border hover:border-foreground transition-colors cursor-pointer text-foreground"
+                aria-label="Close menu"
+              >
+                <X className="size-4" />
+              </button>
+            </div>
+
+            {/* Nav List */}
+            <nav aria-label="Mobile Drawer Navigation">
+              <ul className="flex flex-col gap-4 font-mono text-xs uppercase tracking-wider">
+                {navItems.map((item) => (
+                  <li key={item.id}>
+                    <a
+                      href={`#${item.id}`}
+                      onClick={(e) => handleNavClick(item.id, e)}
+                      className="block py-2 px-3 border border-transparent hover:border-border hover:bg-background/60 text-foreground transition-colors font-semibold"
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
+
+          {/* Drawer Footer */}
+          <div className="pt-6 border-t border-border flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+              <span className="font-mono text-xs text-muted-foreground tracking-wider uppercase font-bold">
+                THEME
+              </span>
+              <ThemeToggle />
+            </div>
+            <div className="font-mono text-[10px] text-muted-foreground tracking-widest uppercase">
+              {currentDate}
+            </div>
+          </div>
+        </aside>
+      </>,
+      document.body
+    )
+  ) : null;
+
   return (
-    <header id="masthead" className="sticky top-0 z-40 w-full bg-background/95 backdrop-blur-md border-b border-border mb-8 transition-colors duration-300">
-      <div className="max-w-5xl mx-auto py-2 px-1 sm:px-2">
-        {/* Top Issue Bar (Smoothly collapses when scrolled) */}
-        <div
-          id="masthead-top"
-          className={`transition-all duration-300 ease-in-out motion-reduce:transition-none flex flex-wrap items-center justify-between text-xs font-mono tracking-widest text-muted-foreground gap-2 overflow-hidden ${
-            isScrolled
-              ? "max-h-0 opacity-0 pb-0 border-none pointer-events-none"
-              : "max-h-12 opacity-100 pb-2 border-b border-border pointer-events-auto"
-          }`}
-        >
-          <div className="flex items-center gap-3">
-            <span>{currentDate}</span>
-          </div>
-          <div className="flex items-center gap-4">
-            <ThemeToggle />
-          </div>
-        </div>
-
-        {/* Main Title Banner (Smoothly collapses when scrolled) */}
-        <div
-          id="masthead-banner"
-          className={`transition-all duration-300 ease-in-out motion-reduce:transition-none text-center rule-double overflow-hidden ${
-            isScrolled
-              ? "max-h-0 opacity-0 my-0 py-0 pointer-events-none"
-              : "max-h-40 opacity-100 my-3 py-4 sm:py-6 pointer-events-auto"
-          }`}
-        >
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-serif font-bold tracking-tight text-foreground uppercase mb-1">
-            Adzyl Jipos
-          </h1>
-          <p className="font-mono text-xs sm:text-sm tracking-widest text-muted-foreground uppercase">
-            Software Developer
-          </p>
-        </div>
-
-        {/* Dynamic Navigation Bar (Transitions into compact navbar on scroll) */}
-        <div
-          className={`transition-all duration-300 ease-in-out motion-reduce:transition-none flex items-center gap-4 ${
-            isScrolled
-              ? "justify-between py-1 border-none"
-              : "justify-center py-2 border-t border-b border-border"
-          }`}
-        >
-          {/* Scrolled Logo Only (Fades and scales in on scroll) */}
-          <a
-            href="#home"
-            onClick={(e) => handleNavClick("home", e)}
-            className={`transition-all duration-300 ease-in-out motion-reduce:transition-none shrink-0 group flex items-center ${
+    <>
+      <header id="masthead" className="sticky top-0 z-40 w-full bg-background/95 backdrop-blur-md border-b border-border mb-6 sm:mb-8 transition-colors duration-300">
+        <div className="max-w-5xl mx-auto py-2 px-3 sm:px-4">
+          {/* Top Issue Bar - Desktop only */}
+          <div
+            id="masthead-top"
+            className={`transition-all duration-300 ease-in-out motion-reduce:transition-none hidden md:flex items-center justify-between text-xs font-mono tracking-widest text-muted-foreground overflow-hidden ${
               isScrolled
-                ? "opacity-100 scale-100 w-auto pointer-events-auto"
-                : "opacity-0 scale-75 w-0 pointer-events-none overflow-hidden"
+                ? "max-h-0 opacity-0 pb-0 border-none pointer-events-none"
+                : "max-h-12 opacity-100 pb-2 border-b border-border pointer-events-auto"
             }`}
-            title="Adzyl Jipos - Home"
           >
-            <img
-              src="/logo.webp"
-              alt="<AZI> Logo"
-              className="h-10 sm:h-11 w-auto object-contain dark:invert-0 invert transition-transform group-hover:scale-105"
-            />
-          </a>
+            <div className="flex items-center gap-3">
+              <span>{currentDate}</span>
+            </div>
+            <div className="flex items-center gap-4">
+              <ThemeToggle />
+            </div>
+          </div>
 
-          {/* Section Navigation Links */}
-          <nav aria-label="Masthead Navigation" className="overflow-x-auto py-1 max-w-full">
-            <ul
-              className={`flex items-center text-xs font-mono uppercase tracking-wider transition-all duration-300 motion-reduce:transition-none ${
+          {/* Mobile Header Top Row (< md) */}
+          <div className="flex md:hidden items-center justify-between py-1">
+            <a
+              href="#home"
+              onClick={(e) => handleNavClick("home", e)}
+              className="flex items-center gap-2 group"
+              title="Adzyl Jipos - Home"
+            >
+              <img
+                src="/logo.webp"
+                alt="<AZI> Logo"
+                className="h-8 w-auto object-contain dark:invert-0 invert transition-transform group-hover:scale-105"
+              />
+              <span className="font-serif font-bold text-lg tracking-tight text-foreground uppercase">
+                Adzyl Jipos
+              </span>
+            </a>
+
+            <div className="flex items-center gap-3">
+              <ThemeToggle />
+              <button
+                type="button"
+                onClick={() => setIsDrawerOpen(!isDrawerOpen)}
+                className="p-1.5 border border-border hover:border-foreground bg-card text-foreground transition-colors cursor-pointer"
+                aria-label={isDrawerOpen ? "Close navigation menu" : "Open navigation menu"}
+              >
+                {isDrawerOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+              </button>
+            </div>
+          </div>
+
+          {/* Main Title Banner - Desktop only */}
+          <div
+            id="masthead-banner"
+            className={`transition-all duration-300 ease-in-out motion-reduce:transition-none hidden md:block text-center rule-double overflow-hidden ${
+              isScrolled
+                ? "max-h-0 opacity-0 my-0 py-0 pointer-events-none"
+                : "max-h-40 opacity-100 my-3 py-4 sm:py-6 pointer-events-auto"
+            }`}
+          >
+            <h1 className="text-4xl sm:text-6xl md:text-7xl font-serif font-bold tracking-tight text-foreground uppercase mb-1">
+              Adzyl Jipos
+            </h1>
+            <p className="font-mono text-xs sm:text-sm tracking-widest text-muted-foreground uppercase">
+              Software Developer
+            </p>
+          </div>
+
+          {/* Dynamic Navigation Bar (Desktop md+) */}
+          <div
+            className={`transition-all duration-300 ease-in-out motion-reduce:transition-none hidden md:flex items-center gap-4 ${
+              isScrolled
+                ? "justify-between py-1 border-none"
+                : "justify-center py-2 border-t border-b border-border"
+            }`}
+          >
+            {/* Scrolled Logo Only */}
+            <a
+              href="#home"
+              onClick={(e) => handleNavClick("home", e)}
+              className={`transition-all duration-300 ease-in-out motion-reduce:transition-none shrink-0 group flex items-center ${
                 isScrolled
-                  ? "gap-x-3 sm:gap-x-6 text-[11px] sm:text-xs whitespace-nowrap"
-                  : "flex-wrap justify-center gap-x-5 sm:gap-x-6 gap-y-2"
+                  ? "opacity-100 scale-100 w-auto pointer-events-auto"
+                  : "opacity-0 scale-75 w-0 pointer-events-none overflow-hidden"
+              }`}
+              title="Adzyl Jipos - Home"
+            >
+              <img
+                src="/logo.webp"
+                alt="<AZI> Logo"
+                className="h-10 sm:h-11 w-auto object-contain dark:invert-0 invert transition-transform group-hover:scale-105"
+              />
+            </a>
+
+            {/* Section Navigation Links */}
+            <nav aria-label="Masthead Navigation" className="overflow-x-auto py-1 max-w-full">
+              <ul
+                className={`flex items-center text-xs font-mono uppercase tracking-wider transition-all duration-300 motion-reduce:transition-none ${
+                  isScrolled
+                    ? "gap-x-3 sm:gap-x-6 text-[11px] sm:text-xs whitespace-nowrap"
+                    : "flex-wrap justify-center gap-x-5 sm:gap-x-6 gap-y-2"
+                }`}
+              >
+                {navItems.map((item) => (
+                  <li key={item.id}>
+                    <a
+                      href={`#${item.id}`}
+                      onClick={(e) => handleNavClick(item.id, e)}
+                      className="hover:underline underline-offset-4 transition-all hover:text-foreground text-muted-foreground"
+                    >
+                      <span className={isScrolled ? "hidden md:inline" : ""}>
+                        {item.label}
+                      </span>
+                      {isScrolled && (
+                        <span className="md:hidden">{item.shortLabel}</span>
+                      )}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+
+            {/* Theme Toggle (Visible in scrolled mode on desktop) */}
+            <div
+              className={`transition-all duration-300 motion-reduce:transition-none shrink-0 ${
+                isScrolled
+                  ? "opacity-100 scale-100 pointer-events-auto"
+                  : "opacity-0 scale-75 pointer-events-none hidden"
               }`}
             >
-              {navItems.map((item) => (
-                <li key={item.id}>
-                  <a
-                    href={`#${item.id}`}
-                    onClick={(e) => handleNavClick(item.id, e)}
-                    className="hover:underline underline-offset-4 transition-all hover:text-foreground text-muted-foreground"
-                  >
-                    <span className={isScrolled ? "hidden md:inline" : ""}>
-                      {item.label}
-                    </span>
-                    {isScrolled && (
-                      <span className="md:hidden">{item.shortLabel}</span>
-                    )}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          {/* Theme Toggle (Visible only in scrolled mode on the right) */}
-          <div
-            className={`transition-all duration-300 motion-reduce:transition-none shrink-0 ${
-              isScrolled
-                ? "opacity-100 scale-100 pointer-events-auto"
-                : "opacity-0 scale-75 pointer-events-none hidden"
-            }`}
-          >
-            <ThemeToggle />
+              <ThemeToggle />
+            </div>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
+
+      {drawerPortal}
+    </>
   );
 }

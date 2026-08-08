@@ -7,7 +7,7 @@ export default function About({ paragraphs }: AboutProps) {
     <section className="py-2 border-b border-border">
       <div className="flex items-center justify-between border-b border-border pb-2 mb-4">
         <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground font-bold">
-          [ SECTION 01 // BIOGRAPHY ]
+          [ 01 // BIOGRAPHY ]
         </h3>
       </div>
 
