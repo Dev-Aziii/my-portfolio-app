@@ -223,15 +223,17 @@ export default function Masthead({ onNavigateSection }: MastheadProps) {
             <a
               href="#home"
               onClick={(e) => handleNavClick("home", e)}
-              className="flex items-center gap-2 group"
+              className="flex items-center gap-2.5 group"
               title="Adzyl Jipos - Home"
             >
-              <img
-                src="/logo.webp"
-                alt="<AZI> Logo"
-                className="h-8 w-auto object-contain dark:invert-0 invert transition-transform group-hover:scale-105"
-              />
-              <span className="font-serif font-bold text-lg tracking-tight text-foreground uppercase">
+              <div className="p-0.5 border border-border/80 rounded-full bg-card shrink-0">
+                <img
+                  src="/images/profile.webp"
+                  alt="Adzyl Jipos"
+                  className="size-7 sm:size-8 rounded-full object-cover grayscale contrast-110 sepia-[0.20] brightness-90 transition-all duration-500 group-hover:grayscale-0 group-hover:contrast-100 group-hover:sepia-0 group-hover:brightness-100 group-hover:scale-105"
+                />
+              </div>
+              <span className="font-serif font-bold text-base sm:text-lg tracking-tight text-foreground uppercase">
                 Adzyl Jipos
               </span>
             </a>
@@ -249,58 +251,111 @@ export default function Masthead({ onNavigateSection }: MastheadProps) {
             </div>
           </div>
 
-          {/* Main Title Banner - Desktop only */}
+          {/* Main Title Banner & Profile Portrait (Desktop md+) */}
           <div
             id="masthead-banner"
-            className={`transition-all duration-300 ease-in-out motion-reduce:transition-none hidden md:block text-center rule-double overflow-hidden ${
+            className={`transition-all duration-300 ease-in-out motion-reduce:transition-none hidden md:block rule-double overflow-hidden ${
               isScrolled
                 ? "max-h-0 opacity-0 my-0 py-0 pointer-events-none"
-                : "max-h-40 opacity-100 my-3 py-4 sm:py-6 pointer-events-auto"
+                : "max-h-56 opacity-100 my-3 py-4 sm:py-6 pointer-events-auto"
             }`}
           >
-            <h1 className="text-4xl sm:text-6xl md:text-7xl font-serif font-bold tracking-tight text-foreground uppercase mb-1">
-              Adzyl Jipos
-            </h1>
-            <p className="font-mono text-xs sm:text-sm tracking-widest text-muted-foreground uppercase">
-              Software Developer
-            </p>
+            <div className="flex items-center gap-6 lg:gap-8 px-1">
+              {/* Double Ring Profile Portrait Frame */}
+              <div className="shrink-0 group relative cursor-pointer">
+                <div className="p-1 border-2 border-border/80 rounded-full bg-card/40 shadow-md transition-all duration-500 group-hover:border-foreground/40">
+                  <div className="size-28 lg:size-32 rounded-full border border-border/60 overflow-hidden bg-muted">
+                    <img
+                      src="/images/profile.webp"
+                      alt="Adzyl Jipos"
+                      className="size-full object-cover grayscale contrast-110 sepia-[0.20] brightness-90 transition-all duration-500 ease-out group-hover:grayscale-0 group-hover:contrast-100 group-hover:sepia-0 group-hover:brightness-100 group-hover:scale-105"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Title & Subtitle + Nav Links */}
+              <div className="flex-1 min-w-0">
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold tracking-tight text-foreground uppercase mb-1">
+                  Adzyl Jipos
+                </h1>
+                <p className="font-mono text-xs sm:text-sm tracking-widest text-muted-foreground uppercase mb-3">
+                  Software Developer
+                </p>
+
+                {/* Section Navigation Links */}
+                <nav aria-label="Masthead Navigation" className="overflow-x-auto">
+                  <ul className="flex items-center gap-x-4 lg:gap-x-6 gap-y-1 text-xs font-mono uppercase tracking-wider flex-wrap">
+                    {navItems.map((item) => (
+                      <li key={item.id}>
+                        <a
+                          href={`#${item.id}`}
+                          onClick={(e) => handleNavClick(item.id, e)}
+                          className="hover:underline underline-offset-4 transition-all hover:text-foreground text-muted-foreground font-semibold"
+                        >
+                          {item.label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+              </div>
+            </div>
           </div>
 
-          {/* Dynamic Navigation Bar (Desktop md+) */}
+          {/* Mobile Main Banner Unscrolled (< md) */}
+          {!isScrolled && (
+            <div className="flex md:hidden flex-col items-center text-center py-4 border-b border-border my-2">
+              <div className="shrink-0 group relative cursor-pointer mb-3">
+                <div className="p-1 border-2 border-border/80 rounded-full bg-card/40 shadow-md transition-all duration-500 group-hover:border-foreground/40">
+                  <div className="size-24 rounded-full border border-border/60 overflow-hidden bg-muted">
+                    <img
+                      src="/images/profile.webp"
+                      alt="Adzyl Jipos"
+                      className="size-full object-cover grayscale contrast-110 sepia-[0.20] brightness-90 transition-all duration-500 ease-out group-hover:grayscale-0 group-hover:contrast-100 group-hover:sepia-0 group-hover:brightness-100 group-hover:scale-105"
+                    />
+                  </div>
+                </div>
+              </div>
+              <h1 className="text-3xl font-serif font-bold tracking-tight text-foreground uppercase mb-1">
+                Adzyl Jipos
+              </h1>
+              <p className="font-mono text-xs tracking-widest text-muted-foreground uppercase">
+                Software Developer
+              </p>
+            </div>
+          )}
+
+          {/* Dynamic Compact Scrolled Navigation Bar (Desktop md+) */}
           <div
             className={`transition-all duration-300 ease-in-out motion-reduce:transition-none hidden md:flex items-center gap-4 ${
               isScrolled
-                ? "justify-between py-1 border-none"
-                : "justify-center py-2 border-t border-b border-border"
+                ? "justify-between py-2 border-t border-b border-border"
+                : "h-0 opacity-0 pointer-events-none overflow-hidden"
             }`}
           >
-            {/* Scrolled Logo Only */}
+            {/* Scrolled Logo + Mini Profile Avatar */}
             <a
               href="#home"
               onClick={(e) => handleNavClick("home", e)}
-              className={`transition-all duration-300 ease-in-out motion-reduce:transition-none shrink-0 group flex items-center ${
-                isScrolled
-                  ? "opacity-100 scale-100 w-auto pointer-events-auto"
-                  : "opacity-0 scale-75 w-0 pointer-events-none overflow-hidden"
-              }`}
+              className="shrink-0 group flex items-center gap-2.5"
               title="Adzyl Jipos - Home"
             >
-              <img
-                src="/logo.webp"
-                alt="<AZI> Logo"
-                className="h-10 sm:h-11 w-auto object-contain dark:invert-0 invert transition-transform group-hover:scale-105"
-              />
+              <div className="p-0.5 border border-border/80 rounded-full bg-card shrink-0">
+                <img
+                  src="/images/profile.webp"
+                  alt="Adzyl Jipos"
+                  className="size-7 rounded-full object-cover grayscale contrast-110 sepia-[0.20] brightness-90 transition-all duration-300 group-hover:grayscale-0 group-hover:contrast-100 group-hover:sepia-0 group-hover:brightness-100 group-hover:scale-105"
+                />
+              </div>
+              <span className="font-serif font-bold text-lg tracking-tight text-foreground uppercase">
+                Adzyl Jipos
+              </span>
             </a>
 
-            {/* Section Navigation Links */}
-            <nav aria-label="Masthead Navigation" className="overflow-x-auto py-1 max-w-full">
-              <ul
-                className={`flex items-center text-xs font-mono uppercase tracking-wider transition-all duration-300 motion-reduce:transition-none ${
-                  isScrolled
-                    ? "gap-x-3 sm:gap-x-6 text-[11px] sm:text-xs whitespace-nowrap"
-                    : "flex-wrap justify-center gap-x-5 sm:gap-x-6 gap-y-2"
-                }`}
-              >
+            {/* Section Navigation Links in Scrolled Bar */}
+            <nav aria-label="Scrolled Navigation" className="overflow-x-auto py-1 max-w-full">
+              <ul className="flex items-center text-xs font-mono uppercase tracking-wider gap-x-4 lg:gap-x-6 whitespace-nowrap">
                 {navItems.map((item) => (
                   <li key={item.id}>
                     <a
@@ -308,26 +363,15 @@ export default function Masthead({ onNavigateSection }: MastheadProps) {
                       onClick={(e) => handleNavClick(item.id, e)}
                       className="hover:underline underline-offset-4 transition-all hover:text-foreground text-muted-foreground"
                     >
-                      <span className={isScrolled ? "hidden md:inline" : ""}>
-                        {item.label}
-                      </span>
-                      {isScrolled && (
-                        <span className="md:hidden">{item.shortLabel}</span>
-                      )}
+                      {item.label}
                     </a>
                   </li>
                 ))}
               </ul>
             </nav>
 
-            {/* Theme Toggle (Visible in scrolled mode on desktop) */}
-            <div
-              className={`transition-all duration-300 motion-reduce:transition-none shrink-0 ${
-                isScrolled
-                  ? "opacity-100 scale-100 pointer-events-auto"
-                  : "opacity-0 scale-75 pointer-events-none hidden"
-              }`}
-            >
+            {/* Theme Toggle in Scrolled Mode */}
+            <div className="shrink-0">
               <ThemeToggle />
             </div>
           </div>
