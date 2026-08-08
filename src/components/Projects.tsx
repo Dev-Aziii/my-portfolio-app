@@ -62,7 +62,6 @@ export default function Projects({
         {!hideTitle && (
           <div className="flex justify-between items-center border-b border-border pb-3 mb-6">
             <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground font-bold flex items-center gap-2">
-              <span className="w-2 h-2 bg-foreground inline-block" />
               [ SECTION 04 // PROJECTS ]
             </h3>
             {showViewAll && (

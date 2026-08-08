@@ -25,7 +25,7 @@ export default function Hero({ data }: HeroProps) {
 
         {/* Lead Summary */}
         <p className="text-base sm:text-lg text-muted-foreground leading-relaxed font-sans max-w-3xl">
-        Full-stack developer building scalable web and mobile applications with modern architecture, polished UX, and AI-assisted development.
+        Building scalable web and mobile applications with AI-assisted development.
         </p>
 
         {/* Rectangular Action Buttons Bar */}
