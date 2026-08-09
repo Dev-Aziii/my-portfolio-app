@@ -47,6 +47,7 @@ export interface Project {
   description: string;
   url: string;
   icon:  LucideIcon | IconType | FunctionComponent<SVGProps<SVGSVGElement>>;
+  logo?: string;
   slug?: string;
   details?: ProjectDetails;
 }

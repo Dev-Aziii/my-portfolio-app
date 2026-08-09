@@ -6,6 +6,7 @@ export const projects: Project[] = [
     title: "Tezā",
     slug: "teza",
     icon: SiReact,
+    logo: "/images/projects/teza/logo.webp",
     url: "https://teza-v1.vercel.app/",
     description: "A modern progressive web application that helps couples stay connected through shared updates, plans, spontaneous proposals, and meaningful daily interactions.",
     details: {
@@ -54,6 +55,7 @@ export const projects: Project[] = [
     title: "ElecSys",
     slug: "elecsys",
     icon: SiLaravel,
+    logo: "/images/projects/elecsys/logo.webp",
     url: "locally hosted",
     description: "A high-performance, containerized election management system engineered for offline-first reliability in large-scale cooperative voting environments.",
     details: {
@@ -96,6 +98,7 @@ export const projects: Project[] = [
       "A Web-Based Integrated Accounting & Financial Management System that automates bookkeeping, financial reporting, and financial transaction management for organizations.",
     url: "http://accsys-jps.runasp.net",
     icon: SiDotnet,
+    logo: "/images/projects/accsys/logo.webp",
     slug: "accsys",
     details: {
       heroImage: "/images/projects/accsys/hero.webp",

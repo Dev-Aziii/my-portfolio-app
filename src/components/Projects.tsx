@@ -291,9 +291,24 @@ export default function Projects({
                   {/* Title & Description (Full Width) */}
                   <div className="space-y-4">
                     <div>
-                      <h3 className="font-serif font-bold text-3xl sm:text-4xl text-foreground tracking-tight">
-                        {activeProject.title}
-                      </h3>
+                      <div className="flex items-center gap-3 mb-2">
+                        {activeProject.logo ? (
+                          <div className="size-9 sm:size-10 shrink-0 border border-border p-1 bg-background flex items-center justify-center shadow-xs">
+                            <img
+                              src={activeProject.logo}
+                              alt={`${activeProject.title} logo`}
+                              className="w-full h-full object-contain"
+                            />
+                          </div>
+                        ) : activeProject.icon ? (
+                          <div className="size-9 sm:size-10 shrink-0 border border-border p-1.5 bg-background flex items-center justify-center text-foreground shadow-xs">
+                            <activeProject.icon className="w-full h-full" />
+                          </div>
+                        ) : null}
+                        <h3 className="font-serif font-bold text-3xl sm:text-4xl text-foreground tracking-tight">
+                          {activeProject.title}
+                        </h3>
+                      </div>
                       {/* Render concise description directly from projects.ts */}
                       <p className="text-sm sm:text-base text-muted-foreground font-sans leading-relaxed mt-3">
                         {activeProject.description}
