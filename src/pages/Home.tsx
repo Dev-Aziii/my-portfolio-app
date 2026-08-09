@@ -148,7 +148,7 @@ export default function Home() {
         <section id="certifications" className="scroll-mt-28 animate-fade-in-up border-t border-border pt-10">
           <Certifications
             certifications={certifications}
-            limit={5}
+            limit={3}
             showViewAll
           />
         </section>

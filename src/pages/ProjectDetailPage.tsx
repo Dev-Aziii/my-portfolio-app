@@ -71,7 +71,7 @@ export default function ProjectDetailPage() {
             <img
               src={gallery[currentIndex]}
               alt={`${project.title} ${currentIndex + 1}`}
-              className="w-auto h-auto max-w-full max-h-[320px] sm:max-h-[420px] object-contain newspaper-photo transition-transform duration-300 group-hover:scale-[1.01]"
+              className="w-auto h-auto max-w-full max-h-80 sm:max-h-[420px] object-contain newspaper-photo transition-transform duration-300 group-hover:scale-[1.01]"
             />
 
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all flex items-center justify-center pointer-events-none">

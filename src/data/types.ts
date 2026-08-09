@@ -88,6 +88,9 @@ export interface Certification {
   title: string;
   issuer: string;
   href: string;
+  category: string;
+  icon?: LucideIcon | IconType | FunctionComponent<SVGProps<SVGSVGElement>>;
+  iconUrl?: string;
 }
 
 export interface Recommendation {

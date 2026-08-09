@@ -1,4 +1,4 @@
-import { BadgeCheck, ChevronRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { Certification } from "@/data/types";
 
@@ -14,7 +14,6 @@ export default function Certifications({
   certifications,
   limit,
   showViewAll,
-  // compact,
   hideTitle,
 }: CertificationsProps) {
   const displayed = limit ? certifications.slice(0, limit) : certifications;
@@ -25,7 +24,7 @@ export default function Certifications({
         {!hideTitle && (
           <div className="flex justify-between items-center border-b border-border pb-2 mb-4">
             <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground font-bold">
-              [ 05 // CERTIFICATIONS ]
+              [ 04 — CERTIFICATIONS ]
             </h3>
             {showViewAll && (
               <Link
@@ -44,24 +43,65 @@ export default function Certifications({
             NO CERTIFICATIONS RECORDED.
           </div>
         ) : (
-          <div className="divide-y divide-border border-t border-b border-border">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {displayed.map((cert) => (
               <a
                 key={cert.title}
                 href={cert.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="py-3 flex items-center justify-between group hover:bg-card px-2 transition-colors"
+                className="group relative flex items-center gap-4 p-4 pr-5 border-2 border-foreground/60 bg-card transition-colors duration-300 hover:bg-background"
               >
-                <div>
-                  <h4 className="font-serif font-bold text-sm text-foreground group-hover:underline underline-offset-2">
+                {/* Inner hairline frame */}
+                <span className="pointer-events-none absolute inset-1.5 border border-border" />
+
+                {/* Corner ticks */}
+                <span className="pointer-events-none absolute left-3 top-3 size-1.5 border-l-2 border-t-2 border-foreground/50" />
+                <span className="pointer-events-none absolute right-3 top-3 size-1.5 border-r-2 border-t-2 border-foreground/50" />
+                <span className="pointer-events-none absolute bottom-3 left-3 size-1.5 border-b-2 border-l-2 border-foreground/50" />
+                <span className="pointer-events-none absolute bottom-3 right-3 size-1.5 border-b-2 border-r-2 border-foreground/50" />
+
+                {/* Seal medallion */}
+                <div className="relative shrink-0 size-16 sm:size-17 rounded-full border border-border bg-background">
+                  <span className="pointer-events-none absolute inset-1 rounded-full border border-dashed border-foreground/30" />
+                  <span className="pointer-events-none absolute inset-2 rounded-full border border-foreground/50" />
+                  <span className="absolute inset-0 flex items-center justify-center">
+                    {cert.iconUrl ? (
+                      <img
+                        src={cert.iconUrl}
+                        alt={`${cert.issuer} certificate seal`}
+                        className="size-10 sm:size-12 object-contain"
+                      />
+                    ) : cert.icon ? (
+                      <cert.icon className="size-8 sm:size-10 text-foreground/80" />
+                    ) : null}
+                  </span>
+                </div>
+
+                <div className="min-w-0 flex-1">
+                  <span className="block font-mono text-[8px] uppercase tracking-[0.28em] text-muted-foreground">
+                    Certificate of Achievement
+                  </span>
+                  <h4 className="mt-1 font-serif font-semibold text-sm sm:text-[15px] text-foreground leading-snug">
                     {cert.title}
                   </h4>
-                  <p className="font-mono text-xs text-muted-foreground mt-0.5">
-                    ISSUER: {cert.issuer}
+
+                  <div className="mt-1.5 inline-flex items-center gap-2">
+                    <span className="h-px w-6 bg-foreground/30" />
+                    <span className="size-1 rotate-45 bg-foreground/60" />
+                    <span className="h-px w-6 bg-foreground/30" />
+                  </div>
+
+                  <p className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1">
+                    <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-foreground/90">
+                      {cert.issuer}
+                    </span>
+                    <span className="h-3 w-px bg-border" />
+                    <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
+                      {cert.category}
+                    </span>
                   </p>
                 </div>
-                <BadgeCheck className="size-4 text-muted-foreground group-hover:text-foreground transition-colors shrink-0 ml-3" />
               </a>
             ))}
           </div>
