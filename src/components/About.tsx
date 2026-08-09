@@ -11,13 +11,11 @@ export default function About({ paragraphs }: AboutProps) {
         </h3>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-foreground">
+      <div className="flex flex-col gap-4 text-foreground">
         {paragraphs.map((text, i) => (
-          <div key={i} className="space-y-2">
-            <p className="text-sm leading-relaxed text-muted-foreground font-sans">
-              {text}
-            </p>
-          </div>
+          <p key={i} className="text-sm leading-relaxed text-muted-foreground font-sans">
+            {text}
+          </p>
         ))}
       </div>
     </section>

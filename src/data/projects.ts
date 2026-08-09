@@ -23,9 +23,9 @@ export const projects: Project[] = [
       ],
       highlights: [
         { label: "Real-time couple activity feed" },
+        { label: "Installable PWA" },
         { label: "Spontaneous date proposals & response tracking" },
-        { label: "Shared daily and monthly schedule planning" },
-        { label: "Cross-platform installable PWA experience" }
+        { label: "Shared daily and monthly schedule planning" }
       ],
       problem: {
         title: "The Challenge: Keeping Couples Connected",
@@ -60,12 +60,10 @@ export const projects: Project[] = [
       heroImage: "/images/projects/elecsys/hero.webp",
       version: "v1.0",
       year: "2026",
-      techs: ["Laravel", "PHP", "JavaScript", "Octane", "FrankenPHP", "Docker", "Caddy", "MySQL"],
+      techs: ["Laravel", "JavaScript", "Octane", "FrankenPHP", "Docker", "Caddy", "MySQL"],
       highlights: [
-        { label: "Offline-first voting with data sync" },
-        { label: "Role-based access control" },
-        { label: "Audit logs and transparency" },
-        { label: "Real-time results and analytics" }
+        { label: "Offline-first voting" },
+        { label: "Transparency and analytics" }
       ],
       metrics: [
         { value: "7,000+", label: "Voters Supported" },
@@ -106,15 +104,15 @@ export const projects: Project[] = [
       techs: [
         ".NET 8",
         "Blazor WebAssembly",
-        "ASP.NET Core Web API",
-        "SQL Server 2022",
-        "EF Core", "Swagger"
+        ".NET Core Web API",
+        "SQL Server ",
+        "EF Core",
       ],
       highlights: [
+        { label: "AP, AR & General Ledger" },
+        { label: "JWT Auth and audit logging" },
         { label: "Automated double-entry bookkeeping validation" },
-        { label: "Accounts Payable, Receivable & General Ledger" },
-        { label: "Real-time automated financial statements" },
-        { label: "JWT Auth with detailed audit logging" }
+        { label: "Real-time automated financial statements" }
       ],
       metrics: [
       ],

@@ -53,6 +53,11 @@ export default function Projects({
     }
   };
 
+  const isHttpUrl = (url?: string): boolean => {
+    if (!url) return false;
+    return /^https?:\/\//i.test(url.trim());
+  };
+
   const activeProject = displayed[activeIndex] || displayed[0];
 
   return (
@@ -87,6 +92,7 @@ export default function Projects({
               const Icon = project.icon;
               const isCopied = copiedUrl === project.url;
               const hasHeroImage = project.details?.heroImage;
+              const hasValidUrl = isHttpUrl(project.url);
 
               const cardContent = (
                 <div className="flex flex-col h-full justify-between p-5 bg-card border border-border hover:border-foreground transition-colors group">
@@ -129,18 +135,20 @@ export default function Projects({
                       ))}
                     </div>
 
-                    <button
-                      onClick={(e) => copyToClipboard(project.url, e)}
-                      className="p-1.5 border border-border hover:border-foreground transition-colors shrink-0"
-                      aria-label="Copy URL"
-                      title={isCopied ? "Copied!" : "Copy URL"}
-                    >
-                      {isCopied ? (
-                        <Check className="size-3.5 text-foreground" />
-                      ) : (
-                        <Copy className="size-3.5 text-muted-foreground hover:text-foreground" />
-                      )}
-                    </button>
+                    {hasValidUrl && (
+                      <button
+                        onClick={(e) => copyToClipboard(project.url, e)}
+                        className="p-1.5 border border-border hover:border-foreground transition-colors shrink-0"
+                        aria-label="Copy URL"
+                        title={isCopied ? "Copied!" : "Copy URL"}
+                      >
+                        {isCopied ? (
+                          <Check className="size-3.5 text-foreground" />
+                        ) : (
+                          <Copy className="size-3.5 text-muted-foreground hover:text-foreground" />
+                        )}
+                      </button>
+                    )}
                   </div>
                 </div>
               );
@@ -171,13 +179,13 @@ export default function Projects({
                     <div
                       key={project.title}
                       onClick={() => setActiveIndex(idx)}
-                      className={`cursor-pointer transition-all duration-200 p-4 border relative flex-1 min-w-[260px] sm:min-w-[280px] lg:min-w-0 ${
+                      className={`cursor-pointer transition-all duration-200 p-4 border relative flex-1 min-w-[240px] sm:min-w-[260px] lg:min-w-0 ${
                         isActive
                           ? "bg-card border-2 border-foreground shadow-sm"
                           : "bg-card/50 border border-border hover:border-foreground/60 hover:bg-card"
                       }`}
                     >
-                      <div className="flex items-start gap-3">
+                      <div className="flex items-center gap-3">
                         {/* Number Badge & Vertical Indicator */}
                         <div className="flex flex-col items-center shrink-0">
                           <span
@@ -188,7 +196,7 @@ export default function Projects({
                             {numberFormatted}
                           </span>
                           <div
-                            className={`w-1 h-8 mt-1.5 transition-colors ${
+                            className={`w-1 h-6 mt-1 transition-colors ${
                               isActive ? "bg-foreground" : "bg-border"
                             }`}
                           />
@@ -197,7 +205,7 @@ export default function Projects({
                         {/* Content */}
                         <div className="flex-1 min-w-0">
                           {isActive && project.details?.heroImage && (
-                            <div className="w-full h-24 overflow-hidden border border-border mb-2.5 bg-background relative">
+                            <div className="w-full h-28 overflow-hidden border border-border mb-2.5 bg-background relative">
                               <img
                                 src={project.details.heroImage}
                                 alt={project.title}
@@ -206,7 +214,7 @@ export default function Projects({
                             </div>
                           )}
 
-                          <div className="flex items-center justify-between gap-1">
+                          <div className="flex items-center justify-between gap-1 mb-1.5">
                             <h4
                               className={`font-serif font-bold text-base truncate ${
                                 isActive ? "text-foreground underline underline-offset-2" : "text-muted-foreground"
@@ -221,11 +229,7 @@ export default function Projects({
                             />
                           </div>
 
-                          <p className="text-xs text-muted-foreground font-sans line-clamp-2 mt-1 leading-relaxed">
-                            {project.description}
-                          </p>
-
-                          <div className="mt-2.5 flex items-center gap-2">
+                          <div className="flex items-center gap-2">
                             <span className="font-mono text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 border border-border bg-background text-foreground flex items-center gap-1">
                               <Icon className="size-3 text-foreground" />
                               {primaryTech}
@@ -284,141 +288,104 @@ export default function Projects({
                     )}
                   </div>
 
-                  {/* Title & Description Grid */}
-                  <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start mb-6">
-                    <div className="xl:col-span-6 space-y-4">
-                      <div>
-                        <h3 className="font-serif font-bold text-3xl sm:text-4xl text-foreground tracking-tight">
-                          {activeProject.title}
-                        </h3>
-                        {/* Render concise description directly from projects.ts */}
-                        <p className="text-xs sm:text-sm text-muted-foreground font-sans leading-relaxed mt-3">
-                          {activeProject.description}
-                        </p>
-                      </div>
+                  {/* Title & Description (Full Width) */}
+                  <div className="space-y-4">
+                    <div>
+                      <h3 className="font-serif font-bold text-3xl sm:text-4xl text-foreground tracking-tight">
+                        {activeProject.title}
+                      </h3>
+                      {/* Render concise description directly from projects.ts */}
+                      <p className="text-sm sm:text-base text-muted-foreground font-sans leading-relaxed mt-3">
+                        {activeProject.description}
+                      </p>
+                    </div>
 
-                      {/* Tech Stack Pills */}
-                      <div>
-                        <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground block mb-2 font-bold">
-                          TECH STACK
-                        </span>
-                        <div className="flex flex-wrap gap-1.5">
-                          {activeProject.details?.techs?.map((tech) => (
-                            <span
-                              key={tech}
-                              className="font-mono text-xs px-2 py-0.5 border border-border bg-background text-foreground font-semibold uppercase"
-                            >
-                              {tech}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Feature Highlights */}
-                      {activeProject.details?.highlights && activeProject.details.highlights.length > 0 && (
-                        <div className="pt-2">
-                          <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground block mb-2 font-bold">
-                            KEY HIGHLIGHTS
+                    {/* Tech Stack Pills */}
+                    <div>
+                      <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground block mb-2 font-bold">
+                        TECH STACK
+                      </span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {activeProject.details?.techs?.map((tech) => (
+                          <span
+                            key={tech}
+                            className="font-mono text-xs px-2.5 py-1 border border-border bg-background text-foreground font-semibold uppercase"
+                          >
+                            {tech}
                           </span>
-                          <ul className="space-y-2">
-                            {activeProject.details.highlights.map((highlight, idx) => (
-                              <li key={idx} className="flex items-start gap-2 text-xs text-foreground font-mono">
-                                <span className="w-1.5 h-1.5 bg-foreground shrink-0 mt-1.5 inline-block" />
-                                <span>{highlight.label}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Static Newspaper Mockup Frame with Action Button */}
-                    <div className="xl:col-span-6">
-                      <div className="border border-border bg-background relative group">
-                        {/* Browser Window Header */}
-                        <div className="bg-muted border-b border-border px-3 py-1.5 flex items-center justify-between font-mono text-[10px] text-muted-foreground">
-                          <div className="flex items-center gap-1">
-                            <span className="w-2 h-2 bg-foreground/40 inline-block" />
-                            <span className="w-2 h-2 bg-foreground/40 inline-block" />
-                            <span className="w-2 h-2 bg-foreground/40 inline-block" />
-                          </div>
-                          <code className="text-[10px] font-mono text-muted-foreground truncate max-w-[180px]">
-                            {activeProject.url}
-                          </code>
-                          <div className="w-4" />
-                        </div>
-
-                        {/* Hero Image Container with Newspaper Photo filter */}
-                        <div className="relative aspect-[16/10] overflow-hidden bg-background">
-                          {activeProject.details?.heroImage ? (
-                            <img
-                              src={activeProject.details.heroImage}
-                              alt={activeProject.title}
-                              className="w-full h-full object-cover newspaper-photo"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-muted">
-                              <activeProject.icon className="size-12 text-muted-foreground" />
-                            </div>
-                          )}
-
-                          {/* Gradient Overlay for button contrast */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent opacity-85" />
-
-                          {/* Action Button inside mockup area */}
-                          <div className="absolute bottom-3 right-3 left-3 flex items-center justify-between gap-2">
-                            {activeProject.slug && activeProject.details ? (
-                              <Link
-                                to={`/projects/${activeProject.slug}`}
-                                className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-foreground text-background font-mono text-xs font-bold uppercase tracking-wider hover:bg-foreground/80 transition-colors border border-foreground"
-                              >
-                                MORE DETAILS
-                                <ArrowUpRight className="size-4" />
-                              </Link>
-                            ) : (
-                              <span className="font-mono text-xs text-muted-foreground bg-background px-3 py-1.5 border border-border">
-                                IN DEVELOPMENT
-                              </span>
-                            )}
-
-                            {activeProject.url && activeProject.url.startsWith("http") && (
-                              <a
-                                href={activeProject.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="p-2 bg-background hover:bg-foreground hover:text-background border border-border transition-colors text-foreground"
-                                title="Open Live Site"
-                              >
-                                <ExternalLink className="size-4" />
-                              </a>
-                            )}
-                          </div>
-                        </div>
+                        ))}
                       </div>
                     </div>
+                  </div>
+
+                  {/* Full-Width Feature Highlights (2x2 Grid on Desktop) */}
+                  {activeProject.details?.highlights && activeProject.details.highlights.length > 0 && (
+                    <div className="mt-6 pt-5 border-t border-border">
+                      <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground block mb-3 font-bold">
+                        KEY HIGHLIGHTS
+                      </span>
+                      <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5">
+                        {activeProject.details.highlights.map((highlight, idx) => (
+                          <li key={idx} className="flex items-start gap-2 text-xs sm:text-sm text-foreground font-mono">
+                            <span className="w-1.5 h-1.5 bg-foreground shrink-0 mt-1.5 inline-block" />
+                            <span>{highlight.label}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Bottom Impact / Metrics Grid */}
+                  {activeProject.details?.metrics && activeProject.details.metrics.length > 0 && (
+                    <div className="mt-6 pt-5 border-t-2 border-border">
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        {activeProject.details.metrics.map((metric, idx) => (
+                          <div
+                            key={idx}
+                            className="p-3 bg-background border border-border hover:border-foreground transition-colors"
+                          >
+                            <div className="font-mono font-bold text-xl sm:text-2xl text-foreground">
+                              {metric.value}
+                            </div>
+                            <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider mt-0.5 truncate">
+                              {metric.label}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Final Bottom CTA Bar */}
+                  <div className="mt-6 pt-5 border-t border-border flex flex-wrap items-center justify-between gap-3">
+                    {activeProject.slug && activeProject.details ? (
+                      <Link
+                        to={`/projects/${activeProject.slug}`}
+                        className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-foreground text-background font-mono text-xs font-bold uppercase tracking-wider hover:bg-foreground/80 transition-colors border border-foreground"
+                      >
+                        MORE DETAILS
+                        <ArrowUpRight className="size-4" />
+                      </Link>
+                    ) : (
+                      <span className="font-mono text-xs text-muted-foreground bg-background px-4 py-2 border border-border">
+                        IN DEVELOPMENT
+                      </span>
+                    )}
+
+                    {isHttpUrl(activeProject.url) && (
+                      <a
+                        href={activeProject.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-4 py-2 bg-background hover:bg-foreground hover:text-background border border-border transition-colors font-mono text-xs font-bold text-foreground"
+                        title="Open Live Site"
+                      >
+                        <ExternalLink className="size-3.5" />
+                        VISIT DEMO
+                      </a>
+                    )}
                   </div>
                 </div>
-
-                {/* Bottom Impact / Metrics Grid */}
-                {activeProject.details?.metrics && activeProject.details.metrics.length > 0 && (
-                  <div className="pt-4 border-t-2 border-border mt-4">
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                      {activeProject.details.metrics.map((metric, idx) => (
-                        <div
-                          key={idx}
-                          className="p-3 bg-background border border-border hover:border-foreground transition-colors"
-                        >
-                          <div className="font-mono font-bold text-xl sm:text-2xl text-foreground">
-                            {metric.value}
-                          </div>
-                          <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider mt-0.5 truncate">
-                            {metric.label}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </div>
             )}
           </div>

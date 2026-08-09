@@ -35,9 +35,12 @@ export default function ProjectDetailPage() {
     }
   };
 
-  const goToSlide = (index: number) => {
-    setCurrentIndex(index);
+  const isHttpUrl = (url?: string): boolean => {
+    if (!url) return false;
+    return /^https?:\/\//i.test(url.trim());
   };
+
+  const hasValidUrl = isHttpUrl(project.url);
 
   return (
     <PageLayout title={project.title} backTo="/projects" backLabel="Back to Projects">
@@ -71,7 +74,7 @@ export default function ProjectDetailPage() {
             ))}
           </div>
 
-          {project.url !== "#" && (
+          {hasValidUrl && (
             <a
               href={project.url}
               target="_blank"

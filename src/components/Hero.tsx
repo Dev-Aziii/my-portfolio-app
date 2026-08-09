@@ -23,13 +23,8 @@ export default function Hero({ data }: HeroProps) {
         Building Modern Software with AI
         </h2>
 
-        {/* Lead Summary */}
-        <p className="text-base sm:text-lg text-muted-foreground leading-relaxed font-sans max-w-3xl">
-        Building scalable web and mobile applications with AI-assisted development.
-        </p>
-
         {/* Rectangular Action Buttons Bar */}
-        <div className="flex flex-wrap items-center gap-3 pt-4">
+        <div className="flex flex-wrap items-center gap-3 pt-0">
           <a
             href={data.cvUrl}
             target="_blank"
