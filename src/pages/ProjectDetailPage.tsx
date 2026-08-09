@@ -5,6 +5,7 @@ import PageLayout from "@/components/PageLayout";
 import Lightbox from "@/components/Lightbox";
 import { projects } from "@/data";
 import usePageTitle from "@/hooks/usePageTitle";
+import { formatDemoLabel, isValidHttpUrl } from "@/lib/utils";
 
 const ROMAN_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
 
@@ -34,12 +35,7 @@ export default function ProjectDetailPage() {
 
   const goToSlide = (index: number) => setCurrentIndex(index);
 
-  const isHttpUrl = (url?: string): boolean => {
-    if (!url) return false;
-    return /^https?:\/\//i.test(url.trim());
-  };
-
-  const hasValidUrl = isHttpUrl(project.url);
+  const hasValidUrl = isValidHttpUrl(project.url);
 
   const plateLabel =
     currentIndex === 0
@@ -231,7 +227,7 @@ export default function ProjectDetailPage() {
             ))}
           </div>
 
-          {hasValidUrl && (
+          {hasValidUrl ? (
             <a
               href={project.url}
               target="_blank"
@@ -241,6 +237,14 @@ export default function ProjectDetailPage() {
               <ExternalLink className="size-3.5" />
               VISIT PROJECT DEMO
             </a>
+          ) : (
+            <span
+              className="inline-flex items-center gap-1.5 font-mono text-xs font-bold text-muted-foreground border border-border px-3 py-1 bg-background cursor-default"
+              title={formatDemoLabel(project.url)}
+            >
+              <span className="size-3.5 inline-block rounded-full border border-muted-foreground/60" />
+              {formatDemoLabel(project.url)}
+            </span>
           )}
         </div>
       </div>

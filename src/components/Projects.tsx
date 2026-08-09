@@ -2,6 +2,7 @@ import { ArrowUpRight, Copy, Check, ExternalLink, ChevronUp, ChevronDown } from 
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import type { Project } from "@/data/types";
+import { formatDemoLabel, isValidHttpUrl } from "@/lib/utils";
 
 interface ProjectsProps {
   projects: Project[];
@@ -53,11 +54,6 @@ export default function Projects({
     }
   };
 
-  const isHttpUrl = (url?: string): boolean => {
-    if (!url) return false;
-    return /^https?:\/\//i.test(url.trim());
-  };
-
   const activeProject = displayed[activeIndex] || displayed[0];
 
   return (
@@ -92,7 +88,7 @@ export default function Projects({
               const Icon = project.icon;
               const isCopied = copiedUrl === project.url;
               const hasHeroImage = project.details?.heroImage;
-              const hasValidUrl = isHttpUrl(project.url);
+              const hasValidUrl = isValidHttpUrl(project.url);
 
               const cardContent = (
                 <div className="flex flex-col h-full justify-between p-5 bg-card border border-border hover:border-foreground transition-colors group">
@@ -135,7 +131,7 @@ export default function Projects({
                       ))}
                     </div>
 
-                    {hasValidUrl && (
+                    {hasValidUrl ? (
                       <button
                         onClick={(e) => copyToClipboard(project.url, e)}
                         className="p-1.5 border border-border hover:border-foreground transition-colors shrink-0"
@@ -148,6 +144,15 @@ export default function Projects({
                           <Copy className="size-3.5 text-muted-foreground hover:text-foreground" />
                         )}
                       </button>
+                    ) : (
+                      <span
+                        className="p-1.5 border border-border shrink-0 max-w-[45%] inline-flex items-center justify-center cursor-default"
+                        title={formatDemoLabel(project.url)}
+                      >
+                        <span className="font-mono text-[10px] uppercase font-semibold text-muted-foreground tracking-wider truncate">
+                          {formatDemoLabel(project.url)}
+                        </span>
+                      </span>
                     )}
                   </div>
                 </div>
@@ -387,7 +392,7 @@ export default function Projects({
                       </span>
                     )}
 
-                    {isHttpUrl(activeProject.url) && (
+                    {isValidHttpUrl(activeProject.url) ? (
                       <a
                         href={activeProject.url}
                         target="_blank"
@@ -398,6 +403,14 @@ export default function Projects({
                         <ExternalLink className="size-3.5" />
                         VISIT DEMO
                       </a>
+                    ) : (
+                      <span
+                        className="inline-flex items-center gap-1.5 px-4 py-2 bg-background border border-border font-mono text-xs font-bold text-muted-foreground cursor-default"
+                        title={formatDemoLabel(activeProject.url)}
+                      >
+                        <span className="size-3.5 inline-block rounded-full border border-muted-foreground/60" />
+                        {formatDemoLabel(activeProject.url)}
+                      </span>
                     )}
                   </div>
                 </div>
