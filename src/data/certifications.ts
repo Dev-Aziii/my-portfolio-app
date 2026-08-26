@@ -1,5 +1,5 @@
 import type { Certification } from "./types";
-import { SiGoogle, SiOracle, SiMongodb, SiLaravel, SiCisco, SiDotnet } from "react-icons/si";
+import { SiCisco } from "react-icons/si";
 import { VscTerminal } from "react-icons/vsc";
 import { TbShield, TbWorldCode } from "react-icons/tb";
 

@@ -119,12 +119,12 @@ export default function Home() {
           <About paragraphs={aboutParagraphs} />
         </section>
 
-        {/* Section 02 & 03: Experience & Tech Stack side-by-side with vertical rule divider */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 animate-fade-in-up">
+        {/* Section 02 & 03: Experience & Tech Stack side-by-side */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 animate-fade-in-up">
           <section id="experience" className="scroll-mt-28">
             <Experience entries={experiences} compact />
           </section>
-          <section id="techstack" className="scroll-mt-28 lg:border-l border-border lg:pl-10">
+          <section id="techstack" className="scroll-mt-28 lg:border-l border-border dark:lg:border-l-0 lg:pl-10 dark:lg:pl-0">
             <TechStack
               categories={techStack}
               limit={6}
@@ -145,7 +145,7 @@ export default function Home() {
         </section>
 
         {/* Section 05: Certifications (Full-width horizontal section) */}
-        <section id="certifications" className="scroll-mt-28 animate-fade-in-up border-t border-border pt-10">
+        <section id="certifications" className="scroll-mt-28 animate-fade-in-up border-t border-border dark:border-cyan-500/20 pt-10">
           <Certifications
             certifications={certifications}
             limit={3}
@@ -154,34 +154,17 @@ export default function Home() {
         </section>
 
         {/* Section 06: GitHub Contributions */}
-        <section id="github" className="scroll-mt-28 animate-fade-in-up border-t border-border pt-10">
+        <section id="github" className="scroll-mt-28 animate-fade-in-up border-t border-border dark:border-cyan-500/20 pt-10">
           <GitHubContributions />
         </section>
 
-        {/* Recommendations (Hidden for now) */}
-        {/*
-        <section id="recommendations" className="scroll-mt-28 animate-fade-in-up">
-          <Recommendations recommendations={recommendations} />
-        </section>
-        */}
-
-        {/* Gallery (Hidden for now) */}
-        {/*
-        <section id="gallery" className="scroll-mt-28 animate-fade-in-up">
-          <Gallery images={galleryImages} />
-        </section>
-        */}
-
-        {/* Newspaper Colophon Footer */}
+        {/* Newspaper / HUD Colophon Footer */}
         <Footer
           socialLinks={socialLinks}
           memberships={memberships}
           email={contactEmail}
         />
       </main>
-
-      {/* Editorial Floating Section Tracker */}
-      {/* <SectionNav /> */}
     </>
   );
 }

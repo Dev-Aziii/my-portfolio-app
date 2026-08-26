@@ -31,6 +31,8 @@
 
   --animate-fade-in-up: fade-in-up 0.5s ease-out both;
   --animate-theme-pulse: theme-pulse 2.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-hud-spin: hud-spin 20s linear infinite;
+  --animate-hud-pulse: hud-pulse 3s ease-in-out infinite;
 
   @keyframes fade-in-up {
     from {
@@ -52,6 +54,26 @@
     100% {
       transform: scale(1.45);
       opacity: 0;
+    }
+  }
+
+  @keyframes hud-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes hud-pulse {
+    0%, 100% {
+      opacity: 0.7;
+      filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.4));
+    }
+    50% {
+      opacity: 1;
+      filter: drop-shadow(0 0 16px rgba(0, 240, 255, 0.8));
     }
   }
 }
@@ -76,27 +98,31 @@
   --border: #C8BDAB;
   --input: #C8BDAB;
   --ring: #1C1A17;
+  --dot-rgb: 113, 113, 122;
+  --dot-alpha: 0.06;
 }
 
 .dark {
-  --background: #141312;
-  --foreground: #F4EFE6;
-  --card: #1D1C19;
-  --card-foreground: #F4EFE6;
-  --popover: #141312;
-  --popover-foreground: #F4EFE6;
-  --primary: #F4EFE6;
-  --primary-foreground: #141312;
-  --secondary: #262420;
-  --secondary-foreground: #F4EFE6;
-  --muted: #22201C;
-  --muted-foreground: #C2B7A5;
-  --accent: #262420;
-  --accent-foreground: #F4EFE6;
-  --destructive: #D9534F;
-  --border: #4A443B;
-  --input: #4A443B;
-  --ring: #F4EFE6;
+  --background: #060b13;
+  --foreground: #edf5ff;
+  --card: #08111e;
+  --card-foreground: #edf5ff;
+  --popover: #08111e;
+  --popover-foreground: #edf5ff;
+  --primary: #00f0ff;
+  --primary-foreground: #040812;
+  --secondary: #0d1b2e;
+  --secondary-foreground: #7dd3fc;
+  --muted: #0a1424;
+  --muted-foreground: #708ea8;
+  --accent: #0c1a2d;
+  --accent-foreground: #38bdf8;
+  --destructive: #ef4444;
+  --border: #162842;
+  --input: #162842;
+  --ring: #00f0ff;
+  --dot-rgb: 0, 240, 255;
+  --dot-alpha: 0.14;
 }
 
 @layer base {
@@ -120,7 +146,7 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* View Transitions API overrides for smooth hardware-accelerated theme circular ripple */
+  /* View Transitions API overrides for smooth circular ripple */
   ::view-transition-old(root),
   ::view-transition-new(root) {
     animation: none;
@@ -135,8 +161,8 @@
     z-index: 9999;
   }
 
-  /* Subtle Paper Grain Texture Overlay */
-  body::before {
+  /* Subtle Paper Grain Texture Overlay (Light Mode Only) */
+  html:not(.dark) body::before {
     content: "";
     position: fixed;
     inset: 0;
@@ -157,7 +183,7 @@
     font-family: var(--font-mono);
   }
 
-  /* Custom Newspaper Scrollbar */
+  /* Custom Scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
   }
@@ -168,6 +194,12 @@
     background-color: var(--border);
     border-radius: 0px;
   }
+  .dark ::-webkit-scrollbar-thumb {
+    background-color: #1a304e;
+  }
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background-color: #00f0ff;
+  }
 }
 
 @layer components {
@@ -175,13 +207,22 @@
   .rule-double {
     border-top: 3px double var(--border);
   }
+  .dark .rule-double {
+    border-top: 1px solid rgba(56, 189, 248, 0.2);
+  }
 
   .rule-double-bold {
     border-top: 4px double var(--foreground);
   }
+  .dark .rule-double-bold {
+    border-top: 2px solid rgba(0, 240, 255, 0.4);
+  }
 
   .rule-single {
     border-top: 1px solid var(--border);
+  }
+  .dark .rule-single {
+    border-top: 1px solid rgba(56, 189, 248, 0.15);
   }
 
   /* Newspaper photo treatment: crisp desaturated feel that gains contrast on hover */
@@ -195,6 +236,15 @@
     filter: grayscale(0%) contrast(100%);
   }
 
+  .dark .newspaper-photo {
+    filter: grayscale(30%) contrast(110%) brightness(95%);
+  }
+
+  .dark .group:hover .newspaper-photo,
+  .dark .newspaper-photo:hover {
+    filter: grayscale(0%) contrast(105%) brightness(100%);
+  }
+
   /* Monospace badge label */
   .mono-tag {
     font-family: var(--font-mono);
@@ -205,11 +255,128 @@
     border: 1px solid var(--border);
     background-color: var(--card);
     color: var(--foreground);
-    transition: border-color 200ms ease, background-color 200ms ease;
+    transition: border-color 200ms ease, background-color 200ms ease, color 200ms ease, box-shadow 200ms ease;
   }
 
   .mono-tag:hover {
     border-color: var(--foreground);
+  }
+
+  .dark .mono-tag {
+    background-color: rgba(9, 18, 32, 0.85);
+    border-color: rgba(56, 189, 248, 0.25);
+    color: #93b3d4;
+  }
+
+  .dark .mono-tag:hover {
+    border-color: #00f0ff;
+    color: #00f0ff;
+    background-color: rgba(0, 240, 255, 0.08);
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.18);
+  }
+
+  /* Futuristic HUD Panel */
+  .hud-panel {
+    position: relative;
+    border: 1px solid var(--border);
+    background-color: var(--card);
+    transition: border-color 300ms ease, box-shadow 300ms ease;
+  }
+
+  .dark .hud-panel {
+    background: linear-gradient(180deg, rgba(9, 18, 32, 0.88) 0%, rgba(5, 12, 22, 0.95) 100%);
+    border-color: rgba(56, 189, 248, 0.22);
+    box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.6), inset 0 1px 0 0 rgba(56, 189, 248, 0.12);
+  }
+
+  .dark .hud-panel:hover {
+    border-color: rgba(0, 240, 255, 0.45);
+    box-shadow: 0 10px 35px -4px rgba(0, 0, 0, 0.7), 0 0 20px -2px rgba(0, 240, 255, 0.12), inset 0 1px 0 0 rgba(0, 240, 255, 0.25);
+  }
+
+  /* Corner Bracket Accents */
+  .hud-corners::before,
+  .hud-corners::after {
+    content: "";
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    pointer-events: none;
+    transition: border-color 300ms ease;
+  }
+
+  .dark .hud-corners::before {
+    top: -1px;
+    left: -1px;
+    border-top: 2px solid #00f0ff;
+    border-left: 2px solid #00f0ff;
+  }
+
+  .dark .hud-corners::after {
+    bottom: -1px;
+    right: -1px;
+    border-bottom: 2px solid #00f0ff;
+    border-right: 2px solid #00f0ff;
+  }
+
+  /* Tech Buttons */
+  .hud-btn-primary {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 250ms ease;
+  }
+
+  .dark .hud-btn-primary {
+    background-color: rgba(0, 240, 255, 0.12);
+    border: 1px solid #00f0ff;
+    color: #00f0ff;
+    box-shadow: 0 0 12px rgba(0, 240, 255, 0.25), inset 0 0 8px rgba(0, 240, 255, 0.1);
+  }
+
+  .dark .hud-btn-primary:hover {
+    background-color: rgba(0, 240, 255, 0.22);
+    color: #ffffff;
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.45), inset 0 0 12px rgba(0, 240, 255, 0.2);
+    transform: translateY(-1px);
+  }
+
+  .hud-btn-secondary {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 250ms ease;
+  }
+
+  .dark .hud-btn-secondary {
+    background-color: rgba(10, 20, 36, 0.8);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    color: #c4def6;
+  }
+
+  .dark .hud-btn-secondary:hover {
+    border-color: rgba(0, 240, 255, 0.6);
+    color: #00f0ff;
+    background-color: rgba(14, 28, 48, 0.9);
+    box-shadow: 0 0 12px rgba(0, 240, 255, 0.18);
   }
 }
 
@@ -239,3 +406,4 @@
   pointer-events: none;
   z-index: 0;
 }
+

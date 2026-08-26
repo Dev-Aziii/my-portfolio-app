@@ -8,10 +8,12 @@ import CertificationsPage from "@/pages/CertificationsPage";
 import NotFound from "@/pages/NotFound";
 import ScrollToTop from "./components/ScrollToTop";
 import BackToTop from "./components/BackToTop";
+import CyberHUDFrame from "./components/CyberHUDFrame";
 
 function App() {
   return (
     <BrowserRouter>
+      <CyberHUDFrame />
       <div className="app-content-layer">
         <ScrollToTop />
         <Routes>
@@ -30,3 +32,4 @@ function App() {
 }
 
 export default App;
+

@@ -80,11 +80,11 @@ export default function GitHubContributions({
   };
 
   const CELL_STYLES: Record<number, string> = {
-    0: "bg-transparent ring-1 ring-inset ring-border",
-    1: "bg-muted",
-    2: "bg-muted-foreground/55",
-    3: "bg-foreground/90",
-    4: "bg-destructive",
+    0: "bg-transparent ring-1 ring-inset ring-border dark:bg-[#091526] dark:ring-cyan-900/40",
+    1: "bg-muted dark:bg-[#0e3b5e]",
+    2: "bg-muted-foreground/55 dark:bg-[#0891b2] dark:shadow-[0_0_4px_rgba(6,182,212,0.4)]",
+    3: "bg-foreground/90 dark:bg-[#06b6d4] dark:shadow-[0_0_8px_rgba(6,182,212,0.7)]",
+    4: "bg-destructive dark:bg-[#00f0ff] dark:shadow-[0_0_12px_rgba(0,240,255,0.9)]",
   };
 
   const cellClass = (level: number) => CELL_STYLES[level] ?? CELL_STYLES[0];
@@ -104,15 +104,15 @@ export default function GitHubContributions({
     <section className="h-full flex flex-col justify-between">
       <div>
         {/* Section Header */}
-        <div className="flex justify-between items-center border-b border-border pb-2 mb-6">
-          <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground font-bold">
+        <div className="flex justify-between items-center border-b border-border dark:border-cyan-500/20 pb-2 mb-6">
+          <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground dark:text-cyan-400 font-bold">
             [ 06 // GITHUB ]
           </h3>
           <a
             href={`https://github.com/${data.username}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-mono text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center uppercase tracking-wider group"
+            className="font-mono text-xs text-muted-foreground dark:text-cyan-400/80 hover:text-foreground dark:hover:text-cyan-300 transition-colors flex items-center uppercase tracking-wider group"
           >
             @{data.username.toUpperCase()}
             <ArrowUpRight className="size-3.5 ml-1 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
@@ -120,12 +120,12 @@ export default function GitHubContributions({
         </div>
 
         {/* Contribution Graph Container */}
-        <div className="bg-card/40 border border-border p-4 sm:p-6">
-          <div className="flex items-center justify-between border-b border-border pb-2 mb-4">
-            <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+        <div className="bg-card/40 dark:bg-[#081220]/90 border border-border dark:border-cyan-500/25 p-4 sm:p-6 hud-corners">
+          <div className="flex items-center justify-between border-b border-border dark:border-cyan-500/20 pb-2 mb-4">
+            <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground dark:text-cyan-400">
               Contribution Record
             </span>
-            <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground hidden sm:inline">
+            <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground dark:text-cyan-500/70 hidden sm:inline">
               Last 12 Months
             </span>
           </div>
@@ -140,7 +140,7 @@ export default function GitHubContributions({
                 return (
                   <div key={weekIdx} className="w-3 overflow-visible">
                     {label && (
-                      <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground whitespace-nowrap">
+                      <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground dark:text-cyan-400/70 whitespace-nowrap">
                         {label}
                       </span>
                     )}
@@ -159,16 +159,16 @@ export default function GitHubContributions({
                     top: `${hoveredDay.y - 6}px`,
                     transform: getTooltipTransform(hoveredDay.weekIdx),
                   }}
-                  className="pointer-events-none z-30 px-2.5 py-1.5 bg-popover text-popover-foreground border border-border shadow-[3px_3px_0_0_var(--border)] whitespace-nowrap animate-fade-in"
+                  className="pointer-events-none z-30 px-2.5 py-1.5 bg-popover dark:bg-[#091526] text-popover-foreground dark:text-cyan-200 border border-border dark:border-cyan-400/70 shadow-[3px_3px_0_0_var(--border)] dark:shadow-[0_0_15px_rgba(0,240,255,0.25)] whitespace-nowrap animate-fade-in"
                 >
-                  <p className="font-serif font-bold text-sm leading-tight text-foreground">
+                  <p className="font-serif font-bold text-sm leading-tight text-foreground dark:text-white">
                     {hoveredDay.day.count === 0
                       ? "No contributions"
                       : `${hoveredDay.day.count} contribution${
                           hoveredDay.day.count === 1 ? "" : "s"
                         }`}
                   </p>
-                  <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground mt-0.5">
+                  <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground dark:text-cyan-400/80 mt-0.5">
                     on {formatDate(hoveredDay.day.date)}
                   </p>
                 </div>
@@ -202,7 +202,7 @@ export default function GitHubContributions({
           </div>
 
           {/* Footer Summary Count + Legend */}
-          <div className="mt-4 pt-4 border-t border-border/40 flex flex-wrap items-center justify-between gap-3 text-xs font-mono tracking-wider text-muted-foreground uppercase">
+          <div className="mt-4 pt-4 border-t border-border/40 dark:border-cyan-500/20 flex flex-wrap items-center justify-between gap-3 text-xs font-mono tracking-wider text-muted-foreground dark:text-cyan-400/80 uppercase">
             <span>
               {data.totalContributions.toLocaleString()} CONTRIBUTIONS IN THE LAST YEAR
             </span>
@@ -219,3 +219,4 @@ export default function GitHubContributions({
     </section>
   );
 }
+

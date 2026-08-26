@@ -83,16 +83,16 @@ export default function ThemeToggle() {
     <button
       type="button"
       onClick={toggleTheme}
-      className="relative inline-flex size-8 sm:size-9 items-center justify-center rounded-full border border-border bg-card text-foreground hover:border-foreground transition-colors cursor-pointer"
+      className="relative inline-flex size-8 sm:size-9 items-center justify-center rounded-full border border-border bg-card text-foreground hover:border-foreground dark:border-cyan-400/70 dark:bg-cyan-950/40 dark:text-cyan-300 dark:hover:border-cyan-300 dark:hover:bg-cyan-900/50 dark:shadow-[0_0_12px_rgba(0,240,255,0.25)] transition-all cursor-pointer"
       aria-label="Toggle theme"
-      title={isDark ? "Switch to Light Edition" : "Switch to Dark Edition"}
+      title={isDark ? "Switch to Vintage Light Edition" : "Switch to Cyber Dark Edition"}
     >
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute -inset-1 rounded-full border border-foreground/40 animate-theme-pulse motion-reduce:animate-none"
+        className="pointer-events-none absolute -inset-1 rounded-full border border-foreground/30 dark:border-cyan-400/40 animate-theme-pulse motion-reduce:animate-none"
       />
       {isDark ? (
-        <Sun className="size-4" />
+        <Sun className="size-4 text-cyan-300 drop-shadow-[0_0_6px_rgba(0,240,255,0.6)]" />
       ) : (
         <Moon className="size-4" />
       )}
