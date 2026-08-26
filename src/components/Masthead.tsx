@@ -204,10 +204,10 @@ export default function Masthead({ onNavigateSection }: MastheadProps) {
           {/* Top Issue Bar - Desktop only */}
           <div
             id="masthead-top"
-            className={`transition-all duration-300 ease-in-out motion-reduce:transition-none hidden md:flex items-center justify-between text-xs font-mono tracking-widest text-muted-foreground dark:text-cyan-400/90 overflow-hidden ${
+            className={`transition-all duration-300 ease-in-out motion-reduce:transition-none hidden md:flex items-center justify-between text-xs font-mono tracking-widest text-muted-foreground dark:text-cyan-400/90 ${
               isScrolled
-                ? "max-h-0 opacity-0 pb-0 border-none pointer-events-none"
-                : "max-h-12 opacity-100 pb-2 border-b border-border dark:border-cyan-500/20 pointer-events-auto"
+                ? "max-h-0 opacity-0 pb-0 border-none pointer-events-none overflow-hidden"
+                : "max-h-14 opacity-100 pb-2 border-b border-border dark:border-cyan-500/20 pointer-events-auto"
             }`}
           >
             <div className="flex items-center gap-3">
