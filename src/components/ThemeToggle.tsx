@@ -10,6 +10,7 @@ export default function ThemeToggle() {
     }
     return false;
   });
+  const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
 
   useEffect(() => {
     const html = document.documentElement;
@@ -23,19 +24,37 @@ export default function ThemeToggle() {
     const handleThemeChange = () => syncState();
     window.addEventListener("theme-change", handleThemeChange);
 
+    const handleWarpStart = () => setIsTransitioning(true);
+    const handleWarpEnd = () => setIsTransitioning(false);
+
+    window.addEventListener("temporal-warp", handleWarpStart);
+    window.addEventListener("temporal-warp-complete", handleWarpEnd);
+
     const observer = new MutationObserver(() => syncState());
     observer.observe(html, { attributes: true, attributeFilter: ["class"] });
 
     return () => {
       window.removeEventListener("theme-change", handleThemeChange);
+      window.removeEventListener("temporal-warp", handleWarpStart);
+      window.removeEventListener("temporal-warp-complete", handleWarpEnd);
       observer.disconnect();
     };
   }, []);
 
   const toggleTheme = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (isTransitioning) {
+      return;
+    }
+
+    setIsTransitioning(true);
+
     const html = document.documentElement;
     const isCurrentlyDark = html.classList.contains("dark");
     const targetDark = !isCurrentlyDark;
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
 
     const updateDOM = () => {
       if (targetDark) {
@@ -52,66 +71,106 @@ export default function ThemeToggle() {
 
     const isReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    if (
-      typeof document === "undefined" ||
-      !("startViewTransition" in document) ||
-      isReducedMotion
-    ) {
+    if (isReducedMotion) {
       updateDOM();
+      setIsTransitioning(false);
       return;
     }
 
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = rect.left + rect.width / 2;
-    const y = rect.top + rect.height / 2;
+    // Auto-release transition lock as a safety fallback
+    setTimeout(() => {
+      setIsTransitioning(false);
+    }, 1600);
+
+    // Broadcast temporal warp event for time-travel animation overlay
+    window.dispatchEvent(
+      new CustomEvent("temporal-warp", {
+        detail: {
+          direction: targetDark ? "to-future" : "to-past",
+          x,
+          y,
+          duration: 1500,
+        },
+      })
+    );
 
     const endRadius = Math.hypot(
       Math.max(x, window.innerWidth - x),
       Math.max(y, window.innerHeight - y)
     );
 
-    const transition = (
-      document as unknown as {
-        startViewTransition: (cb: () => void) => { ready: Promise<void> };
-      }
-    ).startViewTransition(() => {
-      updateDOM();
-    });
+    // Synchronize DOM update with warp apex flash
+    if (
+      typeof document !== "undefined" &&
+      "startViewTransition" in document
+    ) {
+      setTimeout(() => {
+        try {
+          const transition = (
+            document as unknown as {
+              startViewTransition: (cb: () => void) => { ready: Promise<void> };
+            }
+          ).startViewTransition(() => {
+            updateDOM();
+          });
 
-    transition.ready.then(() => {
-      const clipPath = [
-        `circle(0px at ${x}px ${y}px)`,
-        `circle(${endRadius}px at ${x}px ${y}px)`,
-      ];
+          transition.ready
+            .then(() => {
+              try {
+                const clipPath = [
+                  `circle(0px at ${x}px ${y}px)`,
+                  `circle(${endRadius}px at ${x}px ${y}px)`,
+                ];
 
-      document.documentElement.animate(
-        {
-          clipPath: clipPath,
-        },
-        {
-          duration: 450,
-          easing: "cubic-bezier(0.4, 0, 0.2, 1)",
-          pseudoElement: "::view-transition-new(root)",
+                document.documentElement.animate(
+                  {
+                    clipPath: clipPath,
+                  },
+                  {
+                    duration: 650,
+                    easing: "cubic-bezier(0.2, 0.8, 0.2, 1)",
+                    pseudoElement: "::view-transition-new(root)",
+                  }
+                );
+              } catch {
+                // Ignore animation error if already aborted
+              }
+            })
+            .catch(() => {
+              // Transition was interrupted or skipped
+            });
+        } catch {
+          updateDOM();
         }
-      );
-    });
+      }, 550);
+    } else {
+      setTimeout(() => {
+        updateDOM();
+      }, 550);
+    }
   };
 
   return (
     <button
       type="button"
       onClick={toggleTheme}
+      disabled={isTransitioning}
+      aria-disabled={isTransitioning}
       aria-label={
         isDark
           ? "Time Machine: Future Active. Click to travel back to the Past."
           : "Time Machine: Past Active. Click to travel forward to the Future."
       }
       title={
-        isDark
+        isTransitioning
+          ? "Time Travel in Progress..."
+          : isDark
           ? "Time Machine: FUTURE Active (Click to travel to PAST)"
           : "Time Machine: PAST Active (Click to travel to FUTURE)"
       }
-      className={`group/timemachine relative inline-flex size-9 sm:size-10 items-center justify-center rounded-full p-0 cursor-pointer select-none transition-all duration-300 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-foreground dark:focus-visible:ring-cyan-400 ${
+      className={`group/timemachine relative inline-flex size-9 sm:size-10 items-center justify-center rounded-full p-0 select-none transition-all duration-300 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-foreground dark:focus-visible:ring-cyan-400 ${
+        isTransitioning ? "cursor-not-allowed opacity-85 pointer-events-none" : "cursor-pointer"
+      } ${
         isDark
           ? "shadow-[0_0_12px_rgba(0,240,255,0.4)] hover:shadow-[0_0_20px_rgba(0,240,255,0.7)]"
           : "shadow-xs hover:shadow-[0_0_10px_rgba(197,168,128,0.4)]"

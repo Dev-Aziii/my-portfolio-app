@@ -9,10 +9,12 @@ import NotFound from "@/pages/NotFound";
 import ScrollToTop from "./components/ScrollToTop";
 import BackToTop from "./components/BackToTop";
 import CyberHUDFrame from "./components/CyberHUDFrame";
+import TimeWarpOverlay from "./components/TimeWarpOverlay";
 
 function App() {
   return (
     <BrowserRouter>
+      <TimeWarpOverlay />
       <CyberHUDFrame />
       <div className="app-content-layer">
         <ScrollToTop />
