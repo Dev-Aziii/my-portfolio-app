@@ -263,9 +263,9 @@ export default function Masthead({ onNavigateSection }: MastheadProps) {
                 : "max-h-56 opacity-100 my-3 py-4 sm:py-6 pointer-events-auto"
             }`}
           >
-            <div className="flex items-center gap-6 lg:gap-8 px-1">
+            <div className="flex items-center gap-6 lg:gap-8 px-4 sm:px-6">
               {/* Glowing Profile Portrait Frame */}
-              <div className="shrink-0 group relative cursor-pointer">
+              <div className="shrink-0 group relative cursor-pointer my-1">
                 {/* Light Mode: Classic Double Ring */}
                 <div className="dark:hidden p-1 border-2 border-border/80 rounded-full bg-card/40 shadow-md transition-all duration-500 group-hover:border-foreground/40">
                   <div className="size-28 lg:size-32 rounded-full border border-border/60 overflow-hidden bg-muted">
@@ -278,12 +278,12 @@ export default function Masthead({ onNavigateSection }: MastheadProps) {
                 </div>
 
                 {/* Dark Mode: Futuristic Glowing HUD Ring */}
-                <div className="hidden dark:block relative p-2">
+                <div className="hidden dark:block relative p-3">
                   {/* Outer Pulsing Neon Glow Ring */}
-                  <div className="absolute inset-0 rounded-full border-2 border-cyan-400/80 shadow-[0_0_20px_rgba(0,240,255,0.45),inset_0_0_15px_rgba(0,240,255,0.25)] animate-hud-pulse" />
+                  <div className="absolute inset-1 rounded-full border-2 border-cyan-400/80 shadow-[0_0_20px_rgba(0,240,255,0.45),inset_0_0_15px_rgba(0,240,255,0.25)] animate-hud-pulse" />
                   
                   {/* Outer Segmented HUD Arc Details */}
-                  <svg className="absolute -inset-1 size-[calc(100%+8px)] pointer-events-none text-cyan-400" viewBox="0 0 100 100">
+                  <svg className="absolute inset-0 size-full pointer-events-none text-cyan-400" viewBox="0 0 100 100">
                     {/* Top-Left Arc Segment */}
                     <path
                       d="M 18,30 A 42 42 0 0 1 30,18"
@@ -346,16 +346,12 @@ export default function Masthead({ onNavigateSection }: MastheadProps) {
 
                   {/* Dark Mode: Futuristic HUD Segmented Nav Bar */}
                   <div className="hidden dark:inline-flex items-center gap-1 p-1 rounded-sm bg-[#081220]/90 border border-cyan-500/30 shadow-[0_0_15px_rgba(0,240,255,0.08)] max-w-full overflow-x-auto">
-                    {navItems.map((item, idx) => (
+                    {navItems.map((item) => (
                       <a
                         key={item.id}
                         href={`#${item.id}`}
                         onClick={(e) => handleNavClick(item.id, e)}
-                        className={`px-3 py-1.5 font-mono text-xs uppercase tracking-wider font-semibold transition-all whitespace-nowrap ${
-                          idx === 0
-                            ? "bg-cyan-950/60 border border-cyan-400 text-cyan-300 shadow-[0_0_10px_rgba(0,240,255,0.3)]"
-                            : "border border-transparent text-cyan-200/70 hover:text-cyan-300 hover:border-cyan-500/40 hover:bg-cyan-950/30"
-                        }`}
+                        className="px-3 py-1.5 font-mono text-xs uppercase tracking-wider font-semibold transition-all whitespace-nowrap border border-transparent text-cyan-200/70 hover:text-cyan-300 hover:border-cyan-500/40 hover:bg-cyan-950/30 rounded-xs"
                       >
                         {item.label}
                       </a>

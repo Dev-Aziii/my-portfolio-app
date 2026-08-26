@@ -2,21 +2,36 @@ import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 
 export default function ThemeToggle() {
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState<boolean>(() => {
+    if (typeof document !== "undefined") {
+      return document.documentElement.classList.contains("dark");
+    }
+    return false;
+  });
 
   useEffect(() => {
     const html = document.documentElement;
-    if (
-      localStorage.theme === "dark" ||
-      (!("theme" in localStorage) &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches)
-    ) {
-      html.classList.add("dark");
-      setIsDark(true);
-    } else {
-      html.classList.remove("dark");
-      setIsDark(false);
-    }
+
+    // Sync state with DOM
+    const syncState = () => {
+      setIsDark(html.classList.contains("dark"));
+    };
+
+    // Initial check
+    syncState();
+
+    // Listen for custom theme change events dispatched by other ThemeToggle instances
+    const handleThemeChange = () => syncState();
+    window.addEventListener("theme-change", handleThemeChange);
+
+    // Also observe class mutations on html element
+    const observer = new MutationObserver(() => syncState());
+    observer.observe(html, { attributes: true, attributeFilter: ["class"] });
+
+    return () => {
+      window.removeEventListener("theme-change", handleThemeChange);
+      observer.disconnect();
+    };
   }, []);
 
   const toggleTheme = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -33,6 +48,8 @@ export default function ThemeToggle() {
         localStorage.theme = "dark";
         setIsDark(true);
       }
+      // Broadcast to all other ThemeToggle instances
+      window.dispatchEvent(new CustomEvent("theme-change"));
     };
 
     const isReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -91,11 +108,10 @@ export default function ThemeToggle() {
         aria-hidden="true"
         className="pointer-events-none absolute -inset-1 rounded-full border border-foreground/30 dark:border-cyan-400/40 animate-theme-pulse motion-reduce:animate-none"
       />
-      {isDark ? (
-        <Sun className="size-4 text-cyan-300 drop-shadow-[0_0_6px_rgba(0,240,255,0.6)]" />
-      ) : (
-        <Moon className="size-4" />
-      )}
+      {/* Sun Icon: strictly visible only when .dark is on html element */}
+      <Sun className="hidden dark:block size-4 text-cyan-300 drop-shadow-[0_0_6px_rgba(0,240,255,0.6)]" />
+      {/* Moon Icon: strictly visible only in light mode */}
+      <Moon className="block dark:hidden size-4 text-foreground" />
     </button>
   );
 }
