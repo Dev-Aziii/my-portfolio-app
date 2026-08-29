@@ -237,20 +237,10 @@
     top: 0;
     bottom: 0;
     width: min(110px, 16vw);
-    opacity: 0;
-    animation-duration: var(--temporal-duration, 1100ms);
-    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-    animation-fill-mode: both;
-  }
-
-  .temporal-overlay.from-left .temporal-boundary {
     left: 0;
-    animation-name: temporal-boundary-ltr;
-  }
-
-  .temporal-overlay.from-right .temporal-boundary {
-    right: 0;
-    animation-name: temporal-boundary-rtl;
+    opacity: var(--boundary-opacity, 0);
+    transform: translate3d(calc(var(--boundary-x, 0px) - 50%), 0, 0);
+    will-change: transform, opacity;
   }
 
   .temporal-scanlines {
@@ -276,8 +266,7 @@
 
   .temporal-distortion {
     width: min(55px, 9vw);
-    backdrop-filter: contrast(1.25) saturate(1.5) hue-rotate(8deg);
-    background: repeating-linear-gradient(90deg, transparent 0 7px, rgb(0 240 255 / 0.08) 8px 9px);
+    background: repeating-linear-gradient(90deg, transparent 0 7px, rgb(0 240 255 / 0.12) 8px 9px);
     mix-blend-mode: screen;
   }
 }
