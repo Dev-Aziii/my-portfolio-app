@@ -1,4 +1,5 @@
 import { useEffect, useId, useState } from "react";
+import { TEMPORAL_TRANSITION_DURATION, type SweepDirection } from "../lib/temporalTransition";
 
 export default function ThemeToggle() {
   const rawId = useId();
@@ -77,35 +78,34 @@ export default function ThemeToggle() {
       return;
     }
 
-    // Auto-release transition lock as a safety fallback
+    const sweepDirection: SweepDirection = x >= window.innerWidth / 2
+      ? "right-to-left"
+      : "left-to-right";
+
+    // Auto-release transition lock using the same clock as every transition layer.
     setTimeout(() => {
       setIsTransitioning(false);
-    }, 1600);
+    }, TEMPORAL_TRANSITION_DURATION);
 
     // Broadcast temporal warp event for time-travel animation overlay
     window.dispatchEvent(
       new CustomEvent("temporal-warp", {
         detail: {
           direction: targetDark ? "to-future" : "to-past",
+          sweepDirection,
           x,
           y,
-          duration: 1500,
+          duration: TEMPORAL_TRANSITION_DURATION,
         },
       })
     );
 
-    const endRadius = Math.hypot(
-      Math.max(x, window.innerWidth - x),
-      Math.max(y, window.innerHeight - y)
-    );
-
-    // Synchronize DOM update with warp apex flash
+    // View transitions retain both root snapshots while the new era follows the seam.
     if (
       typeof document !== "undefined" &&
       "startViewTransition" in document
     ) {
-      setTimeout(() => {
-        try {
+      try {
           const transition = (
             document as unknown as {
               startViewTransition: (cb: () => void) => { ready: Promise<void> };
@@ -117,18 +117,17 @@ export default function ThemeToggle() {
           transition.ready
             .then(() => {
               try {
-                const clipPath = [
-                  `circle(0px at ${x}px ${y}px)`,
-                  `circle(${endRadius}px at ${x}px ${y}px)`,
-                ];
+                const clipPath = sweepDirection === "left-to-right"
+                  ? ["inset(0 100% 0 0)", "inset(0 0 0 0)"]
+                  : ["inset(0 0 0 100%)", "inset(0 0 0 0)"];
 
                 document.documentElement.animate(
                   {
                     clipPath: clipPath,
                   },
                   {
-                    duration: 650,
-                    easing: "cubic-bezier(0.2, 0.8, 0.2, 1)",
+                    duration: TEMPORAL_TRANSITION_DURATION,
+                    easing: "cubic-bezier(0.22, 1, 0.36, 1)",
                     pseudoElement: "::view-transition-new(root)",
                   }
                 );
@@ -139,14 +138,11 @@ export default function ThemeToggle() {
             .catch(() => {
               // Transition was interrupted or skipped
             });
-        } catch {
-          updateDOM();
-        }
-      }, 550);
-    } else {
-      setTimeout(() => {
+      } catch {
         updateDOM();
-      }, 550);
+      }
+    } else {
+      updateDOM();
     }
   };
 
