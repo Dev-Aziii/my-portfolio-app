@@ -25,11 +25,28 @@ export default function ThemeToggle() {
     const handleThemeChange = () => syncState();
     window.addEventListener("theme-change", handleThemeChange);
 
-    const handleWarpStart = () => setIsTransitioning(true);
-    const handleWarpEnd = () => setIsTransitioning(false);
+    const clearTransitionState = () => {
+      setIsTransitioning(false);
+      html.classList.remove("theme-aging");
+      delete html.dataset.themeDirection;
+      delete html.dataset.themePhase;
+    };
+    const handleWarpStart = (event: Event) => {
+      setIsTransitioning(true);
+      const detail = (event as CustomEvent<{ direction?: string }>).detail;
+      if (detail?.direction === "to-past") html.classList.add("theme-aging");
+      html.dataset.themeDirection = detail?.direction ?? "unknown";
+      html.dataset.themePhase = detail?.direction === "to-past" ? "hold" : "intro";
+    };
+    const handleWarpPhase = (event: Event) => {
+      const detail = (event as CustomEvent<{ phase?: string }>).detail;
+      if (detail?.phase) html.dataset.themePhase = detail.phase;
+    };
+    const handleWarpEnd = () => clearTransitionState();
 
     window.addEventListener("temporal-warp", handleWarpStart);
     window.addEventListener("temporal-warp-complete", handleWarpEnd);
+    window.addEventListener("temporal-warp-phase", handleWarpPhase);
 
     const observer = new MutationObserver(() => syncState());
     observer.observe(html, { attributes: true, attributeFilter: ["class"] });
@@ -38,7 +55,9 @@ export default function ThemeToggle() {
       window.removeEventListener("theme-change", handleThemeChange);
       window.removeEventListener("temporal-warp", handleWarpStart);
       window.removeEventListener("temporal-warp-complete", handleWarpEnd);
+      window.removeEventListener("temporal-warp-phase", handleWarpPhase);
       observer.disconnect();
+      clearTransitionState();
     };
   }, []);
 
@@ -136,7 +155,12 @@ export default function ThemeToggle() {
               }
             })
             .catch(() => {
-              // Transition was interrupted or skipped
+              updateDOM();
+              clearTimeout(safetyTimer);
+              setIsTransitioning(false);
+              html.classList.remove("theme-aging");
+              delete html.dataset.themeDirection;
+              delete html.dataset.themePhase;
             });
       } catch {
         updateDOM();
