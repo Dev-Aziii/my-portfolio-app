@@ -92,8 +92,29 @@ export default function ThemeToggle() {
     const isReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     if (isReducedMotion) {
-      updateDOM();
-      setIsTransitioning(false);
+      if ("startViewTransition" in document) {
+        try {
+          const transition = (
+            document as unknown as {
+              startViewTransition: (cb: () => void) => { finished: Promise<void> };
+            }
+          ).startViewTransition(updateDOM);
+
+          // The reduced-motion CSS supplies only a brief root crossfade. Keep the
+          // control locked until the browser has released both root snapshots.
+          transition.finished.then(
+            () => setIsTransitioning(false),
+            () => setIsTransitioning(false)
+          );
+        } catch {
+          updateDOM();
+          setIsTransitioning(false);
+        }
+      } else {
+        // Browsers without View Transitions still receive the theme immediately.
+        updateDOM();
+        setIsTransitioning(false);
+      }
       return;
     }
 
