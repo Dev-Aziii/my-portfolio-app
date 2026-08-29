@@ -1,5 +1,5 @@
-import { useEffect, useId, useState } from "react";
-import { TEMPORAL_TRANSITION_DURATION, type SweepDirection } from "../lib/temporalTransition";
+import { useEffect, useId, useRef, useState } from "react";
+import { TEMPORAL_TRANSITION_TIMING, type SweepDirection } from "../lib/temporalTransition";
 
 export default function ThemeToggle() {
   const rawId = useId();
@@ -12,6 +12,7 @@ export default function ThemeToggle() {
     return false;
   });
   const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
+  const timersRef = useRef<number[]>([]);
 
   useEffect(() => {
     const html = document.documentElement;
@@ -52,6 +53,7 @@ export default function ThemeToggle() {
     observer.observe(html, { attributes: true, attributeFilter: ["class"] });
 
     return () => {
+      timersRef.current.forEach(window.clearTimeout);
       window.removeEventListener("theme-change", handleThemeChange);
       window.removeEventListener("temporal-warp", handleWarpStart);
       window.removeEventListener("temporal-warp-complete", handleWarpEnd);
@@ -122,10 +124,17 @@ export default function ThemeToggle() {
       ? "right-to-left"
       : "left-to-right";
 
-    // Auto-release transition lock using the same clock as every transition layer.
-    setTimeout(() => {
+    const { totalDuration, themeSwapPoint, settlePoint, safetyMargin } = TEMPORAL_TRANSITION_TIMING;
+    const schedule = (callback: () => void, delay: number) => {
+      const timer = window.setTimeout(callback, delay);
+      timersRef.current.push(timer);
+      return timer;
+    };
+
+    // Auto-release the lock after all renderers have had a small cleanup margin.
+    schedule(() => {
       setIsTransitioning(false);
-    }, TEMPORAL_TRANSITION_DURATION);
+    }, totalDuration + safetyMargin);
 
     // Broadcast temporal warp event for time-travel animation overlay
     window.dispatchEvent(
@@ -135,12 +144,20 @@ export default function ThemeToggle() {
           sweepDirection,
           x,
           y,
-          duration: TEMPORAL_TRANSITION_DURATION,
+          duration: totalDuration,
         },
       })
     );
 
-    // View transitions retain both root snapshots while the new era follows the seam.
+    schedule(() => {
+      window.dispatchEvent(new CustomEvent("temporal-warp-phase", { detail: { phase: "transform" } }));
+    }, themeSwapPoint);
+    schedule(() => {
+      window.dispatchEvent(new CustomEvent("temporal-warp-phase", { detail: { phase: "settle" } }));
+    }, settlePoint);
+
+    // Capture the new snapshot at the centralized swap point.
+    schedule(() => {
     if (
       typeof document !== "undefined" &&
       "startViewTransition" in document
@@ -166,7 +183,7 @@ export default function ThemeToggle() {
                     clipPath: clipPath,
                   },
                   {
-                    duration: TEMPORAL_TRANSITION_DURATION,
+                    duration: totalDuration - themeSwapPoint,
                     easing: "cubic-bezier(0.22, 1, 0.36, 1)",
                     pseudoElement: "::view-transition-new(root)",
                   }
@@ -177,7 +194,6 @@ export default function ThemeToggle() {
             })
             .catch(() => {
               updateDOM();
-              clearTimeout(safetyTimer);
               setIsTransitioning(false);
               html.classList.remove("theme-aging");
               delete html.dataset.themeDirection;
@@ -189,6 +205,7 @@ export default function ThemeToggle() {
     } else {
       updateDOM();
     }
+    }, themeSwapPoint);
   };
 
   return (

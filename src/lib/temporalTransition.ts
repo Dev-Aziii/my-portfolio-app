@@ -1,4 +1,12 @@
-export const TEMPORAL_TRANSITION_DURATION = 1100;
+export const TEMPORAL_TRANSITION_TIMING = Object.freeze({
+  totalDuration: 1100,
+  themeSwapPoint: 120,
+  settlePoint: 860,
+  safetyMargin: 120,
+});
+
+/** @deprecated Prefer TEMPORAL_TRANSITION_TIMING.totalDuration. */
+export const TEMPORAL_TRANSITION_DURATION = TEMPORAL_TRANSITION_TIMING.totalDuration;
 
 export type TemporalDirection = "to-future" | "to-past";
 export type SweepDirection = "left-to-right" | "right-to-left";
@@ -8,5 +16,5 @@ export interface TemporalWarpDetail {
   sweepDirection: SweepDirection;
   x: number;
   y: number;
-  duration: typeof TEMPORAL_TRANSITION_DURATION;
+  duration: number;
 }
