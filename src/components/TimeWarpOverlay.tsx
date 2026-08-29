@@ -18,12 +18,22 @@ interface Particle {
   size: number;
 }
 
+type WarpPhase = "hold" | "black" | "charcoal" | "gray" | "parchment" | "accent";
+
+const PAST_PHASES: Array<[WarpPhase, number]> = [
+  ["black", 110],
+  ["charcoal", 360],
+  ["gray", 690],
+  ["parchment", 1020],
+  ["accent", 1320],
+];
+
 export default function TimeWarpOverlay() {
   const [warpState, setWarpState] = useState<{
     active: boolean;
     direction: "to-future" | "to-past";
     origin: { x: number; y: number };
-    phase: "intro" | "warp" | "settle";
+    phase: "intro" | "warp" | "settle" | WarpPhase;
     currentYear: number;
     progress: number;
   }>({
@@ -54,25 +64,25 @@ export default function TimeWarpOverlay() {
 
       const initialYear = direction === "to-future" ? 1924 : 2099;
 
-      // Phase 1: Intro (0-280ms)
+      // The past has its own material-aging sequence; it is not a reversed warp.
       setWarpState({
         active: true,
         direction,
         origin: { x: originX, y: originY },
-        phase: "intro",
+        phase: direction === "to-past" ? "hold" : "intro",
         currentYear: initialYear,
         progress: 0,
       });
 
-      // Phase 2: Hyper-Warp Peak (280-950ms)
-      const t1 = window.setTimeout(() => {
-        setWarpState((prev) => ({ ...prev, phase: "warp" }));
-      }, 280);
-
-      // Phase 3: Settle & Decelerate (950-1500ms)
-      const t2 = window.setTimeout(() => {
-        setWarpState((prev) => ({ ...prev, phase: "settle" }));
-      }, 950);
+      const phaseTimers = direction === "to-past"
+        ? PAST_PHASES.map(([phase, delay]) => window.setTimeout(() => {
+            setWarpState((prev) => ({ ...prev, phase }));
+            window.dispatchEvent(new CustomEvent("temporal-warp-phase", { detail: { direction, phase } }));
+          }, delay))
+        : [
+            window.setTimeout(() => setWarpState((prev) => ({ ...prev, phase: "warp" })), 280),
+            window.setTimeout(() => setWarpState((prev) => ({ ...prev, phase: "settle" })), 950),
+          ];
 
       // Complete transition & clean reset (1550ms)
       const t3 = window.setTimeout(() => {
@@ -87,7 +97,7 @@ export default function TimeWarpOverlay() {
         window.dispatchEvent(new CustomEvent("temporal-warp-complete"));
       }, 1550);
 
-      timeoutRefs.current.push(t1, t2, t3);
+      timeoutRefs.current.push(...phaseTimers, t3);
     };
 
     window.addEventListener("temporal-warp", handleWarp as EventListener);
@@ -95,6 +105,10 @@ export default function TimeWarpOverlay() {
     return () => {
       window.removeEventListener("temporal-warp", handleWarp as EventListener);
       timeoutRefs.current.forEach((t) => clearTimeout(t));
+      timeoutRefs.current = [];
+      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+      // ThemeToggle listens for this as the single, idempotent cleanup signal.
+      window.dispatchEvent(new CustomEvent("temporal-warp-complete"));
     };
   }, []);
 
@@ -149,7 +163,7 @@ export default function TimeWarpOverlay() {
     ];
     const colors = isToFuture ? futureColors : pastColors;
 
-    const particleCount = 220;
+    const particleCount = isToFuture ? 220 : 150;
     const particles: Particle[] = [];
 
     for (let i = 0; i < particleCount; i++) {
@@ -176,7 +190,45 @@ export default function TimeWarpOverlay() {
       const elapsed = now - startTime;
       const progress = Math.min(elapsed / duration, 1);
 
-      // Smooth non-linear velocity multiplier (accelerate -> max warp -> decelerate)
+      if (!isToFuture) {
+        // Dedicated aging renderer: a left-to-right boundary deposits material,
+        // rather than running the hyperspace particles backwards.
+        const hold = 0.075;
+        const boundaryProgress = Math.max(0, Math.min(1, (progress - hold) / 0.78));
+        const bx = boundaryProgress * (width + 180) - 90;
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = "rgba(2,5,9,.9)";
+        ctx.fillRect(Math.max(0, bx), 0, width - bx, height);
+        const stages = ["#050505", "#282621", "#77736b", "#e8dcc1"];
+        const stage = Math.min(3, Math.floor(boundaryProgress * 4));
+        ctx.fillStyle = stages[stage];
+        ctx.globalAlpha = .72;
+        ctx.fillRect(0, 0, Math.max(0, bx), height);
+        ctx.globalAlpha = 1;
+        const glow = ctx.createLinearGradient(bx - 70, 0, bx + 70, 0);
+        glow.addColorStop(0, "rgba(80,55,30,.15)");
+        glow.addColorStop(.45, "rgba(0,240,255,.75)");
+        glow.addColorStop(.55, "rgba(224,184,112,.75)");
+        glow.addColorStop(1, "transparent");
+        ctx.fillStyle = glow;
+        ctx.fillRect(bx - 70, 0, 140, height);
+        // Oxidation, crumbling metal, scratches, fibers and ink flecks local to the boundary.
+        particles.forEach((p, i) => {
+          const px = bx + Math.sin(p.angle * 9 + i) * 74;
+          const py = ((p.y + i * 47) % (height + 40)) - 20;
+          const aged = px < bx;
+          ctx.fillStyle = aged ? (i % 3 ? "rgba(48,38,27,.72)" : "rgba(126,74,37,.6)") : p.color;
+          ctx.fillRect(px, py, aged ? 1 + i % 4 : 2, aged ? 1 : 2 + i % 5);
+          if (i % 13 === 0) {
+            ctx.strokeStyle = aged ? "rgba(40,32,24,.45)" : "rgba(0,240,255,.45)";
+            ctx.beginPath(); ctx.moveTo(px - 30, py); ctx.lineTo(px + 30 + i % 45, py + (i % 3)); ctx.stroke();
+          }
+        });
+        if (progress < 1) animFrameRef.current = requestAnimationFrame(render);
+        return;
+      }
+
+      // Smooth non-linear velocity multiplier (future simulation only)
       const velocityCurve = Math.sin(progress * Math.PI);
 
       // Update live year ticker smoothly
@@ -297,6 +349,20 @@ export default function TimeWarpOverlay() {
     : isToFuture
     ? 1924
     : 2099;
+
+  if (!isToFuture) {
+    const pastPhase = warpState.phase as WarpPhase;
+    return (
+      <div className={`time-aging-overlay aging-${pastPhase}`} aria-hidden="true">
+        <canvas ref={canvasRef} />
+        <div className="aging-scan-errors" />
+        <div className="aging-cracks" />
+        <div className="aging-glyphs">⌁ 0x19 ▧ Æ // ERR_2099 § ⌁</div>
+        <div className="aging-boundary-label">MATERIAL AGE / 1924</div>
+        <div className="aging-last-accent" />
+      </div>
+    );
+  }
 
   return (
     <div

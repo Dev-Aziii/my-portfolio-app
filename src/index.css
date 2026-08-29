@@ -202,6 +202,69 @@
   }
 }
 
+/* Coordinated cyber-to-print material aging. These selectors intentionally
+   affect the live page beneath the boundary overlay in discrete phases. */
+html.theme-aging {
+  --aging-wear: 0;
+}
+html.theme-aging[data-theme-phase="charcoal"] { --aging-wear: .25; }
+html.theme-aging[data-theme-phase="gray"] { --aging-wear: .58; }
+html.theme-aging[data-theme-phase="parchment"],
+html.theme-aging[data-theme-phase="accent"] { --aging-wear: 1; }
+html.theme-aging body {
+  filter: saturate(calc(1 - var(--aging-wear) * .75)) contrast(calc(1 - var(--aging-wear) * .08));
+}
+html.theme-aging :is(h1, h2, h3, .font-mono) {
+  letter-spacing: calc(-.01em - var(--aging-wear) * .025em);
+  text-shadow: calc(var(--aging-wear) * 1px) 0 rgba(55, 39, 25, .32);
+}
+html.theme-aging :is(.border, [class*="border-"]) {
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--border), #3d2d20 calc(var(--aging-wear) * 65%));
+}
+html.theme-aging :is(.rule-double, .rule-double-bold, .rule-single) {
+  border-top-style: solid;
+  border-image: repeating-linear-gradient(90deg, #372a20 0 18px, transparent 18px 21px) 1;
+}
+
+.time-aging-overlay {
+  position: fixed; inset: 0; z-index: 10000; overflow: hidden;
+  pointer-events: none; background: rgba(0, 4, 8, .14);
+}
+.time-aging-overlay canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.aging-scan-errors {
+  position: absolute; inset: 0; opacity: .65;
+  background: repeating-linear-gradient(0deg, transparent 0 19px, rgba(0,240,255,.18) 20px, transparent 22px);
+  animation: aging-sync 95ms steps(2) infinite;
+}
+.aging-cracks {
+  position: absolute; inset: 0; opacity: .62; mix-blend-mode: screen;
+  background: linear-gradient(111deg, transparent 47%, rgba(220,245,255,.6) 47.2%, transparent 47.5%), linear-gradient(73deg, transparent 62%, rgba(220,245,255,.4) 62.2%, transparent 62.45%);
+  clip-path: polygon(0 0, 78% 0, 63% 100%, 0 100%);
+}
+.aging-glyphs {
+  position: absolute; top: 22%; left: 41%; width: 9rem; color: #7ff7ff;
+  font: 700 11px/2 var(--font-mono); word-spacing: 12px; overflow: hidden;
+  text-shadow: 7px 0 #00f0ff; animation: aging-glyph 120ms steps(2) infinite;
+}
+.aging-boundary-label {
+  position: absolute; bottom: 8%; left: 50%; padding: 3px 7px;
+  color: #241a12; background: rgba(231,216,185,.72); font: 9px var(--font-mono);
+  letter-spacing: .2em; transform: rotate(-1deg);
+}
+.aging-last-accent { display: none; position: absolute; left: 67%; top: 38%; width: 24px; height: 3px; background: #00f0ff; box-shadow: 0 0 18px #00f0ff; }
+.aging-accent .aging-last-accent { display: block; animation: last-neon 310ms steps(1) 3 forwards; }
+.aging-accent :is(.aging-scan-errors, .aging-cracks, .aging-glyphs, .aging-boundary-label) { opacity: 0; transition: opacity 120ms; }
+@keyframes aging-sync { 50% { transform: translate(8px, -3px); clip-path: inset(12% 0 51%); } }
+@keyframes aging-glyph { 50% { transform: translate(-13px, 4px); filter: blur(.5px); } }
+@keyframes last-neon {
+  0%, 32% { opacity: 1; transform: scaleX(1); background: #00f0ff; }
+  16%, 48% { opacity: .08; }
+  70% { opacity: 1; transform: scaleX(.35); background: #252017; box-shadow: none; }
+  100% { opacity: 1; transform: scale(.12, .7); background: #252017; box-shadow: none; }
+}
+@media (prefers-reduced-motion: reduce) { .time-aging-overlay { display: none; } }
+
 @layer components {
   /* Newspaper double rule divider */
   .rule-double {
@@ -513,5 +576,4 @@
 .animate-temporal-crt {
   animation: temporal-crt-line 0.8s ease-out forwards;
 }
-
 
