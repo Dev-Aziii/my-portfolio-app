@@ -35,17 +35,17 @@ export const ERA_TRANSITION_START = "era-transition-start";
 export const ERA_TRANSITION_COMPLETE = "era-transition-complete";
 
 export const FUTURE_TIMING: TransitionTiming = {
-  charge: 35,
-  sweep: 620,
-  settle: 65,
-  total: 720,
+  charge: 50,
+  sweep: 760,
+  settle: 90,
+  total: 900,
 };
 
 export const PAST_TIMING: TransitionTiming = {
-  charge: 45,
-  sweep: 640,
-  settle: 65,
-  total: 750,
+  charge: 60,
+  sweep: 750,
+  settle: 90,
+  total: 900,
 };
 
 export const REDUCED_MOTION_DURATION = 180;
@@ -96,6 +96,15 @@ export function getRadialClipPath(
   const x = Math.round(originX * 10) / 10;
   const y = Math.round(originY * 10) / 10;
   return `circle(${safeRadius}px at ${x}px ${y}px)`;
+}
+
+/**
+ * Generates a right-edge-to-left reveal clip path for the paper-fold transition.
+ */
+export function getSideSwipeClipPath(progress: number): string {
+  const safeProgress = Math.round(clampProgress(progress) * 1000) / 10;
+  const leftInset = Math.round((100 - safeProgress) * 10) / 10;
+  return `inset(0% 0% 0% ${leftInset}%)`;
 }
 
 /**

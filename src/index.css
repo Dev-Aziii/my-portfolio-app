@@ -304,9 +304,12 @@
   }
 
   .era-material-transition .era-ink-cloud,
+  .era-material-transition .era-ink-seam,
   .era-material-transition .era-dispersion,
   .era-material-transition .era-scanline,
-  .era-material-transition .era-energy-ring {
+  .era-material-transition .era-energy-ring,
+  .era-material-transition .era-paper-fold,
+  .era-material-transition .era-fold-edge {
     animation: none !important;
     opacity: 0 !important;
   }
@@ -679,13 +682,14 @@ html[data-era-transition] .theme-background {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   RADIAL THEME TRANSITION OVERLAY & ENERGY RING
+   PAPER-FOLD THEME TRANSITION OVERLAY
    ═══════════════════════════════════════════════════════════════ */
 
 .era-material-transition {
-  --era-transition-duration: 720ms;
-  --era-ink-rgb: 0 240 255;
-  --era-spark-rgb: 185 251 255;
+  --era-transition-duration: 900ms;
+  --era-fold-surface-rgb: 2 6 13;
+  --era-fold-ink-rgb: 185 251 255;
+  --era-fold-accent-rgb: 0 240 255;
   position: fixed;
   inset: 0;
   width: 100vw;
@@ -695,16 +699,29 @@ html[data-era-transition] .theme-background {
   overflow: hidden;
   contain: strict;
   isolation: isolate;
+  perspective: 1200px;
   pointer-events: none;
 }
 
 .era-material-transition--past {
-  --era-ink-rgb: 213 166 95;
-  --era-spark-rgb: 255 225 170;
+  --era-fold-surface-rgb: 239 229 210;
+  --era-fold-ink-rgb: 255 225 170;
+  --era-fold-accent-rgb: 213 166 95;
 }
 
 .era-material-transition > * {
   pointer-events: none;
+}
+
+/* The former radial decorations are intentionally disabled for the simple
+   paper-fold treatment. Keeping this guard makes stale markup harmless. */
+.era-material-transition > .era-ink-cloud,
+.era-material-transition > .era-ink-seam,
+.era-material-transition > .era-energy-ring,
+.era-material-transition > .era-scanline,
+.era-material-transition > .era-grain,
+.era-material-transition > .era-dispersion {
+  display: none;
 }
 
 .era-ink-cloud,
@@ -721,7 +738,7 @@ html[data-era-transition] .theme-background {
 }
 
 .era-ink-cloud {
-  z-index: 1;
+  z-index: 2;
   background:
     radial-gradient(circle at 48% 48%, rgb(var(--era-spark-rgb) / 0.34) 0 3%, transparent 20%),
     repeating-radial-gradient(circle at 44% 54%, transparent 0 7px, rgb(var(--era-ink-rgb) / 0.18) 8px 10px, transparent 12px 21px),
@@ -730,6 +747,75 @@ html[data-era-transition] .theme-background {
   mix-blend-mode: screen;
   opacity: 0;
   animation: era-ink-bloom var(--era-transition-duration) cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.era-ink-seam {
+  position: absolute;
+  top: -12%;
+  bottom: -12%;
+  width: min(72vw, 940px);
+  min-width: 260px;
+  z-index: 1;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+  will-change: transform, opacity;
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      rgb(var(--era-surface-rgb) / 0.24) 10%,
+      rgb(var(--era-surface-rgb) / 0.92) 42%,
+      rgb(var(--era-ink-rgb) / 0.72) 58%,
+      rgb(var(--era-accent-rgb) / 0.24) 72%,
+      transparent 100%
+    ),
+    repeating-radial-gradient(
+      ellipse at 52% 50%,
+      transparent 0 8px,
+      rgb(var(--era-surface-rgb) / 0.2) 9px 11px,
+      transparent 12px 24px
+    ),
+    radial-gradient(
+      ellipse at 48% 50%,
+      rgb(var(--era-spark-rgb) / 0.2),
+      rgb(var(--era-ink-rgb) / 0.18) 42%,
+      transparent 72%
+    );
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 16%, black 82%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, black 16%, black 82%, transparent 100%);
+  mix-blend-mode: normal;
+}
+
+.era-ink-seam::before,
+.era-ink-seam::after {
+  content: "";
+  position: absolute;
+  inset: 0 -18%;
+  background:
+    radial-gradient(circle at 18% 18%, rgb(var(--era-accent-rgb) / 0.45) 0 1px, transparent 2px),
+    radial-gradient(circle at 68% 36%, rgb(var(--era-spark-rgb) / 0.48) 0 1px, transparent 2px),
+    radial-gradient(circle at 43% 72%, rgb(var(--era-accent-rgb) / 0.38) 0 1px, transparent 2px),
+    repeating-linear-gradient(102deg, transparent 0 13px, rgb(var(--era-spark-rgb) / 0.1) 14px 15px, transparent 16px 27px);
+  opacity: 0.55;
+  transform: translate3d(0, 0, 0) rotate(-1deg);
+}
+
+.era-ink-seam::after {
+  inset: 0 -10%;
+  opacity: 0.28;
+  transform: translate3d(0, 0, 0) rotate(2deg) scaleX(0.92);
+  mix-blend-mode: screen;
+}
+
+.era-material-transition--left .era-ink-seam {
+  left: 0;
+  animation: era-seam-sweep-left var(--era-transition-duration) cubic-bezier(0.22, 0.8, 0.2, 1) both;
+}
+
+.era-material-transition--right .era-ink-seam {
+  right: 0;
+  animation: era-seam-sweep-right var(--era-transition-duration) cubic-bezier(0.22, 0.8, 0.2, 1) both;
 }
 
 .era-ink-cloud::before,
@@ -769,7 +855,7 @@ html[data-era-transition] .theme-background {
 }
 
 .era-dispersion {
-  z-index: 2;
+  z-index: 3;
   border: 1px dashed rgb(var(--era-spark-rgb) / 0.55);
   box-shadow:
     0 0 18px rgb(var(--era-ink-rgb) / 0.42),
@@ -784,7 +870,7 @@ html[data-era-transition] .theme-background {
   top: 0;
   bottom: 0;
   left: var(--era-origin-x);
-  z-index: 4;
+  z-index: 5;
   width: clamp(42px, 7vw, 96px);
   opacity: 0;
   transform: translateX(-50%) scaleX(0.3);
@@ -811,6 +897,7 @@ html[data-era-transition] .theme-background {
   transform: translate(-50%, -50%) scale(0);
   will-change: transform, opacity;
   box-sizing: border-box;
+  z-index: 6;
 }
 
 /* Future (Dark Mode) Neon Cyan Luminous Pulse Ring */
@@ -837,6 +924,26 @@ html[data-era-transition] .theme-background {
   42% { transform: translate(-50%, -50%) scale(0.72); opacity: 0.68; }
   76% { transform: translate(-50%, -50%) scale(1.02); opacity: 0.34; filter: blur(8px) saturate(1.12); }
   100% { transform: translate(-50%, -50%) scale(1.16); opacity: 0; filter: blur(12px) saturate(1.16); }
+}
+
+@keyframes era-seam-sweep-left {
+  0% { transform: translate3d(-110%, 0, 0); opacity: 0; }
+  12% { transform: translate3d(-68%, 0, 0); opacity: 0.28; }
+  32% { transform: translate3d(-18%, 0, 0); opacity: 0.86; }
+  58% { transform: translate3d(46vw, 0, 0); opacity: 0.72; }
+  70% { transform: translate3d(86vw, 0, 0); opacity: 0.48; }
+  82% { transform: translate3d(112vw, 0, 0); opacity: 0.2; }
+  100% { transform: translate3d(124vw, 0, 0); opacity: 0; }
+}
+
+@keyframes era-seam-sweep-right {
+  0% { transform: translate3d(110%, 0, 0); opacity: 0; }
+  12% { transform: translate3d(68%, 0, 0); opacity: 0.28; }
+  32% { transform: translate3d(18%, 0, 0); opacity: 0.86; }
+  58% { transform: translate3d(-46vw, 0, 0); opacity: 0.72; }
+  70% { transform: translate3d(-86vw, 0, 0); opacity: 0.48; }
+  82% { transform: translate3d(-112vw, 0, 0); opacity: 0.2; }
+  100% { transform: translate3d(-124vw, 0, 0); opacity: 0; }
 }
 
 @keyframes era-ink-swirl {
@@ -874,6 +981,66 @@ html[data-era-transition] .theme-background {
   38% { transform: translateX(-80%) scaleX(1); opacity: 0.9; }
   72% { transform: translateX(-100vw) scaleX(0.72); opacity: 0.5; }
   86%, 100% { transform: translateX(-112vw) scaleX(0.34); opacity: 0; }
+}
+
+.era-paper-fold,
+.era-fold-edge {
+  position: absolute;
+  top: -1%;
+  bottom: -1%;
+  left: 0;
+  transform: translate3d(100%, 0, 0) rotateY(-8deg);
+  transform-origin: right center;
+  will-change: transform, opacity;
+  animation: era-paper-fold-left var(--era-transition-duration) cubic-bezier(0.22, 0.72, 0.18, 1) both;
+}
+
+.era-paper-fold {
+  z-index: 1;
+  width: 100%;
+  opacity: 0;
+  overflow: hidden;
+  background:
+    linear-gradient(102deg, transparent 0%, rgb(var(--era-fold-surface-rgb) / 0.94) 12%, rgb(var(--era-fold-surface-rgb)) 50%, rgb(var(--era-fold-surface-rgb) / 0.96) 88%, transparent 100%),
+    repeating-linear-gradient(0deg, transparent 0 5px, rgb(var(--era-fold-ink-rgb) / 0.035) 6px 7px),
+    linear-gradient(90deg, rgb(var(--era-fold-accent-rgb) / 0.06), transparent 32%, rgb(var(--era-fold-accent-rgb) / 0.08));
+  box-shadow: -42px 0 80px rgb(var(--era-fold-accent-rgb) / 0.1);
+}
+
+.era-paper-fold::before,
+.era-paper-fold::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.era-paper-fold::before {
+  background: linear-gradient(90deg, transparent 0 62%, rgb(var(--era-fold-ink-rgb) / 0.04) 78%, rgb(var(--era-fold-accent-rgb) / 0.12) 94%, transparent);
+  transform: skewX(-2deg);
+}
+
+.era-paper-fold::after {
+  background: linear-gradient(90deg, transparent 0 76%, rgb(255 255 255 / 0.08) 88%, transparent 100%);
+  opacity: 0.7;
+}
+
+.era-fold-edge {
+  z-index: 2;
+  width: clamp(2px, 0.35vw, 6px);
+  opacity: 0;
+  background: linear-gradient(180deg, transparent, rgb(var(--era-fold-ink-rgb) / 0.9) 16%, rgb(var(--era-fold-accent-rgb) / 0.95) 50%, rgb(var(--era-fold-ink-rgb) / 0.72) 84%, transparent);
+  box-shadow: 0 0 18px rgb(var(--era-fold-accent-rgb) / 0.36), 0 0 42px rgb(var(--era-fold-ink-rgb) / 0.16);
+}
+
+@keyframes era-paper-fold-left {
+  0% { transform: translate3d(104%, 0, 0) rotateY(-10deg); opacity: 0; }
+  12% { transform: translate3d(82%, 0, 0) rotateY(-8deg); opacity: 0.28; }
+  32% { transform: translate3d(34%, 0, 0) rotateY(-4deg); opacity: 0.82; }
+  58% { transform: translate3d(0, 0, 0) rotateY(0deg); opacity: 0.98; }
+  70% { transform: translate3d(-1%, 0, 0) rotateY(1deg); opacity: 0.92; }
+  82% { transform: translate3d(-5%, 0, 0) rotateY(3deg); opacity: 0.36; }
+  100% { transform: translate3d(-10%, 0, 0) rotateY(6deg); opacity: 0; }
 }
 
 ::view-transition-group(root) {

@@ -4,7 +4,7 @@ import {
   ERA_TRANSITION_START,
   REDUCED_MOTION_DURATION,
   calculateMaxRadius,
-  getRadialClipPath,
+  getSideSwipeClipPath,
   getTransitionTiming,
   resolveMotionMode,
   resolveSweepEdge,
@@ -133,8 +133,8 @@ export default function ThemeToggle() {
       typeof (document as Partial<ViewTransitionDocument>).startViewTransition ===
       "function";
 
-    const initialClip = getRadialClipPath(0, x, y);
-    const finalClip = getRadialClipPath(maxRadius, x, y);
+    const initialClip = getSideSwipeClipPath(0);
+    const finalClip = getSideSwipeClipPath(1);
 
     if (motionMode === "cinematic") {
       html.style.setProperty("--era-origin-x", `${x}px`);
@@ -150,7 +150,7 @@ export default function ThemeToggle() {
       edge,
       origin: { x, y },
       maxRadius,
-      duration: timing.sweep,
+      duration: timing.total,
       startedAt: performance.now(),
     };
 

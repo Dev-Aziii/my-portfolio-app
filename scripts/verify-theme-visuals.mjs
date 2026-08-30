@@ -90,26 +90,42 @@ async function captureProgress(
   await setTheme(page, direction === "future" ? "light" : "dark");
   await clickVisibleToggle(page);
   await page.waitForFunction(() => Boolean(document.documentElement.dataset.eraTransition));
-  const sweep = 620;
+  const sweep = 900;
   await page.waitForTimeout(sweep * progress);
   const state = await page.evaluate(() => ({
     transition: document.documentElement.dataset.eraTransition ?? null,
     motion: document.documentElement.dataset.eraMotion ?? null,
     energyRingPresent: Boolean(document.querySelector(".era-energy-ring")),
     inkCloudPresent: Boolean(document.querySelector(".era-ink-cloud")),
+    inkSeamPresent: Boolean(document.querySelector(".era-ink-seam")),
     scanlinePresent: Boolean(document.querySelector(".era-scanline")),
     grainPresent: Boolean(document.querySelector(".era-grain")),
+    paperFoldPresent: Boolean(document.querySelector(".era-paper-fold")),
+    foldEdgePresent: Boolean(document.querySelector(".era-fold-edge")),
     direction: document.querySelector(".era-material-transition")?.dataset.direction ?? null,
     edge: document.querySelector(".era-material-transition")?.dataset.edge ?? null,
-    inkPalette: document.querySelector(".era-material-transition")
-      ? getComputedStyle(document.querySelector(".era-material-transition")).getPropertyValue("--era-ink-rgb").trim()
+    sweep: document.querySelector(".era-material-transition")?.dataset.sweep ?? null,
+    foldAnimation: document.querySelector(".era-paper-fold")
+      ? getComputedStyle(document.querySelector(".era-paper-fold")).animationName
       : null,
-    sparkPalette: document.querySelector(".era-material-transition")
-      ? getComputedStyle(document.querySelector(".era-material-transition")).getPropertyValue("--era-spark-rgb").trim()
+    legacyLayerCount: document.querySelectorAll(
+      ".era-ink-cloud, .era-ink-seam, .era-energy-ring, .era-scanline, .era-grain, .era-dispersion",
+    ).length,
+    seamAnimation: document.querySelector(".era-ink-seam")
+      ? getComputedStyle(document.querySelector(".era-ink-seam")).animationName
       : null,
-    originX: document.documentElement.style.getPropertyValue("--era-origin-x"),
-    originY: document.documentElement.style.getPropertyValue("--era-origin-y"),
-    maxRadius: document.documentElement.style.getPropertyValue("--era-max-radius"),
+    scanlineAnimation: document.querySelector(".era-scanline")
+      ? getComputedStyle(document.querySelector(".era-scanline")).animationName
+      : null,
+    foldInkPalette: document.querySelector(".era-material-transition")
+      ? getComputedStyle(document.querySelector(".era-material-transition")).getPropertyValue("--era-fold-ink-rgb").trim()
+      : null,
+    foldAccentPalette: document.querySelector(".era-material-transition")
+      ? getComputedStyle(document.querySelector(".era-material-transition")).getPropertyValue("--era-fold-accent-rgb").trim()
+      : null,
+    foldSurfacePalette: document.querySelector(".era-material-transition")
+      ? getComputedStyle(document.querySelector(".era-material-transition")).getPropertyValue("--era-fold-surface-rgb").trim()
+      : null,
     pseudoAnimations: document.getAnimations().map((animation) => {
       const effect = animation.effect;
       return effect && "pseudoElement" in effect ? effect.pseudoElement : null;
@@ -135,8 +151,11 @@ async function verifyReducedMotion(browser) {
     motion: document.documentElement.dataset.eraMotion ?? null,
     energyRingPresent: Boolean(document.querySelector(".era-energy-ring")),
     inkCloudPresent: Boolean(document.querySelector(".era-ink-cloud")),
+    inkSeamPresent: Boolean(document.querySelector(".era-ink-seam")),
     scanlinePresent: Boolean(document.querySelector(".era-scanline")),
     grainPresent: Boolean(document.querySelector(".era-grain")),
+    paperFoldPresent: Boolean(document.querySelector(".era-paper-fold")),
+    foldEdgePresent: Boolean(document.querySelector(".era-fold-edge")),
   }));
   await page.waitForFunction(() => !document.documentElement.dataset.eraTransition);
   await page.close();
@@ -222,25 +241,23 @@ try {
 
   for (const [name, result] of Object.entries(progress)) {
     const expectedDirection = name.startsWith("future") ? "to-future" : "to-past";
-    const expectedInkPalette = expectedDirection === "to-future" ? "0 240 255" : "213 166 95";
-    const expectedSparkPalette = expectedDirection === "to-future" ? "185 251 255" : "255 225 170";
+    const expectedFoldInkPalette = expectedDirection === "to-future" ? "185 251 255" : "255 225 170";
+    const expectedFoldAccentPalette = expectedDirection === "to-future" ? "0 240 255" : "213 166 95";
+    const expectedFoldSurfacePalette = expectedDirection === "to-future" ? "2 6 13" : "239 229 210";
     const state = result.state;
-    const originX = Number.parseFloat(state.originX);
-    const expectedEdge = originX >= result.viewportWidth / 2 ? "right" : "left";
     if (
       result.errors.length ||
       state.transition !== expectedDirection ||
       state.motion !== "cinematic" ||
-      !state.originX ||
-      !state.originY ||
-      !state.maxRadius ||
       state.direction !== expectedDirection ||
-      state.edge !== expectedEdge ||
-      state.inkPalette !== expectedInkPalette ||
-      state.sparkPalette !== expectedSparkPalette ||
-      !state.inkCloudPresent ||
-      !state.scanlinePresent ||
-      !state.grainPresent
+      state.foldInkPalette !== expectedFoldInkPalette ||
+      state.foldAccentPalette !== expectedFoldAccentPalette ||
+      state.foldSurfacePalette !== expectedFoldSurfacePalette ||
+      state.sweep !== "left" ||
+      state.foldAnimation !== "era-paper-fold-left" ||
+      !state.paperFoldPresent ||
+      !state.foldEdgePresent ||
+      state.legacyLayerCount !== 0
     ) {
       failures.push(`progress ${name}`);
     }
@@ -250,8 +267,11 @@ try {
     reducedMotion.motion !== "reduced" ||
     reducedMotion.energyRingPresent ||
     reducedMotion.inkCloudPresent ||
+    reducedMotion.inkSeamPresent ||
     reducedMotion.scanlinePresent ||
-    reducedMotion.grainPresent
+    reducedMotion.grainPresent ||
+    reducedMotion.paperFoldPresent ||
+    reducedMotion.foldEdgePresent
   ) {
     failures.push("reduced motion");
   }

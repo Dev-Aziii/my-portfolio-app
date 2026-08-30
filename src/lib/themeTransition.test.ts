@@ -8,6 +8,7 @@ import {
   calculateMaxRadius,
   clampProgress,
   getRadialClipPath,
+  getSideSwipeClipPath,
   radialEase,
   resolveMotionMode,
   resolveSweepEdge,
@@ -38,6 +39,12 @@ describe("theme transition radial geometry", () => {
     expect(getRadialClipPath(540.2, 900.5, 450.2)).toBe(
       "circle(540.2px at 900.5px 450.2px)",
     );
+  });
+
+  it("generates a fixed right-edge-to-left swipe clip path", () => {
+    expect(getSideSwipeClipPath(0)).toBe("inset(0% 0% 0% 100%)");
+    expect(getSideSwipeClipPath(0.5)).toBe("inset(0% 0% 0% 50%)");
+    expect(getSideSwipeClipPath(1)).toBe("inset(0% 0% 0% 0%)");
   });
 
   it("builds monotonic radial snapshot keyframes", () => {
@@ -87,16 +94,22 @@ describe("theme transition radial geometry", () => {
 });
 
 describe("theme transition timing", () => {
-  it("keeps both directions within atmospheric duration range (~650ms - 750ms)", () => {
-    expect(FUTURE_TIMING.total).toBeGreaterThanOrEqual(650);
-    expect(FUTURE_TIMING.total).toBeLessThanOrEqual(780);
-    expect(PAST_TIMING.total).toBeGreaterThanOrEqual(650);
-    expect(PAST_TIMING.total).toBeLessThanOrEqual(780);
+  it("uses a cinematic timeline around 900ms in both directions", () => {
+    expect(FUTURE_TIMING.total).toBeGreaterThanOrEqual(880);
+    expect(FUTURE_TIMING.total).toBeLessThanOrEqual(920);
+    expect(PAST_TIMING.total).toBeGreaterThanOrEqual(880);
+    expect(PAST_TIMING.total).toBeLessThanOrEqual(960);
+    expect(FUTURE_TIMING.sweep).toBeGreaterThan(700);
+    expect(PAST_TIMING.sweep).toBeGreaterThan(700);
   });
 
-  it("gives the past a distinct timeline and charge hold", () => {
-    expect(PAST_TIMING.charge).toBeGreaterThan(0);
-    expect(PAST_TIMING.total).toBeGreaterThan(FUTURE_TIMING.total);
+  it("reserves charge, sweep, and settle phases in both directions", () => {
+    expect(FUTURE_TIMING.charge).toBeGreaterThan(0);
+    expect(PAST_TIMING.charge).toBeGreaterThan(FUTURE_TIMING.charge);
+    expect(FUTURE_TIMING.sweep).toBeGreaterThan(0);
+    expect(PAST_TIMING.sweep).toBeGreaterThan(0);
+    expect(FUTURE_TIMING.settle).toBeGreaterThan(0);
+    expect(PAST_TIMING.settle).toBeGreaterThan(0);
   });
 
   it("keeps reduced motion snappy", () => {
