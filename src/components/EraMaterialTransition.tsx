@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import {
   ERA_TRANSITION_COMPLETE,
   ERA_TRANSITION_START,
@@ -8,6 +8,7 @@ import {
 interface ActiveRingState {
   id: number;
   direction: "to-future" | "to-past";
+  edge: EraTransitionDetail["edge"];
   origin: { x: number; y: number };
   maxRadius: number;
   duration: number;
@@ -32,6 +33,7 @@ export default function EraMaterialTransition() {
       setActiveRing({
         id: detail.id,
         direction: detail.direction,
+        edge: detail.edge,
         origin: detail.origin,
         maxRadius: detail.maxRadius,
         duration: detail.duration,
@@ -81,16 +83,26 @@ export default function EraMaterialTransition() {
     const animation = el.animate(
       [
         {
-          transform: "translate(-50%, -50%) scale(0)",
-          opacity: 0.95,
+          transform: "translate(-50%, -50%) scale(0.06)",
+          opacity: 0,
+        },
+        {
+          transform: "translate(-50%, -50%) scale(0.2)",
+          opacity: 0.9,
+          offset: 0.12,
         },
         {
           transform: "translate(-50%, -50%) scale(0.65)",
-          opacity: 0.85,
-          offset: 0.65,
+          opacity: 0.76,
+          offset: 0.56,
         },
         {
           transform: "translate(-50%, -50%) scale(1.02)",
+          opacity: 0.42,
+          offset: 0.82,
+        },
+        {
+          transform: "translate(-50%, -50%) scale(1.14)",
           opacity: 0,
           offset: 1,
         },
@@ -115,9 +127,32 @@ export default function EraMaterialTransition() {
 
   const isFuture = activeRing.direction === "to-future";
   const diameter = activeRing.maxRadius * 2;
+  const transitionStyle = {
+    "--era-transition-duration": `${activeRing.duration}ms`,
+    "--era-origin-x": `${activeRing.origin.x}px`,
+    "--era-origin-y": `${activeRing.origin.y}px`,
+  } as CSSProperties;
 
   return (
-    <div className="era-material-transition" aria-hidden="true">
+    <div
+      className={`era-material-transition era-material-transition--${
+        isFuture ? "future" : "past"
+      } era-material-transition--${activeRing.edge}`}
+      data-direction={activeRing.direction}
+      data-edge={activeRing.edge}
+      style={transitionStyle}
+      aria-hidden="true"
+    >
+      <div
+        className="era-ink-cloud"
+        style={{ width: `${diameter}px`, height: `${diameter}px` }}
+      />
+      <div className="era-grain" />
+      <div
+        className="era-dispersion"
+        style={{ width: `${diameter}px`, height: `${diameter}px` }}
+      />
+      <div className="era-scanline" />
       <div
         ref={ringRef}
         className={`era-energy-ring ${

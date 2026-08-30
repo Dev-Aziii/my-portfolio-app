@@ -92,14 +92,21 @@ async function captureProgress(
   await page.waitForFunction(() => Boolean(document.documentElement.dataset.eraTransition));
   const sweep = 620;
   await page.waitForTimeout(sweep * progress);
-  await page.screenshot({
-    path: path.join(outputDir, `${name}.png`),
-    fullPage: false,
-  });
   const state = await page.evaluate(() => ({
     transition: document.documentElement.dataset.eraTransition ?? null,
     motion: document.documentElement.dataset.eraMotion ?? null,
     energyRingPresent: Boolean(document.querySelector(".era-energy-ring")),
+    inkCloudPresent: Boolean(document.querySelector(".era-ink-cloud")),
+    scanlinePresent: Boolean(document.querySelector(".era-scanline")),
+    grainPresent: Boolean(document.querySelector(".era-grain")),
+    direction: document.querySelector(".era-material-transition")?.dataset.direction ?? null,
+    edge: document.querySelector(".era-material-transition")?.dataset.edge ?? null,
+    inkPalette: document.querySelector(".era-material-transition")
+      ? getComputedStyle(document.querySelector(".era-material-transition")).getPropertyValue("--era-ink-rgb").trim()
+      : null,
+    sparkPalette: document.querySelector(".era-material-transition")
+      ? getComputedStyle(document.querySelector(".era-material-transition")).getPropertyValue("--era-spark-rgb").trim()
+      : null,
     originX: document.documentElement.style.getPropertyValue("--era-origin-x"),
     originY: document.documentElement.style.getPropertyValue("--era-origin-y"),
     maxRadius: document.documentElement.style.getPropertyValue("--era-max-radius"),
@@ -108,8 +115,12 @@ async function captureProgress(
       return effect && "pseudoElement" in effect ? effect.pseudoElement : null;
     }).filter(Boolean),
   }));
+  await page.screenshot({
+    path: path.join(outputDir, `${name}.png`),
+    fullPage: false,
+  });
   await page.close();
-  return { state, errors };
+  return { state, errors, viewportWidth: viewport.width };
 }
 
 async function verifyReducedMotion(browser) {
@@ -123,6 +134,9 @@ async function verifyReducedMotion(browser) {
   const during = await page.evaluate(() => ({
     motion: document.documentElement.dataset.eraMotion ?? null,
     energyRingPresent: Boolean(document.querySelector(".era-energy-ring")),
+    inkCloudPresent: Boolean(document.querySelector(".era-ink-cloud")),
+    scanlinePresent: Boolean(document.querySelector(".era-scanline")),
+    grainPresent: Boolean(document.querySelector(".era-grain")),
   }));
   await page.waitForFunction(() => !document.documentElement.dataset.eraTransition);
   await page.close();
@@ -208,20 +222,37 @@ try {
 
   for (const [name, result] of Object.entries(progress)) {
     const expectedDirection = name.startsWith("future") ? "to-future" : "to-past";
+    const expectedInkPalette = expectedDirection === "to-future" ? "0 240 255" : "213 166 95";
+    const expectedSparkPalette = expectedDirection === "to-future" ? "185 251 255" : "255 225 170";
     const state = result.state;
+    const originX = Number.parseFloat(state.originX);
+    const expectedEdge = originX >= result.viewportWidth / 2 ? "right" : "left";
     if (
       result.errors.length ||
       state.transition !== expectedDirection ||
       state.motion !== "cinematic" ||
       !state.originX ||
       !state.originY ||
-      !state.maxRadius
+      !state.maxRadius ||
+      state.direction !== expectedDirection ||
+      state.edge !== expectedEdge ||
+      state.inkPalette !== expectedInkPalette ||
+      state.sparkPalette !== expectedSparkPalette ||
+      !state.inkCloudPresent ||
+      !state.scanlinePresent ||
+      !state.grainPresent
     ) {
       failures.push(`progress ${name}`);
     }
   }
 
-  if (reducedMotion.motion !== "reduced" || reducedMotion.energyRingPresent) {
+  if (
+    reducedMotion.motion !== "reduced" ||
+    reducedMotion.energyRingPresent ||
+    reducedMotion.inkCloudPresent ||
+    reducedMotion.scanlinePresent ||
+    reducedMotion.grainPresent
+  ) {
     failures.push("reduced motion");
   }
   if (

@@ -303,6 +303,14 @@
     animation: reduced-motion-root-fade-in 150ms ease-out both;
   }
 
+  .era-material-transition .era-ink-cloud,
+  .era-material-transition .era-dispersion,
+  .era-material-transition .era-scanline,
+  .era-material-transition .era-energy-ring {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+
   .temporal-overlay,
   .temporal-overlay *,
   html.temporal-transition body > *,
@@ -675,15 +683,125 @@ html[data-era-transition] .theme-background {
    ═══════════════════════════════════════════════════════════════ */
 
 .era-material-transition {
+  --era-transition-duration: 720ms;
+  --era-ink-rgb: 0 240 255;
+  --era-spark-rgb: 185 251 255;
   position: fixed;
   inset: 0;
   width: 100vw;
   height: 100vh;
-  pointer-events: none;
   user-select: none;
   z-index: 9999;
   overflow: hidden;
   contain: strict;
+  isolation: isolate;
+  pointer-events: none;
+}
+
+.era-material-transition--past {
+  --era-ink-rgb: 213 166 95;
+  --era-spark-rgb: 255 225 170;
+}
+
+.era-material-transition > * {
+  pointer-events: none;
+}
+
+.era-ink-cloud,
+.era-dispersion {
+  position: absolute;
+  left: var(--era-origin-x);
+  top: var(--era-origin-y);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0.08);
+  transform-origin: center;
+  will-change: transform, opacity, filter;
+  max-width: 80vw;
+  max-height: 80vh;
+}
+
+.era-ink-cloud {
+  z-index: 1;
+  background:
+    radial-gradient(circle at 48% 48%, rgb(var(--era-spark-rgb) / 0.34) 0 3%, transparent 20%),
+    repeating-radial-gradient(circle at 44% 54%, transparent 0 7px, rgb(var(--era-ink-rgb) / 0.18) 8px 10px, transparent 12px 21px),
+    radial-gradient(ellipse at 50% 50%, rgb(var(--era-ink-rgb) / 0.42), transparent 62%);
+  filter: blur(5px) saturate(1.08);
+  mix-blend-mode: screen;
+  opacity: 0;
+  animation: era-ink-bloom var(--era-transition-duration) cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.era-ink-cloud::before,
+.era-ink-cloud::after {
+  content: "";
+  position: absolute;
+  inset: 15%;
+  border-radius: 43% 57% 54% 46%;
+  border: 1px solid rgb(var(--era-ink-rgb) / 0.34);
+  box-shadow: 0 0 26px rgb(var(--era-ink-rgb) / 0.24);
+  opacity: 0;
+}
+
+.era-ink-cloud::before {
+  transform: rotate(-18deg) scale(0.72);
+  animation: era-ink-swirl var(--era-transition-duration) cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.era-ink-cloud::after {
+  inset: 25%;
+  border-style: dotted;
+  transform: rotate(28deg) scale(0.48);
+  animation: era-ink-swirl var(--era-transition-duration) cubic-bezier(0.2, 0.8, 0.2, 1) 45ms both reverse;
+}
+
+.era-grain {
+  position: absolute;
+  inset: -15%;
+  z-index: 3;
+  background-image:
+    repeating-radial-gradient(circle at 30% 40%, rgb(var(--era-spark-rgb) / 0.18) 0 1px, transparent 1px 5px),
+    repeating-linear-gradient(103deg, transparent 0 9px, rgb(var(--era-ink-rgb) / 0.08) 10px 11px, transparent 12px 18px);
+  mix-blend-mode: soft-light;
+  opacity: 0;
+  will-change: opacity, transform;
+  animation: era-grain-shift var(--era-transition-duration) ease-out both;
+}
+
+.era-dispersion {
+  z-index: 2;
+  border: 1px dashed rgb(var(--era-spark-rgb) / 0.55);
+  box-shadow:
+    0 0 18px rgb(var(--era-ink-rgb) / 0.42),
+    inset 0 0 24px rgb(var(--era-spark-rgb) / 0.16);
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: era-glow-dispersion var(--era-transition-duration) cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.era-scanline {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--era-origin-x);
+  z-index: 4;
+  width: clamp(42px, 7vw, 96px);
+  opacity: 0;
+  transform: translateX(-50%) scaleX(0.3);
+  transform-origin: center;
+  background:
+    linear-gradient(90deg, transparent, rgb(var(--era-spark-rgb) / 0.16) 22%, rgb(var(--era-spark-rgb) / 0.92) 50%, rgb(var(--era-spark-rgb) / 0.16) 78%, transparent),
+    repeating-linear-gradient(0deg, transparent 0 7px, rgb(var(--era-spark-rgb) / 0.24) 8px 9px);
+  filter: blur(0.25px) drop-shadow(0 0 9px rgb(var(--era-ink-rgb) / 0.85));
+  will-change: transform, opacity;
+}
+
+.era-material-transition--left .era-scanline {
+  animation: era-scan-toward-right var(--era-transition-duration) cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.era-material-transition--right .era-scanline {
+  animation: era-scan-toward-left var(--era-transition-duration) cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .era-energy-ring {
@@ -711,6 +829,51 @@ html[data-era-transition] .theme-background {
     0 0 16px 2px rgba(230, 175, 85, 0.7),
     0 0 36px 6px rgba(230, 175, 85, 0.35),
     inset 0 0 20px 2px rgba(230, 175, 85, 0.4);
+}
+
+@keyframes era-ink-bloom {
+  0% { transform: translate(-50%, -50%) scale(0.08); opacity: 0; }
+  12% { transform: translate(-50%, -50%) scale(0.22); opacity: 0.82; }
+  42% { transform: translate(-50%, -50%) scale(0.72); opacity: 0.68; }
+  76% { transform: translate(-50%, -50%) scale(1.02); opacity: 0.34; filter: blur(8px) saturate(1.12); }
+  100% { transform: translate(-50%, -50%) scale(1.16); opacity: 0; filter: blur(12px) saturate(1.16); }
+}
+
+@keyframes era-ink-swirl {
+  0% { transform: rotate(-18deg) scale(0.72); opacity: 0; }
+  18% { opacity: 0.7; }
+  72% { transform: rotate(54deg) scale(1.04); opacity: 0.34; }
+  100% { transform: rotate(92deg) scale(1.34); opacity: 0; }
+}
+
+@keyframes era-grain-shift {
+  0% { transform: translate3d(-2%, -1%, 0) scale(0.98); opacity: 0; }
+  18% { opacity: 0.48; }
+  70% { transform: translate3d(2%, 1%, 0) scale(1.02); opacity: 0.28; }
+  100% { transform: translate3d(4%, 2%, 0) scale(1.05); opacity: 0; }
+}
+
+@keyframes era-glow-dispersion {
+  0%, 10% { transform: translate(-50%, -50%) scale(0.18) rotate(-12deg); opacity: 0; }
+  28% { opacity: 0.58; }
+  72% { transform: translate(-50%, -50%) scale(0.98) rotate(24deg); opacity: 0.24; }
+  100% { transform: translate(-50%, -50%) scale(1.28) rotate(42deg); opacity: 0; }
+}
+
+@keyframes era-scan-toward-right {
+  0%, 9% { transform: translateX(-50%) scaleX(0.3); opacity: 0; }
+  18% { opacity: 0.62; }
+  38% { transform: translateX(-20%) scaleX(1); opacity: 0.9; }
+  72% { transform: translateX(100vw) scaleX(0.72); opacity: 0.5; }
+  86%, 100% { transform: translateX(112vw) scaleX(0.34); opacity: 0; }
+}
+
+@keyframes era-scan-toward-left {
+  0%, 9% { transform: translateX(-50%) scaleX(0.3); opacity: 0; }
+  18% { opacity: 0.62; }
+  38% { transform: translateX(-80%) scaleX(1); opacity: 0.9; }
+  72% { transform: translateX(-100vw) scaleX(0.72); opacity: 0.5; }
+  86%, 100% { transform: translateX(-112vw) scaleX(0.34); opacity: 0; }
 }
 
 ::view-transition-group(root) {

@@ -107,25 +107,29 @@ try {
     const toggles = page.getByRole("button", { name: /Time Machine:/ });
     await (await visibleToggle(page)).click();
     await page.waitForTimeout(20);
-    const duringBusy = await toggles.evaluateAll((elements) =>
-      elements.map((element) => element.getAttribute("aria-busy")),
-    );
-    const duringDisabled = await toggles.evaluateAll((elements) =>
-      elements.map((element) => element.getAttribute("aria-disabled")),
+    const duringState = await toggles.evaluateAll((elements) =>
+      elements.map((element) => ({
+        busy: element.getAttribute("aria-busy"),
+        disabled: element.getAttribute("aria-disabled"),
+        nativeDisabled: element.disabled,
+      })),
     );
     await waitForCleanup(page);
-    const afterBusy = await toggles.evaluateAll((elements) =>
-      elements.map((element) => element.getAttribute("aria-busy")),
-    );
-    const afterDisabled = await toggles.evaluateAll((elements) =>
-      elements.map((element) => element.getAttribute("aria-disabled")),
+    const afterState = await toggles.evaluateAll((elements) =>
+      elements.map((element) => ({
+        busy: element.getAttribute("aria-busy"),
+        disabled: element.getAttribute("aria-disabled"),
+        nativeDisabled: element.disabled,
+      })),
     );
     results.reducedMotionSync = {
       ...(await state(page)),
-      duringBusy,
-      duringDisabled,
-      afterBusy,
-      afterDisabled,
+      duringBusy: duringState.map(({ busy }) => busy),
+      duringDisabled: duringState.map(({ disabled }) => disabled),
+      duringNativeDisabled: duringState.map(({ nativeDisabled }) => nativeDisabled),
+      afterBusy: afterState.map(({ busy }) => busy),
+      afterDisabled: afterState.map(({ disabled }) => disabled),
+      afterNativeDisabled: afterState.map(({ nativeDisabled }) => nativeDisabled),
     };
     await page.close();
   }
@@ -221,8 +225,10 @@ try {
     results.reducedMotionSync.duringBusy.length < 2 ||
     results.reducedMotionSync.duringBusy.some((value) => value !== "true") ||
     results.reducedMotionSync.duringDisabled.some((value) => value !== "true") ||
+    results.reducedMotionSync.duringNativeDisabled.some((value) => value !== true) ||
     results.reducedMotionSync.afterBusy.some((value) => value !== "false") ||
-    results.reducedMotionSync.afterDisabled.some((value) => value !== "false")
+    results.reducedMotionSync.afterDisabled.some((value) => value !== "false") ||
+    results.reducedMotionSync.afterNativeDisabled.some((value) => value !== false)
   ) {
     failures.push("reduced-motion toggle state synchronization");
   }
