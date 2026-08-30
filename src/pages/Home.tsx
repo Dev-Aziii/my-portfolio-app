@@ -124,7 +124,7 @@ export default function Home() {
           <section id="experience" className="scroll-mt-28">
             <Experience entries={experiences} compact />
           </section>
-          <section id="techstack" className="scroll-mt-28 lg:border-l border-border dark:lg:border-l-0 lg:pl-10 dark:lg:pl-0">
+          <section id="techstack" className="scroll-mt-28">
             <TechStack
               categories={techStack}
               limit={6}

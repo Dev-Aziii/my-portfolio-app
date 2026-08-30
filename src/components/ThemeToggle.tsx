@@ -1,8 +1,62 @@
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
+import {
+  ERA_TRANSITION_COMPLETE,
+  ERA_TRANSITION_START,
+  REDUCED_MOTION_DURATION,
+  calculateMaxRadius,
+  getRadialClipPath,
+  getTransitionTiming,
+  resolveMotionMode,
+  resolveSweepEdge,
+  type EraDirection,
+  type EraTransitionDetail,
+} from "@/lib/themeTransition";
+
+interface ViewTransitionHandle {
+  ready: Promise<void>;
+  finished: Promise<void>;
+  skipTransition: () => void;
+  updateCallbackDone?: Promise<void>;
+  types?: unknown;
+}
+
+type ViewTransitionDocument = {
+  startViewTransition: (callback: () => void) => ViewTransitionHandle;
+};
+
+let nextTransitionRunId = 0;
+let activeTransitionRunId = 0;
+
+const wait = (duration: number, signal?: AbortSignal) =>
+  new Promise<void>((resolve, reject) => {
+    const timer = window.setTimeout(() => {
+      signal?.removeEventListener("abort", handleAbort);
+      resolve();
+    }, duration);
+
+    const handleAbort = () => {
+      window.clearTimeout(timer);
+      signal?.removeEventListener("abort", handleAbort);
+      reject(new DOMException("Theme transition interrupted", "AbortError"));
+    };
+
+    if (signal?.aborted) {
+      handleAbort();
+      return;
+    }
+
+    signal?.addEventListener("abort", handleAbort, { once: true });
+  });
+
+function dispatchEraEvent(name: string, detail: EraTransitionDetail) {
+  window.dispatchEvent(new CustomEvent(name, { detail }));
+}
 
 export default function ThemeToggle() {
   const rawId = useId();
   const id = rawId.replace(/[:]/g, ""); // Safe SVG ID without special characters
+  const mountedRef = useRef(true);
+  const abortTransitionRef = useRef<(() => void) | null>(null);
 
   const [isDark, setIsDark] = useState<boolean>(() => {
     if (typeof document !== "undefined") {
@@ -14,6 +68,7 @@ export default function ThemeToggle() {
 
   useEffect(() => {
     const html = document.documentElement;
+    mountedRef.current = true;
 
     const syncState = () => {
       setIsDark(html.classList.contains("dark"));
@@ -24,129 +79,247 @@ export default function ThemeToggle() {
     const handleThemeChange = () => syncState();
     window.addEventListener("theme-change", handleThemeChange);
 
-    const handleWarpStart = () => setIsTransitioning(true);
-    const handleWarpEnd = () => setIsTransitioning(false);
+    const handleTransitionStart = () => setIsTransitioning(true);
+    const handleTransitionEnd = () => setIsTransitioning(false);
 
-    window.addEventListener("temporal-warp", handleWarpStart);
-    window.addEventListener("temporal-warp-complete", handleWarpEnd);
+    window.addEventListener(ERA_TRANSITION_START, handleTransitionStart);
+    window.addEventListener(ERA_TRANSITION_COMPLETE, handleTransitionEnd);
 
     const observer = new MutationObserver(() => syncState());
     observer.observe(html, { attributes: true, attributeFilter: ["class"] });
 
     return () => {
       window.removeEventListener("theme-change", handleThemeChange);
-      window.removeEventListener("temporal-warp", handleWarpStart);
-      window.removeEventListener("temporal-warp-complete", handleWarpEnd);
+      window.removeEventListener(ERA_TRANSITION_START, handleTransitionStart);
+      window.removeEventListener(ERA_TRANSITION_COMPLETE, handleTransitionEnd);
       observer.disconnect();
+      mountedRef.current = false;
+      abortTransitionRef.current?.();
+      abortTransitionRef.current = null;
     };
   }, []);
 
-  const toggleTheme = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (isTransitioning) {
+  const toggleTheme = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    const html = document.documentElement;
+
+    if (isTransitioning || html.dataset.eraTransition) {
       return;
     }
 
+    const runId = ++nextTransitionRunId;
+    activeTransitionRunId = runId;
     setIsTransitioning(true);
 
-    const html = document.documentElement;
     const isCurrentlyDark = html.classList.contains("dark");
     const targetDark = !isCurrentlyDark;
+    const direction: EraDirection = targetDark ? "to-future" : "to-past";
+    const timing = getTransitionTiming(direction);
 
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = rect.left + rect.width / 2;
-    const y = rect.top + rect.height / 2;
+    const x = Math.round(rect.left + rect.width / 2);
+    const y = Math.round(rect.top + rect.height / 2);
+    const edge = resolveSweepEdge(x, window.innerWidth);
+    const maxRadius = calculateMaxRadius(x, y, window.innerWidth, window.innerHeight);
+    const motionMode = resolveMotionMode(
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    );
+    const supportsViewTransitions =
+      typeof (document as Partial<ViewTransitionDocument>).startViewTransition ===
+      "function";
 
+    const initialClip = getRadialClipPath(0, x, y);
+    const finalClip = getRadialClipPath(maxRadius, x, y);
+
+    if (motionMode === "cinematic") {
+      html.style.setProperty("--era-origin-x", `${x}px`);
+      html.style.setProperty("--era-origin-y", `${y}px`);
+      html.style.setProperty("--era-max-radius", `${maxRadius}px`);
+      html.style.setProperty("--era-initial-clip", initialClip);
+      html.style.setProperty("--era-material-duration", `${timing.sweep}ms`);
+    }
+
+    const initialDetail: EraTransitionDetail = {
+      id: runId,
+      direction,
+      edge,
+      origin: { x, y },
+      maxRadius,
+      duration: timing.sweep,
+      startedAt: performance.now(),
+    };
+
+    html.dataset.eraTransition = direction;
+    html.dataset.eraTransitionRun = String(runId);
+    html.dataset.eraMotion = motionMode;
+    dispatchEraEvent(ERA_TRANSITION_START, initialDetail);
+
+    let committed = false;
     const updateDOM = () => {
+      if (committed) return;
+
+      try {
+        localStorage.setItem("theme", targetDark ? "dark" : "light");
+      } catch {
+        // Storage can be unavailable in privacy-restricted contexts. The live
+        // theme must still change even when persistence is denied.
+      }
+
+      committed = true;
+
       if (targetDark) {
         html.classList.add("dark");
-        localStorage.theme = "dark";
-        setIsDark(true);
+        if (mountedRef.current) setIsDark(true);
       } else {
         html.classList.remove("dark");
-        localStorage.theme = "light";
-        setIsDark(false);
+        if (mountedRef.current) setIsDark(false);
       }
       window.dispatchEvent(new CustomEvent("theme-change"));
     };
 
-    const isReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const complete = () => {
+      if (activeTransitionRunId !== runId) return;
 
-    if (isReducedMotion) {
-      updateDOM();
-      setIsTransitioning(false);
-      return;
-    }
+      delete html.dataset.eraTransition;
+      delete html.dataset.eraTransitionRun;
+      html.style.removeProperty("--era-initial-clip");
+      html.style.removeProperty("--era-origin-x");
+      html.style.removeProperty("--era-origin-y");
+      html.style.removeProperty("--era-max-radius");
+      html.style.removeProperty("--era-material-duration");
+      delete html.dataset.eraTransitionFallback;
+      delete html.dataset.eraMaterialCapture;
+      delete html.dataset.eraMotion;
+      dispatchEraEvent(ERA_TRANSITION_COMPLETE, {
+        ...initialDetail,
+        startedAt: performance.now(),
+      });
+      activeTransitionRunId = 0;
+      if (mountedRef.current) setIsTransitioning(false);
+    };
 
-    // Auto-release transition lock as a safety fallback
-    setTimeout(() => {
-      setIsTransitioning(false);
-    }, 1600);
+    const abortController = new AbortController();
+    let currentViewTransition: ViewTransitionHandle | null = null;
+    const transitionAnimations: Animation[] = [];
+    let safetyTimer: number | null = null;
 
-    // Broadcast temporal warp event for time-travel animation overlay
-    window.dispatchEvent(
-      new CustomEvent("temporal-warp", {
-        detail: {
-          direction: targetDark ? "to-future" : "to-past",
-          x,
-          y,
-          duration: 1500,
-        },
-      })
-    );
+    const abortRun = () => {
+      if (abortController.signal.aborted) return;
 
-    const endRadius = Math.hypot(
-      Math.max(x, window.innerWidth - x),
-      Math.max(y, window.innerHeight - y)
-    );
-
-    // Synchronize DOM update with warp apex flash
-    if (
-      typeof document !== "undefined" &&
-      "startViewTransition" in document
-    ) {
-      setTimeout(() => {
+      abortController.abort();
+      transitionAnimations.forEach((animation) => {
         try {
-          const transition = (
-            document as unknown as {
-              startViewTransition: (cb: () => void) => { ready: Promise<void> };
-            }
-          ).startViewTransition(() => {
-            updateDOM();
-          });
-
-          transition.ready
-            .then(() => {
-              try {
-                const clipPath = [
-                  `circle(0px at ${x}px ${y}px)`,
-                  `circle(${endRadius}px at ${x}px ${y}px)`,
-                ];
-
-                document.documentElement.animate(
-                  {
-                    clipPath: clipPath,
-                  },
-                  {
-                    duration: 650,
-                    easing: "cubic-bezier(0.2, 0.8, 0.2, 1)",
-                    pseudoElement: "::view-transition-new(root)",
-                  }
-                );
-              } catch {
-                // Ignore animation error if already aborted
-              }
-            })
-            .catch(() => {
-              // Transition was interrupted or skipped
-            });
+          animation.cancel();
         } catch {
-          updateDOM();
+          // The browser may already have discarded an interrupted snapshot.
         }
-      }, 550);
-    } else {
-      setTimeout(() => {
+      });
+      currentViewTransition?.skipTransition();
+      updateDOM();
+      complete();
+    };
+
+    abortTransitionRef.current = abortRun;
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "hidden") abortRun();
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    safetyTimer = window.setTimeout(abortRun, timing.total + 100);
+
+    try {
+      if (motionMode === "reduced") {
+        if (!supportsViewTransitions) {
+          updateDOM();
+          await wait(REDUCED_MOTION_DURATION, abortController.signal);
+          return;
+        }
+
+        const transition = (
+          document as unknown as ViewTransitionDocument
+        ).startViewTransition(updateDOM);
+        currentViewTransition = transition;
+        await transition.ready;
+        if (activeTransitionRunId !== runId) return;
+
+        const oldAnimation = html.animate(
+          [{ opacity: 1 }, { opacity: 0 }],
+          {
+            duration: REDUCED_MOTION_DURATION,
+            easing: "ease-out",
+            fill: "both",
+            pseudoElement: "::view-transition-old(root)",
+          },
+        );
+        const newAnimation = html.animate(
+          [{ opacity: 0 }, { opacity: 1 }],
+          {
+            duration: REDUCED_MOTION_DURATION,
+            easing: "ease-out",
+            fill: "both",
+            pseudoElement: "::view-transition-new(root)",
+          },
+        );
+        transitionAnimations.push(oldAnimation, newAnimation);
+
+        await wait(REDUCED_MOTION_DURATION, abortController.signal);
+        oldAnimation.finish();
+        newAnimation.finish();
+        transition.skipTransition();
+        await transition.finished;
+        return;
+      }
+
+      await wait(timing.charge, abortController.signal);
+      if (activeTransitionRunId !== runId) return;
+      html.dataset.eraMaterialCapture = "true";
+
+      if (!supportsViewTransitions) {
+        html.dataset.eraTransitionFallback = "true";
+        dispatchEraEvent(ERA_TRANSITION_START, initialDetail);
+        await wait(timing.sweep * 0.5, abortController.signal);
+        if (activeTransitionRunId !== runId) return;
         updateDOM();
-      }, 550);
+        await wait(timing.sweep * 0.5 + timing.settle, abortController.signal);
+        return;
+      }
+
+      const transition = (
+        document as unknown as ViewTransitionDocument
+      ).startViewTransition(updateDOM);
+      currentViewTransition = transition;
+      await transition.ready;
+      if (activeTransitionRunId !== runId) return;
+
+      dispatchEraEvent(ERA_TRANSITION_START, initialDetail);
+
+      const revealAnimation = html.animate(
+        [
+          { clipPath: initialClip },
+          { clipPath: finalClip },
+        ],
+        {
+          duration: timing.sweep,
+          easing: "cubic-bezier(0.25, 1, 0.35, 1)",
+          fill: "both",
+          pseudoElement: "::view-transition-new(root)",
+        },
+      );
+
+      transitionAnimations.push(revealAnimation);
+
+      await wait(timing.sweep + timing.settle, abortController.signal);
+      revealAnimation.finish();
+      transition.skipTransition();
+      await transition.finished;
+    } catch {
+      currentViewTransition?.skipTransition();
+      updateDOM();
+    } finally {
+      if (safetyTimer !== null) window.clearTimeout(safetyTimer);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      if (abortTransitionRef.current === abortRun) {
+        abortTransitionRef.current = null;
+      }
+      complete();
     }
   };
 
@@ -154,8 +327,8 @@ export default function ThemeToggle() {
     <button
       type="button"
       onClick={toggleTheme}
-      disabled={isTransitioning}
-      aria-disabled={isTransitioning}
+      aria-disabled={isTransitioning ? "true" : "false"}
+      aria-busy={isTransitioning ? "true" : "false"}
       aria-label={
         isDark
           ? "Time Machine: Future Active. Click to travel back to the Past."

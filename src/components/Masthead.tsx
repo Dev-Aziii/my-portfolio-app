@@ -199,7 +199,14 @@ export default function Masthead({ onNavigateSection }: MastheadProps) {
 
   return (
     <>
-      <header id="masthead" className="sticky top-0 z-40 w-full bg-background/95 dark:bg-[#060b13]/95 backdrop-blur-md border-b border-border dark:border-cyan-500/20 mb-6 sm:mb-8 transition-colors duration-300">
+      <header
+        id="masthead"
+        className={`sticky top-0 z-40 w-full mb-6 sm:mb-8 transition-all duration-300 ${
+          isScrolled
+            ? "bg-background/90 dark:bg-[#060b13]/90 backdrop-blur-md border-b border-border dark:border-cyan-500/20 shadow-xs"
+            : "bg-transparent border-b border-transparent"
+        }`}
+      >
         <div className="max-w-5xl mx-auto py-2 px-3 sm:px-4">
           {/* Top Issue Bar - Desktop only */}
           <div
@@ -266,53 +273,12 @@ export default function Masthead({ onNavigateSection }: MastheadProps) {
             <div className="flex items-center gap-6 lg:gap-8 px-4 sm:px-6">
               {/* Glowing Profile Portrait Frame */}
               <div className="shrink-0 group relative cursor-pointer my-1">
-                {/* Light Mode: Classic Double Ring */}
-                <div className="dark:hidden p-1 border-2 border-border/80 rounded-full bg-card/40 shadow-md transition-all duration-500 group-hover:border-foreground/40">
-                  <div className="size-28 lg:size-32 rounded-full border border-border/60 overflow-hidden bg-muted">
+                <div className="relative p-1.5 border-2 border-[#c5b59f] dark:border-cyan-400/90 rounded-full bg-[#f2ebd9] dark:bg-slate-950/80 shadow-md dark:shadow-[0_0_20px_rgba(0,240,255,0.5)] transition-all duration-500 group-hover:border-[#8c6f52] dark:group-hover:border-cyan-300">
+                  <div className="size-28 lg:size-32 rounded-full border border-[#b59e84]/70 dark:border-cyan-400/80 overflow-hidden bg-[#e8decd] dark:bg-slate-950 shadow-inner">
                     <img
                       src="/images/profile.webp"
                       alt="Adzyl Jipos"
-                      className="size-full object-cover grayscale contrast-110 sepia-[0.20] brightness-90 transition-all duration-500 ease-out group-hover:grayscale-0 group-hover:contrast-100 group-hover:sepia-0 group-hover:brightness-100 group-hover:scale-105"
-                    />
-                  </div>
-                </div>
-
-                {/* Dark Mode: Futuristic Glowing HUD Ring */}
-                <div className="hidden dark:block relative p-3">
-                  {/* Outer Pulsing Neon Glow Ring */}
-                  <div className="absolute inset-1 rounded-full border-2 border-cyan-400/80 shadow-[0_0_20px_rgba(0,240,255,0.45),inset_0_0_15px_rgba(0,240,255,0.25)] animate-hud-pulse" />
-                  
-                  {/* Outer Segmented HUD Arc Details */}
-                  <svg className="absolute inset-0 size-full pointer-events-none text-cyan-400" viewBox="0 0 100 100">
-                    {/* Top-Left Arc Segment */}
-                    <path
-                      d="M 18,30 A 42 42 0 0 1 30,18"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                    />
-                    {/* Bottom-Right Arc Segment */}
-                    <path
-                      d="M 82,70 A 42 42 0 0 1 70,82"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                    />
-                    {/* Tick Mark Accents */}
-                    <circle cx="50" cy="4" r="1.5" fill="currentColor" />
-                    <circle cx="50" cy="96" r="1.5" fill="currentColor" />
-                    <circle cx="4" cy="50" r="1.5" fill="currentColor" />
-                    <circle cx="96" cy="50" r="1.5" fill="currentColor" />
-                  </svg>
-
-                  {/* Inner Avatar Frame */}
-                  <div className="size-28 lg:size-32 rounded-full border-2 border-cyan-400/90 overflow-hidden bg-slate-950/80 shadow-[0_0_14px_rgba(0,240,255,0.3)] transition-transform duration-500 group-hover:scale-[1.03]">
-                    <img
-                      src="/images/profile.webp"
-                      alt="Adzyl Jipos"
-                      className="size-full object-cover contrast-105 brightness-100 transition-all duration-500 group-hover:scale-105"
+                      className="size-full object-cover grayscale contrast-110 sepia-[0.25] brightness-95 dark:grayscale-0 dark:sepia-0 dark:brightness-100 dark:contrast-105 transition-all duration-500 ease-out group-hover:scale-105"
                     />
                   </div>
                 </div>
@@ -320,44 +286,28 @@ export default function Masthead({ onNavigateSection }: MastheadProps) {
 
               {/* Title & Subtitle + Nav Links */}
               <div className="flex-1 min-w-0">
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold tracking-tight text-foreground dark:text-white dark:tracking-wide uppercase mb-1 drop-shadow-[0_0_18px_rgba(0,240,255,0.12)]">
-                  Adzyl Jipos
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold tracking-tight text-foreground dark:text-white uppercase mb-1 dark:drop-shadow-[0_0_24px_rgba(0,240,255,0.75)]">
+                  ADZYL JIPOS
                 </h1>
-                <p className="font-mono text-xs sm:text-sm tracking-widest text-muted-foreground dark:text-cyan-400 dark:tracking-[0.2em] font-semibold uppercase mb-3.5">
+                <p className="font-mono text-xs sm:text-sm tracking-widest text-muted-foreground dark:text-cyan-400 font-semibold uppercase mb-3.5 dark:drop-shadow-[0_0_8px_rgba(0,240,255,0.6)]">
                   Software Developer
                 </p>
 
                 {/* Section Navigation Links */}
                 <nav aria-label="Masthead Navigation" className="overflow-x-auto">
-                  {/* Light Mode: Classic Newspaper Links */}
-                  <ul className="dark:hidden flex items-center gap-x-4 lg:gap-x-6 gap-y-1 text-xs font-mono uppercase tracking-wider flex-wrap">
+                  <ul className="flex items-center gap-x-3 lg:gap-x-4 gap-y-1 text-xs font-mono uppercase tracking-wider flex-wrap">
                     {navItems.map((item) => (
                       <li key={item.id}>
                         <a
                           href={`#${item.id}`}
                           onClick={(e) => handleNavClick(item.id, e)}
-                          className="hover:underline underline-offset-4 transition-all hover:text-foreground text-muted-foreground font-semibold"
+                          className="inline-block py-1 px-2 border border-transparent hover:border-border dark:hover:border-cyan-500/50 hover:bg-card/60 dark:hover:bg-cyan-950/40 text-muted-foreground hover:text-foreground dark:text-cyan-200/80 dark:hover:text-cyan-300 transition-all font-semibold rounded-xs"
                         >
                           {item.label}
                         </a>
                       </li>
                     ))}
                   </ul>
-
-                  {/* Dark Mode: Futuristic HUD Segmented Nav Bar */}
-                  <div className="hidden dark:inline-flex items-center gap-1 p-1 rounded-sm bg-[#081220]/90 border border-cyan-500/30 shadow-[0_0_15px_rgba(0,240,255,0.08)] max-w-full overflow-x-auto">
-                    {navItems.map((item) => (
-                      <a
-                        key={item.id}
-                        href={`#${item.id}`}
-                        onClick={(e) => handleNavClick(item.id, e)}
-                        className="px-3 py-1.5 font-mono text-xs uppercase tracking-wider font-semibold transition-all whitespace-nowrap border border-transparent text-cyan-200/70 hover:text-cyan-300 hover:border-cyan-500/40 hover:bg-cyan-950/30 rounded-xs"
-                      >
-                        {item.label}
-                      </a>
-                    ))}
-                    <span className="hidden sm:inline-block px-1.5 text-cyan-400/40 font-mono text-xs">|</span>
-                  </div>
                 </nav>
               </div>
             </div>
@@ -366,28 +316,16 @@ export default function Masthead({ onNavigateSection }: MastheadProps) {
           {/* Mobile Main Banner Unscrolled (< md) */}
           {!isScrolled && (
             <div className="flex md:hidden flex-col items-center text-center py-4 border-b border-border dark:border-cyan-500/20 my-2">
-              {/* Light Mode Mobile Avatar */}
-              <div className="dark:hidden shrink-0 group relative cursor-pointer mb-3">
-                <div className="p-1 border-2 border-border/80 rounded-full bg-card/40 shadow-md transition-all duration-500 group-hover:border-foreground/40">
-                  <div className="size-24 rounded-full border border-border/60 overflow-hidden bg-muted">
+              {/* Mobile Avatar */}
+              <div className="shrink-0 group relative cursor-pointer mb-3">
+                <div className="p-1 border-2 border-border/80 dark:border-cyan-400/80 rounded-full bg-card/40 dark:bg-slate-950 shadow-md dark:shadow-[0_0_16px_rgba(0,240,255,0.35)] transition-all duration-500 group-hover:border-foreground/40 dark:group-hover:border-cyan-300">
+                  <div className="size-24 rounded-full border border-border/60 dark:border-cyan-400/60 overflow-hidden bg-muted dark:bg-slate-950">
                     <img
                       src="/images/profile.webp"
                       alt="Adzyl Jipos"
-                      className="size-full object-cover grayscale contrast-110 sepia-[0.20] brightness-90 transition-all duration-500 ease-out group-hover:grayscale-0 group-hover:contrast-100 group-hover:sepia-0 group-hover:brightness-100 group-hover:scale-105"
+                      className="size-full object-cover grayscale contrast-110 sepia-[0.20] brightness-90 dark:grayscale-0 dark:sepia-0 dark:brightness-100 dark:contrast-105 transition-all duration-500 ease-out group-hover:scale-105"
                     />
                   </div>
-                </div>
-              </div>
-
-              {/* Dark Mode Mobile Avatar */}
-              <div className="hidden dark:block relative p-1.5 mb-3">
-                <div className="absolute inset-0 rounded-full border-2 border-cyan-400/80 shadow-[0_0_16px_rgba(0,240,255,0.4)] animate-hud-pulse" />
-                <div className="size-24 rounded-full border-2 border-cyan-400/90 overflow-hidden bg-slate-950">
-                  <img
-                    src="/images/profile.webp"
-                    alt="Adzyl Jipos"
-                    className="size-full object-cover contrast-105 brightness-100"
-                  />
                 </div>
               </div>
 

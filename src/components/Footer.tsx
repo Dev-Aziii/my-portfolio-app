@@ -9,7 +9,7 @@ interface FooterProps {
 
 export default function Footer({ socialLinks, memberships, email }: FooterProps) {
   return (
-    <footer className="w-full pt-8 pb-12 border-t-4 border-double border-border dark:border-t dark:border-double-none dark:border-cyan-500/20 mt-12 text-foreground">
+    <footer className="w-full pt-8 pb-12 border-t border-border dark:border-cyan-500/20 mt-12 text-foreground">
       {/* Editorial / HUD Columns */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pb-8 border-b border-border dark:border-cyan-500/20">
         {/* Memberships */}
