@@ -80,7 +80,7 @@ try {
     failures.push("github modal trigger");
   } else {
     await githubButton.click();
-    if (await desktop.getByRole("dialog").count() !== 1 || !(await desktop.getByRole("dialog").getByText("[ 06 // GITHUB ]").count())) failures.push("github modal open");
+    if (await desktop.getByRole("dialog").count() !== 1 || !(await desktop.getByRole("dialog").getByText("[ - GITHUB - ]").count())) failures.push("github modal open");
     await desktop.keyboard.press("Escape");
     await desktop.waitForTimeout(200);
     if (await desktop.getByRole("dialog").count() !== 0 || await desktop.evaluate(() => document.body.style.overflow !== "")) failures.push("github modal escape close");

@@ -56,7 +56,7 @@ export default function GitHubContributions({ initialData = githubContributionsD
   return (
     <section className="github-panel" aria-labelledby="github-heading">
       <div className="github-panel__header">
-        <h2 id="github-heading" className="dashboard-eyebrow">[ 06 // GITHUB ]</h2>
+        <h2 id="github-heading" className="dashboard-eyebrow">[ - GITHUB - ]</h2>
         <a className="github-panel__link" href={`https://github.com/${data.username}`} target="_blank" rel="noopener noreferrer">
           @{data.username.toUpperCase()} <ArrowUpRight aria-hidden="true" />
         </a>
