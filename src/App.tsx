@@ -8,15 +8,12 @@ import CertificationsPage from "@/pages/CertificationsPage";
 import NotFound from "@/pages/NotFound";
 import ScrollToTop from "./components/ScrollToTop";
 import BackToTop from "./components/BackToTop";
-import CyberHUDFrame from "./components/CyberHUDFrame";
-import EraMaterialTransition from "./components/EraMaterialTransition";
+import DashboardShell from "./components/DashboardShell";
 
 function App() {
   return (
     <BrowserRouter>
-      <EraMaterialTransition />
-      <CyberHUDFrame />
-      <div className="app-content-layer">
+      <DashboardShell>
         <ScrollToTop />
         <Routes>
           <Route index element={<Home />} />
@@ -28,7 +25,7 @@ function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
         <BackToTop />
-      </div>
+      </DashboardShell>
     </BrowserRouter>
   );
 }

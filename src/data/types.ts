@@ -34,6 +34,7 @@ export interface ExperienceEntry {
   title?: string;
   company: string;
   year: string;
+  kind?: "experience" | "education" | "learning";
   logoInitials?: string;
   schedule?: string;
   location?: string;

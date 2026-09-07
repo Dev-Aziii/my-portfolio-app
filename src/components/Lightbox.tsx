@@ -145,7 +145,7 @@ export default function Lightbox({
 
   return createPortal(
     <div
-      className="fixed inset-0 z-9999 flex items-center justify-center bg-black/80 backdrop-blur-md select-none touch-none"
+      className="lightbox select-none touch-none"
       onClick={onClose}
       onWheel={handleWheel}
       onTouchStart={handleTouchStart}
@@ -154,32 +154,32 @@ export default function Lightbox({
       {/* Close button */}
       <button
         onClick={onClose}
-        className="absolute top-6 right-6 p-2.5 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 transition-all z-30 cursor-pointer"
+        className="lightbox__button lightbox__button--close"
         aria-label="Close"
       >
-        <X className="size-6 text-white" />
+        <X aria-hidden="true" />
       </button>
 
       {/* Prev arrow */}
       {currentIndex > 0 && onNavigate && (
         <button
           onClick={handlePrev}
-          className="absolute left-6 p-3 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 transition-all z-30 cursor-pointer"
+          className="lightbox__button lightbox__button--prev"
           aria-label="Previous image"
         >
-          <ChevronLeft className="size-6 text-white" />
+          <ChevronLeft aria-hidden="true" />
         </button>
       )}
 
       {/* Image Container */}
       <div
-        className="relative z-20 max-h-[85vh] max-w-[90vw] flex items-center justify-center p-2"
+        className="relative z-20 flex max-h-[85vh] max-w-[90vw] items-center justify-center p-2"
         onClick={(e) => e.stopPropagation()}
       >
         <img
           src={src}
           alt={alt}
-          className="max-h-[80vh] max-w-[85vw] object-contain rounded-lg shadow-2xl ring-1 ring-white/10 transition-all duration-200"
+          className="lightbox__image transition-all duration-200"
         />
       </div>
 
@@ -187,15 +187,15 @@ export default function Lightbox({
       {currentIndex < images.length - 1 && onNavigate && (
         <button
           onClick={handleNext}
-          className="absolute right-6 p-3 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 transition-all z-30 cursor-pointer"
+        className="lightbox__button lightbox__button--next"
           aria-label="Next image"
         >
-          <ChevronRight className="size-6 text-white" />
+          <ChevronRight aria-hidden="true" />
         </button>
       )}
 
       {/* Image counter */}
-      <div className="absolute bottom-6 px-4 py-1.5 rounded-full bg-black/50 backdrop-blur-sm text-white/80 text-sm font-medium z-30">
+      <div className="lightbox__counter">
         {currentIndex + 1} / {images.length}
       </div>
     </div>,

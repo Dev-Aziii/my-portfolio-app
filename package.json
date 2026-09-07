@@ -9,8 +9,8 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:theme-transition": "vitest run src/lib/themeTransition.test.ts",
-    "test:theme-visual": "node scripts/verify-theme-visuals.mjs",
-    "test:theme-behavior": "node scripts/verify-theme-behavior.mjs",
+    "test:dashboard-visual": "node scripts/verify-dashboard-visuals.mjs",
+    "test:dashboard-behavior": "node scripts/verify-dashboard-behavior.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
