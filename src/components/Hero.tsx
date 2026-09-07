@@ -22,7 +22,7 @@ export default function Hero({ data }: HeroProps) {
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-foreground dark:text-white leading-tight tracking-tight">
           Building Modern Software{" "}
           <span className="dark:bg-gradient-to-r dark:from-purple-400 dark:via-indigo-300 dark:to-cyan-300 dark:bg-clip-text dark:text-transparent dark:drop-shadow-[0_0_16px_rgba(168,85,247,0.35)]">
-            with AI
+            with Purpose.
           </span>
         </h2>
 
