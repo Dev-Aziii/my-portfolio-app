@@ -69,9 +69,12 @@ try {
         projects: document.querySelectorAll(".dashboard-project-card").length,
         navItems: document.querySelectorAll(".dashboard-nav__item").length,
         artworkLoaded: Boolean(artwork && artwork.complete && artwork.naturalWidth > 0),
+        artworkSrc: artwork?.getAttribute("src") ?? "",
         squareGeometry,
         sidebarBio: Boolean(document.querySelector(".dashboard-sidebar__bio")),
         sidebarContact: Boolean(document.querySelector(".dashboard-contact-list")),
+        contactNav: [...document.querySelectorAll(".dashboard-nav__item")].some((item) => item.textContent?.trim() === "Contact"),
+        sidebarEmail: document.querySelector(".dashboard-sidebar__footer[href^='mailto:']")?.getAttribute("href") ?? "",
         visibleColors,
         mobileBarVisible: getComputedStyle(document.querySelector(".dashboard-mobile-bar")).display !== "none",
         sidebarVisible: Boolean(sidebar && sidebar.getBoundingClientRect().right > 0),
@@ -83,12 +86,12 @@ try {
       };
     });
 
-    if (state.overflow || !state.hero || state.stats !== 4 || state.projects !== 4 || state.navItems !== 7) {
+    if (state.overflow || !state.hero || state.stats !== 4 || state.projects !== 4 || state.navItems !== 5 || state.contactNav) {
       failures.push(`${name}: core dashboard structure`);
     }
-    if (!state.artworkLoaded) failures.push(`${name}: hero artwork`);
+    if (!state.artworkLoaded || !state.artworkSrc.endsWith("/images/aziwallp6.png")) failures.push(`${name}: hero artwork`);
     if (!state.squareGeometry) failures.push(`${name}: square geometry`);
-    if (state.sidebarBio || state.sidebarContact) failures.push(`${name}: minimal sidebar content`);
+    if (state.sidebarBio || state.sidebarContact || state.sidebarEmail !== "mailto:adzyl.jipos@gmail.com") failures.push(`${name}: minimal sidebar content`);
     if (/34, 197, 94|0, 240, 255|6, 182, 212|green|cyan/i.test(state.visibleColors)) {
       failures.push(`${name}: colored runtime accents`);
     }

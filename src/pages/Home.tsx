@@ -1,23 +1,17 @@
-import About from "@/components/About";
+import { useState } from "react";
 import Certifications from "@/components/Certifications";
 import DashboardActivity from "@/components/DashboardActivity";
 import DashboardStats from "@/components/DashboardStats";
-import Education from "@/components/Education";
-import Experience from "@/components/Experience";
-import Footer from "@/components/Footer";
-import GitHubContributions from "@/components/GitHubContributions";
+import GitHubModal from "@/components/GitHubModal";
 import Hero from "@/components/Hero";
 import Projects from "@/components/Projects";
 import TechStack from "@/components/TechStack";
 import usePageTitle from "@/hooks/usePageTitle";
 import { getDashboardStats } from "@/lib/dashboard";
 import {
-  aboutParagraphs,
   certifications,
-  contactEmail,
   experiences,
   heroData,
-  memberships,
   projects,
   socialLinks,
   techStack,
@@ -26,6 +20,7 @@ import { githubContributionsData } from "@/data/githubContributions";
 
 export default function Home() {
   usePageTitle("Adzyl Jipos — Portfolio");
+  const [isGithubOpen, setIsGithubOpen] = useState(false);
 
   const stats = getDashboardStats({
     projects,
@@ -48,25 +43,6 @@ export default function Home() {
             <Projects projects={projects} limit={4} showViewAll variant="grid" />
           </section>
 
-          <section id="about" data-dashboard-section="about">
-            <About paragraphs={aboutParagraphs} />
-          </section>
-
-          <section id="experience" data-dashboard-section="experience">
-            <Experience entries={experiences} compact showViewAll />
-          </section>
-
-          <section id="education" data-dashboard-section="education">
-            <Education entries={experiences} />
-          </section>
-
-          <section id="certifications" data-dashboard-section="certifications">
-            <Certifications certifications={certifications} limit={4} showViewAll />
-          </section>
-
-          <section id="github" data-dashboard-section="github">
-            <GitHubContributions />
-          </section>
         </div>
 
         <aside className="dashboard-content-grid__secondary">
@@ -74,13 +50,15 @@ export default function Home() {
             <TechStack categories={techStack} limit={6} categoryLimit={4} showViewAll />
           </section>
 
-          <DashboardActivity />
-
-          <section id="contact" data-dashboard-section="contact">
-            <Footer socialLinks={socialLinks} memberships={memberships} email={contactEmail} />
-          </section>
+          <DashboardActivity onOpenGithub={() => setIsGithubOpen(true)} />
         </aside>
+
+        <section id="certifications" data-dashboard-section="certifications" className="dashboard-content-grid__full">
+          <Certifications certifications={certifications} limit={4} showViewAll />
+        </section>
       </div>
+
+      <GitHubModal open={isGithubOpen} onClose={() => setIsGithubOpen(false)} />
     </div>
   );
 }

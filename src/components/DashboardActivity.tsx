@@ -1,4 +1,4 @@
-import { Activity, GitCommitHorizontal } from "lucide-react";
+import { Activity, GitCommitHorizontal, Github } from "lucide-react";
 import { githubContributionsData } from "@/data/githubContributions";
 
 const recentContributions = githubContributionsData.days
@@ -6,7 +6,11 @@ const recentContributions = githubContributionsData.days
   .slice(-4)
   .reverse();
 
-export default function DashboardActivity() {
+interface DashboardActivityProps {
+  onOpenGithub: () => void;
+}
+
+export default function DashboardActivity({ onOpenGithub }: DashboardActivityProps) {
   return (
     <section className="dashboard-panel dashboard-activity" aria-labelledby="activity-heading">
       <div className="dashboard-section-header">
@@ -14,7 +18,17 @@ export default function DashboardActivity() {
           <span className="dashboard-eyebrow">Open source signal</span>
           <h2 id="activity-heading">Recent Activity</h2>
         </div>
-        <Activity aria-hidden="true" />
+        <div className="dashboard-activity__header-actions">
+          <Activity aria-hidden="true" />
+          <button
+            type="button"
+            className="dashboard-icon-button dashboard-activity__github-button"
+            aria-label="View GitHub contributions"
+            onClick={onOpenGithub}
+          >
+            <Github aria-hidden="true" />
+          </button>
+        </div>
       </div>
 
       <div className="dashboard-activity__summary">
@@ -37,4 +51,3 @@ export default function DashboardActivity() {
     </section>
   );
 }
-

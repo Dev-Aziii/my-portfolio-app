@@ -25,13 +25,86 @@ const failures = [];
 try {
   const desktop = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   await desktop.goto(baseUrl, { waitUntil: "networkidle" });
-  await desktop.getByRole("button", { name: "Skills" }).click();
+
+  const overviewState = await desktop.evaluate(() => {
+    const sectionIds = [...document.querySelectorAll("[data-dashboard-section]")].map((section) => section.id);
+    const contact = document.getElementById("contact");
+    const pageText = document.body.innerText;
+    return {
+      sectionIds,
+      navItems: document.querySelectorAll(".dashboard-nav__item").length,
+      sidebarName: document.querySelector(".dashboard-profile__name")?.textContent?.trim(),
+      sidebarRole: document.querySelector(".dashboard-profile__role"),
+      contactNav: [...document.querySelectorAll(".dashboard-nav__item")].some((item) => item.textContent?.trim() === "Contact"),
+      sidebarEmail: document.querySelector(".dashboard-sidebar__footer[href^='mailto:']")?.getAttribute("href"),
+      hasContactSection: Boolean(contact),
+      hasContactCopy: pageText.includes("Let's work together"),
+    };
+  });
+  if (overviewState.sectionIds.includes("about") || overviewState.sectionIds.includes("experience") || overviewState.sectionIds.includes("education") || overviewState.sectionIds.includes("github")) {
+    failures.push("overview redundant sections");
+  }
+  if (overviewState.navItems !== 5 || overviewState.sidebarName !== "Azi" || overviewState.sidebarRole || overviewState.contactNav) failures.push("compact sidebar navigation");
+  if (overviewState.hasContactSection || overviewState.hasContactCopy) failures.push("contact removal");
+  if (overviewState.sidebarEmail !== "mailto:adzyl.jipos@gmail.com") failures.push("sidebar email link");
+
+  await desktop.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
   await desktop.waitForTimeout(250);
-  const sectionState = await desktop.evaluate(() => ({
+  const scrollState = await desktop.evaluate(() => ({
     active: document.querySelector(".dashboard-nav__item[aria-current]")?.textContent?.trim(),
-    top: document.getElementById("skills")?.getBoundingClientRect().top ?? Infinity,
+    activeCount: document.querySelectorAll(".dashboard-nav__item[aria-current]").length,
   }));
-  if (sectionState.active !== "Skills" || Math.abs(sectionState.top) > 180) failures.push("home section navigation");
+  if (scrollState.active !== "Overview" || scrollState.activeCount !== 1) failures.push("scroll changes active navigation");
+
+  const sidebarRoutes = [
+    ["Projects", "/projects"],
+    ["Skills", "/tech-stack"],
+    ["Experience", "/experience"],
+    ["Certifications", "/certifications"],
+  ];
+  for (const [label, route] of sidebarRoutes) {
+    await desktop.goto(baseUrl, { waitUntil: "networkidle" });
+    await desktop.getByRole("button", { name: label, exact: true }).click();
+    await desktop.waitForTimeout(300);
+    const routeState = await desktop.evaluate(() => ({
+      path: window.location.pathname,
+      active: document.querySelector(".dashboard-nav__item[aria-current]")?.textContent?.trim(),
+      activeCount: document.querySelectorAll(".dashboard-nav__item[aria-current]").length,
+    }));
+    if (routeState.path !== route || routeState.active !== label || routeState.activeCount !== 1) failures.push(`${label.toLowerCase()} route navigation`);
+  }
+
+  await desktop.goto(baseUrl, { waitUntil: "networkidle" });
+  const githubButton = desktop.getByRole("button", { name: "View GitHub contributions" });
+  if (await githubButton.count() !== 1) {
+    failures.push("github modal trigger");
+  } else {
+    await githubButton.click();
+    if (await desktop.getByRole("dialog").count() !== 1 || !(await desktop.getByRole("dialog").getByText("[ 06 // GITHUB ]").count())) failures.push("github modal open");
+    await desktop.keyboard.press("Escape");
+    await desktop.waitForTimeout(200);
+    if (await desktop.getByRole("dialog").count() !== 0 || await desktop.evaluate(() => document.body.style.overflow !== "")) failures.push("github modal escape close");
+    await githubButton.click();
+    await desktop.getByRole("button", { name: "Close GitHub dialog" }).click();
+    if (await desktop.getByRole("dialog").count() !== 0) failures.push("github modal button close");
+    await githubButton.click();
+    await desktop.locator(".github-modal").click({ position: { x: 5, y: 5 } });
+    if (await desktop.getByRole("dialog").count() !== 0) failures.push("github modal backdrop close");
+  }
+
+  const artworkFilters = await desktop.evaluate(() => ({
+    hero: getComputedStyle(document.querySelector(".dashboard-hero__art img")).filter,
+    profile: getComputedStyle(document.querySelector(".dashboard-profile__image")).filter,
+    project: getComputedStyle(document.querySelector(".dashboard-project-card__image img")).filter,
+  }));
+  const heroHoverFilter = await desktop.evaluate(() => getComputedStyle(document.querySelector(".dashboard-hero__art img")).filter);
+  await desktop.locator(".dashboard-profile").hover();
+  await desktop.waitForTimeout(350);
+  const profileHoverFilter = await desktop.evaluate(() => getComputedStyle(document.querySelector(".dashboard-profile__image")).filter);
+  await desktop.locator(".dashboard-project-card-link").first().hover();
+  await desktop.waitForTimeout(350);
+  const projectHoverFilter = await desktop.evaluate(() => getComputedStyle(document.querySelector(".dashboard-project-card__image img")).filter);
+  if (artworkFilters.hero !== heroHoverFilter || artworkFilters.profile === profileHoverFilter || artworkFilters.project === projectHoverFilter) failures.push("image color hover treatment");
 
   await desktop.goto(new URL("projects", baseUrl).href, { waitUntil: "networkidle" });
   await desktop.getByRole("button", { name: "Skills" }).click();

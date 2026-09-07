@@ -1,10 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Award,
   BriefcaseBusiness,
   Code2,
   FolderKanban,
-  GraduationCap,
   LayoutDashboard,
   Mail,
   Menu,
@@ -18,72 +17,25 @@ const navigation = [
   { id: "projects", label: "Projects", route: "/projects", icon: FolderKanban },
   { id: "skills", label: "Skills", route: "/tech-stack", icon: Code2 },
   { id: "experience", label: "Experience", route: "/experience", icon: BriefcaseBusiness },
-  { id: "education", label: "Education", route: "/", icon: GraduationCap },
   { id: "certifications", label: "Certifications", route: "/certifications", icon: Award },
-  { id: "contact", label: "Contact", route: "/", icon: Mail },
 ] as const;
 
 type NavigationItem = (typeof navigation)[number];
 
 function routeIsActive(item: NavigationItem, pathname: string) {
-  if (item.id === "home" || item.id === "education" || item.id === "contact") {
+  if (item.id === "home") {
     return pathname === "/";
   }
 
   return item.id === "projects"
-    ? pathname.startsWith("/projects")
+    ? pathname === "/projects" || pathname.startsWith("/projects/")
     : pathname === item.route;
 }
 
 export default function DashboardShell({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const navigate = useNavigate();
-  const [activeSection, setActiveSection] = useState("home");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const isHome = location.pathname === "/";
-
-  const currentNavigation = useMemo(
-    () => navigation.find((item) => routeIsActive(item, location.pathname))?.id ?? "home",
-    [location.pathname],
-  );
-
-  useEffect(() => {
-    if (!isHome) {
-      setActiveSection(currentNavigation);
-      return;
-    }
-
-    let frame = 0;
-    const updateActiveSection = () => {
-      cancelAnimationFrame(frame);
-      frame = window.requestAnimationFrame(() => {
-        const threshold = window.innerHeight * 0.3;
-        let current = "home";
-        navigation.forEach((item) => {
-          const section = document.getElementById(item.id);
-          if (section && section.getBoundingClientRect().top <= threshold) {
-            current = item.id;
-          }
-        });
-        setActiveSection(current);
-      });
-    };
-
-    updateActiveSection();
-    window.addEventListener("scroll", updateActiveSection, { passive: true });
-
-    const hash = location.hash.slice(1);
-    if (hash) {
-      window.requestAnimationFrame(() => {
-        document.getElementById(hash)?.scrollIntoView({ behavior: "smooth", block: "start" });
-      });
-    }
-
-    return () => {
-      window.removeEventListener("scroll", updateActiveSection);
-      cancelAnimationFrame(frame);
-    };
-  }, [currentNavigation, isHome, location.hash]);
 
   useEffect(() => {
     document.body.style.overflow = isDrawerOpen ? "hidden" : "";
@@ -103,13 +55,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
 
   const handleNavigation = (item: NavigationItem) => {
     setIsDrawerOpen(false);
-
-    if (isHome && document.getElementById(item.id)) {
-      document.getElementById(item.id)?.scrollIntoView({ behavior: "smooth", block: "start" });
-      return;
-    }
-
-    navigate(item.id === "home" ? "/" : { pathname: item.route, hash: item.route === "/" ? `#${item.id}` : "" });
+    navigate(item.route);
   };
 
   const sidebar = (
@@ -120,8 +66,8 @@ export default function DashboardShell({ children }: { children: React.ReactNode
             <img src={heroData.profileImage} alt={heroData.name} className="dashboard-profile__image" />
             <span className="dashboard-profile__status" aria-label="Available for opportunities" />
           </span>
-          <span className="dashboard-profile__name">{heroData.name}</span>
-          <span className="dashboard-profile__role">{heroData.title}</span>
+          <span className="dashboard-profile__name">Azi</span>
+          <span className="sr-only">{heroData.title}</span>
         </a>
 
       </div>
@@ -129,7 +75,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
       <nav className="dashboard-nav" aria-label="Portfolio sections">
         {navigation.map((item) => {
           const Icon = item.icon;
-          const active = isHome ? activeSection === item.id : routeIsActive(item, location.pathname);
+          const active = routeIsActive(item, location.pathname);
           return (
             <button
               key={item.id}
@@ -147,7 +93,10 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         })}
       </nav>
 
-      <div className="dashboard-sidebar__footer" aria-hidden="true" />
+      <a className="dashboard-sidebar__footer" href={`mailto:${heroData.email}`} aria-label={`Email ${heroData.email}`}>
+        <Mail aria-hidden="true" />
+        <span>{heroData.email}</span>
+      </a>
     </aside>
   );
 
