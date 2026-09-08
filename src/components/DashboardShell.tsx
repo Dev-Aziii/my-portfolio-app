@@ -15,7 +15,7 @@ import {
   X,
 } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { heroData, socialLinks } from "@/data";
+import { heroData, profileAscii, socialLinks } from "@/data";
 import ThemeToggle from "@/components/ThemeToggle";
 
 const navigation = [
@@ -73,15 +73,27 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   const sidebar = (
     <aside className={`dashboard-sidebar${isDrawerOpen ? " is-open" : ""}`} aria-label="Portfolio navigation">
       <div className="dashboard-sidebar__top">
-        <a className="dashboard-profile" href="/" onClick={(event) => { event.preventDefault(); handleNavigation(navigation[0]); }}>
-          <span className="dashboard-profile__image-wrap">
-            <img src={heroData.profileImage} alt={heroData.name} className="dashboard-profile__image" />
-            <span className="dashboard-profile__status" aria-label="Available for opportunities" />
-          </span>
-          <span className="dashboard-profile__name">Azi</span>
-          <span className="dashboard-profile__role">{heroData.title}</span>
-        </a>
+        <div className="dashboard-profile-art" aria-hidden="true">
+          <span className="dashboard-profile-art__mantra">Build<br />Learn<br />Create</span>
+          <pre className="dashboard-profile-art__portrait" data-profile-ascii aria-hidden="true">{profileAscii}</pre>
+          <span className="dashboard-profile-art__purpose">Ideas<br />into<br />useful<br />software.</span>
+        </div>
 
+        <a
+          className="dashboard-profile"
+          href="/"
+          aria-label="Go to portfolio overview"
+          onClick={(event) => { event.preventDefault(); handleNavigation(navigation[0]); }}
+        >
+          <span className="dashboard-profile__identity">
+            <span className="dashboard-profile__name">Azi</span>
+            <span className="dashboard-profile__role">{heroData.title}</span>
+          </span>
+          <span className="dashboard-profile__availability">
+            <span className="dashboard-profile__status" aria-hidden="true" />
+            Always building.
+          </span>
+        </a>
       </div>
 
       <div className="dashboard-sidebar__middle">

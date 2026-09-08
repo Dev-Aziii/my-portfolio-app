@@ -30,11 +30,18 @@ try {
     const sectionIds = [...document.querySelectorAll("[data-dashboard-section]")].map((section) => section.id);
     const contact = document.getElementById("contact");
     const pageText = document.body.innerText;
+    const asciiPortrait = document.querySelector("[data-profile-ascii]");
+    const asciiLines = asciiPortrait?.textContent?.split("\n") ?? [];
     return {
       sectionIds,
       navItems: document.querySelectorAll(".dashboard-nav__item").length,
       sidebarName: document.querySelector(".dashboard-profile__name")?.textContent?.trim(),
       sidebarRole: document.querySelector(".dashboard-profile__role")?.textContent?.trim(),
+      sidebarStatus: document.querySelector(".dashboard-profile__availability")?.textContent?.trim(),
+      asciiHidden: asciiPortrait?.getAttribute("aria-hidden"),
+      asciiLineCount: asciiLines.length,
+      asciiLineWidths: [...new Set(asciiLines.map((line) => line.length))],
+      asciiCharactersValid: /^[01\s]+$/.test(asciiPortrait?.textContent ?? ""),
       contactNav: [...document.querySelectorAll(".dashboard-nav__item")].some((item) => item.textContent?.trim() === "Contact"),
       sidebarEmail: document.querySelector(".dashboard-sidebar__footer[href^='mailto:']")?.getAttribute("href"),
       quickLinks: [...document.querySelectorAll(".dashboard-sidebar__quick-link")].map((item) => item.textContent?.trim()),
@@ -47,6 +54,8 @@ try {
     failures.push("overview redundant sections");
   }
   if (overviewState.navItems !== 5 || overviewState.sidebarName !== "Azi" || overviewState.sidebarRole !== "Software Developer" || overviewState.contactNav) failures.push("sidebar navigation");
+  if (overviewState.sidebarStatus !== "Always building." || overviewState.asciiHidden !== "true") failures.push("ascii profile semantics");
+  if (!overviewState.asciiCharactersValid || overviewState.asciiLineCount < 40 || overviewState.asciiLineWidths.length !== 1 || overviewState.asciiLineWidths[0] !== 72) failures.push("ascii profile grid");
   if (overviewState.quickLinks.join("|") !== "GitHub|LinkedIn|Download CV" || overviewState.contactLinks.join("|") !== "Get in touch|Send a message") failures.push("sidebar utility groups");
   if (overviewState.hasContactSection || overviewState.hasContactCopy) failures.push("contact removal");
   if (overviewState.sidebarEmail !== "mailto:adzyl.jipos@gmail.com") failures.push("sidebar email link");
@@ -120,7 +129,6 @@ try {
 
   const artworkFilters = await desktop.evaluate(() => ({
     hero: getComputedStyle(document.querySelector(".dashboard-hero__art img")).filter,
-    profile: getComputedStyle(document.querySelector(".dashboard-profile__image")).filter,
     featuredLogo: getComputedStyle(document.querySelector("[data-project-selector] img")).filter,
     featuredHero: getComputedStyle(document.querySelector("[data-featured-project-detail] img")).filter,
   }));
@@ -134,13 +142,10 @@ try {
     })),
   })));
   const heroHoverFilter = await desktop.evaluate(() => getComputedStyle(document.querySelector(".dashboard-hero__art img")).filter);
-  await desktop.locator(".dashboard-profile").hover();
-  await desktop.waitForTimeout(350);
-  const profileHoverFilter = await desktop.evaluate(() => getComputedStyle(document.querySelector(".dashboard-profile__image")).filter);
   await desktop.locator("[data-project-selector]").first().hover();
   await desktop.waitForTimeout(350);
   const featuredLogoHoverFilter = await desktop.evaluate(() => getComputedStyle(document.querySelector("[data-project-selector] img")).filter);
-  if (artworkFilters.hero !== "none" || artworkFilters.profile !== "none" || artworkFilters.featuredLogo !== "none" || artworkFilters.featuredHero !== "none" || artworkFilters.hero !== heroHoverFilter || artworkFilters.profile !== profileHoverFilter || artworkFilters.featuredLogo !== featuredLogoHoverFilter) failures.push("image color treatment");
+  if (artworkFilters.hero !== "none" || artworkFilters.featuredLogo !== "none" || artworkFilters.featuredHero !== "none" || artworkFilters.hero !== heroHoverFilter || artworkFilters.featuredLogo !== featuredLogoHoverFilter) failures.push("image color treatment");
   if (themeToggleState.some((toggle) => toggle.role !== "radiogroup" || toggle.options.length !== 3 || toggle.options.some((option) => option.role !== "radio" || !["true", "false"].includes(option.checked) || option.icon !== 1))) failures.push("theme switch semantics");
 
   await desktop.goto(new URL("projects", baseUrl).href, { waitUntil: "networkidle" });
@@ -158,10 +163,14 @@ try {
     return Boolean(sidebar && sidebar.getBoundingClientRect().left >= -1 && document.querySelector(".dashboard-drawer-overlay"));
   });
   if (!drawerOpen) failures.push("mobile drawer open");
-  await mobile.getByRole("banner").getByRole("button", { name: "Close navigation" }).click();
+  await mobile.keyboard.press("Escape");
   await mobile.waitForTimeout(260);
   const drawerClosed = await mobile.evaluate(() => !document.querySelector(".dashboard-drawer-overlay"));
-  if (!drawerClosed) failures.push("mobile drawer close");
+  if (!drawerClosed) failures.push("mobile drawer escape close");
+  await mobile.getByRole("button", { name: "Open navigation" }).click();
+  await mobile.getByRole("banner").getByRole("button", { name: "Close navigation" }).click();
+  await mobile.waitForTimeout(260);
+  if (await mobile.locator(".dashboard-drawer-overlay").count()) failures.push("mobile drawer button close");
   await mobile.close();
 
   const experience = await browser.newPage({ viewport: { width: 1024, height: 768 } });

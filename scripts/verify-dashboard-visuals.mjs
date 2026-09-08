@@ -39,11 +39,24 @@ try {
       document.documentElement.classList.remove("dark");
     });
     await page.reload({ waitUntil: "networkidle" });
-    await page.screenshot({ path: path.join(outputDir, `${name}.png`), fullPage: false });
+    await page.screenshot({ path: path.join(outputDir, `${name}-light.png`), fullPage: false });
+    if (name === "mobile") {
+      await page.getByRole("button", { name: "Open navigation" }).click();
+      await page.waitForTimeout(260);
+      await page.screenshot({ path: path.join(outputDir, "mobile-light-sidebar.png"), fullPage: false });
+    }
 
     const state = await page.evaluate(() => {
       const root = getComputedStyle(document.documentElement);
       const sidebar = document.querySelector(".dashboard-sidebar");
+      const content = document.querySelector(".dashboard-shell__content");
+      const asciiPortrait = document.querySelector("[data-profile-ascii]");
+      const profileArt = document.querySelector(".dashboard-profile-art");
+      const profileCard = document.querySelector(".dashboard-profile");
+      const sidebarStyles = sidebar ? getComputedStyle(sidebar) : null;
+      const asciiStyles = asciiPortrait ? getComputedStyle(asciiPortrait) : null;
+      const profileArtBounds = profileArt?.getBoundingClientRect();
+      const profileCardBounds = profileCard?.getBoundingClientRect();
       const artwork = document.querySelector(".dashboard-hero__art img");
       const projectPanel = document.querySelector(".dashboard-panel--projects");
       const activityPanel = document.querySelector(".dashboard-activity");
@@ -56,7 +69,7 @@ try {
         ".dashboard-panel",
         ".dashboard-action",
         ".dashboard-nav__item",
-        ".dashboard-profile__image",
+        ".dashboard-profile",
         ".dashboard-featured-projects__selector-item",
         ".dashboard-featured-projects__detail",
       ];
@@ -89,11 +102,18 @@ try {
         selectorLogoSize: selectorLogo ? getComputedStyle(selectorLogo).width : "",
         roundedGeometry,
         sidebarRole: Boolean(document.querySelector(".dashboard-profile__role")),
+        asciiPortrait: Boolean(asciiPortrait),
+        asciiFontSize: asciiStyles?.fontSize ?? "",
+        asciiColor: asciiStyles?.color ?? "",
+        sidebarWidth: sidebar?.getBoundingClientRect().width ?? 0,
+        sidebarBackgroundColor: sidebarStyles?.backgroundColor ?? "",
+        sidebarOverflowY: sidebarStyles?.overflowY ?? "",
+        contentMarginLeft: content ? Number.parseFloat(getComputedStyle(content).marginLeft) : -1,
+        profileCardOverlapsArt: Boolean(profileArtBounds && profileCardBounds && profileCardBounds.top < profileArtBounds.bottom && profileCardBounds.bottom > profileArtBounds.bottom),
         contactNav: [...document.querySelectorAll(".dashboard-nav__item")].some((item) => item.textContent?.trim() === "Contact"),
         sidebarEmail: document.querySelector(".dashboard-sidebar__footer[href^='mailto:']")?.getAttribute("href") ?? "",
         imageFilters: [
           ".dashboard-hero__art img",
-          ".dashboard-profile__image",
           ".dashboard-certification-card__icon img",
         ].map((selector) => getComputedStyle(document.querySelector(selector)).filter),
         visibleColors,
@@ -114,7 +134,12 @@ try {
     }
     if (!state.artworkLoaded || !state.artworkSrc.endsWith("/images/azii.webp")) failures.push(`${name}: hero artwork`);
     if (!state.roundedGeometry) failures.push(`${name}: rounded geometry`);
-    if (!state.sidebarRole || state.sidebarEmail !== "mailto:adzyl.jipos@gmail.com") failures.push(`${name}: sidebar content`);
+    if (!state.sidebarRole || !state.asciiPortrait || state.sidebarEmail !== "mailto:adzyl.jipos@gmail.com") failures.push(`${name}: sidebar content`);
+    const expectedSidebarWidth = name === "desktop" ? 336 : name === "tablet" ? 292 : 336;
+    const expectedAsciiFontSize = name === "tablet" ? "5.25px" : "5.7px";
+    if (state.sidebarWidth !== expectedSidebarWidth || state.contentMarginLeft !== (name === "mobile" ? 0 : expectedSidebarWidth)) failures.push(`${name}: sidebar responsive width`);
+    if (state.asciiFontSize !== expectedAsciiFontSize || state.sidebarOverflowY !== "auto" || !state.profileCardOverlapsArt) failures.push(`${name}: ascii sidebar geometry`);
+    if (state.sidebarBackgroundColor === "rgba(0, 0, 0, 0)") failures.push(`${name}: light sidebar surface`);
     if (state.imageFilters.some((filter) => filter !== "none")) failures.push(`${name}: grayscale image treatment`);
     if (/34, 197, 94|0, 240, 255|6, 182, 212|green|cyan/i.test(state.visibleColors)) {
       failures.push(`${name}: colored runtime accents`);
@@ -130,11 +155,20 @@ try {
       document.documentElement.classList.add("dark");
     });
     await page.reload({ waitUntil: "networkidle" });
+    await page.screenshot({ path: path.join(outputDir, `${name}-dark.png`), fullPage: false });
+    if (name === "mobile") {
+      await page.getByRole("button", { name: "Open navigation" }).click();
+      await page.waitForTimeout(260);
+      await page.screenshot({ path: path.join(outputDir, "mobile-dark-sidebar.png"), fullPage: false });
+    }
     const darkHeroBackground = await page.evaluate(() => ({
       hero: getComputedStyle(document.querySelector(".dashboard-hero")).backgroundImage,
       panel: getComputedStyle(document.querySelector(".dashboard-panel")).backgroundImage,
+      sidebarBackgroundColor: getComputedStyle(document.querySelector(".dashboard-sidebar")).backgroundColor,
+      asciiColor: getComputedStyle(document.querySelector("[data-profile-ascii]")).color,
     }));
     if (darkHeroBackground.hero !== darkHeroBackground.panel) failures.push(`${name}: dark hero background`);
+    if (darkHeroBackground.sidebarBackgroundColor === "rgba(0, 0, 0, 0)" || darkHeroBackground.asciiColor === state.asciiColor) failures.push(`${name}: dark sidebar theme`);
     if (name === "desktop" && Math.abs(state.projectPanelBottom - state.activityPanelBottom) > 2) failures.push("desktop: featured/activity alignment");
     if (name === "mobile" && !state.mobileBarVisible) failures.push("mobile: top navigation visibility");
     if (name !== "mobile" && !state.sidebarVisible) failures.push(`${name}: sidebar visibility`);

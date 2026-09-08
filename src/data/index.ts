@@ -14,6 +14,7 @@ export type {
 } from "./types";
 
 export { heroData } from "./hero";
+export { profileAscii } from "./profileAscii";
 export { aboutParagraphs } from "./about";
 export { techStack } from "./techStack";
 export { experiences } from "./experience";
