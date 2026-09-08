@@ -51,7 +51,7 @@ export default function Hero({ data, socialLinks }: HeroProps) {
         </div>
       </div>
       <div className="dashboard-hero__art" aria-hidden="true">
-        <img src="/images/aziwallp6.webp" alt="" />
+        <img src="/images/azii.webp" alt="" />
       </div>
     </section>
   );

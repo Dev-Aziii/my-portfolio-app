@@ -47,6 +47,9 @@ try {
       const artwork = document.querySelector(".dashboard-hero__art img");
       const projectPanel = document.querySelector(".dashboard-panel--projects");
       const activityPanel = document.querySelector(".dashboard-activity");
+      const hero = document.querySelector(".dashboard-hero");
+      const selectorItem = document.querySelector("[data-project-selector]");
+      const selectorLogo = document.querySelector("[data-project-selector] .dashboard-featured-projects__selector-logo");
       const squareSelectors = [
         ".dashboard-hero",
         ".dashboard-panel",
@@ -77,6 +80,9 @@ try {
         navItems: document.querySelectorAll(".dashboard-nav__item").length,
         artworkLoaded: Boolean(artwork && artwork.complete && artwork.naturalWidth > 0),
         artworkSrc: artwork?.getAttribute("src") ?? "",
+        heroBackground: hero ? getComputedStyle(hero).backgroundColor : "",
+        selectorMinHeight: selectorItem ? getComputedStyle(selectorItem).minHeight : "",
+        selectorLogoSize: selectorLogo ? getComputedStyle(selectorLogo).width : "",
         squareGeometry,
         sidebarBio: Boolean(document.querySelector(".dashboard-sidebar__bio")),
         sidebarContact: Boolean(document.querySelector(".dashboard-contact-list")),
@@ -98,7 +104,7 @@ try {
     if (state.overflow || !state.hero || state.stats !== 0 || state.projects !== 3 || state.navItems !== 5 || state.contactNav) {
       failures.push(`${name}: core dashboard structure`);
     }
-    if (!state.artworkLoaded || !state.artworkSrc.endsWith("/images/aziwallp6.webp")) failures.push(`${name}: hero artwork`);
+    if (!state.artworkLoaded || !state.artworkSrc.endsWith("/images/azii.webp")) failures.push(`${name}: hero artwork`);
     if (!state.squareGeometry) failures.push(`${name}: square geometry`);
     if (state.sidebarBio || state.sidebarContact || state.sidebarEmail !== "mailto:adzyl.jipos@gmail.com") failures.push(`${name}: minimal sidebar content`);
     if (/34, 197, 94|0, 240, 255|6, 182, 212|green|cyan/i.test(state.visibleColors)) {
@@ -107,6 +113,18 @@ try {
     if (state.palette.bg !== "#f5f5f5" || state.palette.surface !== "#ffffff" || state.palette.border !== "#c8c8c8") {
       failures.push(`${name}: palette tokens`);
     }
+    if (state.heroBackground !== "rgb(255, 255, 255)") failures.push(`${name}: light hero background`);
+    if (state.selectorMinHeight !== "56px" || state.selectorLogoSize !== "30px") failures.push(`${name}: compact project selectors`);
+
+    await page.evaluate(() => {
+      localStorage.setItem("theme", "dark");
+      document.documentElement.classList.add("dark");
+    });
+    await page.reload({ waitUntil: "networkidle" });
+    const darkHeroBackground = await page.evaluate(() =>
+      getComputedStyle(document.querySelector(".dashboard-hero")).backgroundColor,
+    );
+    if (darkHeroBackground !== "rgb(0, 0, 0)") failures.push(`${name}: dark hero background`);
     if (name === "desktop" && Math.abs(state.projectPanelBottom - state.activityPanelBottom) > 2) failures.push("desktop: featured/activity alignment");
     if (name === "mobile" && !state.mobileBarVisible) failures.push("mobile: top navigation visibility");
     if (name !== "mobile" && !state.sidebarVisible) failures.push(`${name}: sidebar visibility`);
