@@ -3,7 +3,7 @@ import { githubContributionsData } from "@/data/githubContributions";
 
 const recentContributions = githubContributionsData.days
   .filter((day) => day.count > 0)
-  .slice(-4)
+  .slice(-2)
   .reverse();
 
 interface DashboardActivityProps {

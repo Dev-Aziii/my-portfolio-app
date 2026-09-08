@@ -2,6 +2,7 @@ import { useEffect, useState, type MouseEvent } from "react";
 import { ArrowUpRight, Check, ChevronDown, ChevronUp, Copy } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { Project } from "@/data/types";
+import { getProjectThemeStyle } from "@/lib/projectTheme";
 import { formatDemoLabel, isValidHttpUrl } from "@/lib/utils";
 
 interface ProjectsProps {
@@ -98,7 +99,8 @@ export default function Projects({ projects, limit, showViewAll, compact, hideTi
               <button
                 key={project.title}
                 type="button"
-                className="dashboard-featured-projects__selector-item"
+                className="project-theme dashboard-featured-projects__selector-item"
+                style={getProjectThemeStyle(project.theme)}
                 data-project-selector
                 data-active={index === activeIndex}
                 aria-pressed={index === activeIndex}
@@ -113,7 +115,11 @@ export default function Projects({ projects, limit, showViewAll, compact, hideTi
           </div>
 
           {activeProject && (
-            <article className="dashboard-featured-projects__detail" data-featured-project-detail>
+            <article
+              className="project-theme dashboard-featured-projects__detail"
+              style={getProjectThemeStyle(activeProject.theme)}
+              data-featured-project-detail
+            >
               <div className="dashboard-featured-projects__detail-main">
                 {activeProject.details?.heroImage && (
                   <div className="dashboard-featured-projects__detail-art">

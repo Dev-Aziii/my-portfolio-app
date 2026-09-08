@@ -260,25 +260,32 @@
   .dashboard-copy-action--static { max-width: 46%; cursor: default; font-size: 0.58rem; }
 
   .dashboard-featured-projects { display: flex; min-height: 0; flex-direction: column; gap: 18px; }
-  .dashboard-featured-projects__selector { display: flex; gap: 8px; overflow-x: auto; padding: 1px 1px 8px; scrollbar-width: none; }
+  .dashboard-featured-projects__selector { display: flex; justify-content: center; gap: 8px; overflow-x: auto; padding: 1px 1px 8px; scrollbar-width: none; }
   .dashboard-featured-projects__selector::-webkit-scrollbar { display: none; }
   .dashboard-featured-projects__selector-item { position: relative; display: flex; min-width: 112px; flex: 0 0 auto; min-height: 56px; flex-direction: row; align-items: center; justify-content: flex-start; gap: 8px; padding: 7px 9px; border: 1px solid var(--border); border-radius: 11px; background: var(--bg); color: var(--text-secondary); cursor: pointer; font: inherit; font-size: 0.66rem; font-weight: 650; text-align: left; transition: background 160ms ease, border-color 160ms ease, color 160ms ease; }
   .dashboard-featured-projects__selector-item:hover { border-color: var(--text-primary); background: var(--surface-hover); color: var(--text-primary); }
-  .dashboard-featured-projects__selector-item[data-active="true"] { border-color: var(--text-primary); background: var(--surface-hover); color: var(--text-primary); }
-  .dashboard-featured-projects__selector-item[data-active="true"]::after { content: ""; position: absolute; bottom: -6px; left: 50%; width: 10px; height: 10px; border-right: 1px solid var(--text-primary); border-bottom: 1px solid var(--text-primary); background: var(--surface-hover); transform: translateX(-50%) rotate(45deg); }
+  .dashboard-featured-projects__selector-item[data-active="true"] { border-color: var(--project-border); background: var(--project-wash); color: var(--project-accent); box-shadow: 0 0 0 1px color-mix(in srgb, var(--project-accent) 22%, transparent); }
+  .dashboard-featured-projects__selector-item[data-active="true"]::after { content: ""; position: absolute; bottom: -6px; left: 50%; width: 10px; height: 10px; border-right: 1px solid var(--project-accent); border-bottom: 1px solid var(--project-accent); background: var(--project-wash); transform: translateX(-50%) rotate(45deg); }
   .dashboard-featured-projects__selector-logo { display: inline-flex; width: 30px; height: 30px; align-items: center; justify-content: center; flex: 0 0 auto; overflow: hidden; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); }
+  .dashboard-featured-projects__selector-item[data-active="true"] .dashboard-featured-projects__selector-logo { border-color: var(--project-border); box-shadow: inset 0 0 12px color-mix(in srgb, var(--project-accent) 14%, transparent); }
   .dashboard-featured-projects__selector-logo img { width: 100%; height: 100%; object-fit: contain; }
   .dashboard-featured-projects__detail { display: block; min-height: 0; padding: 22px; border: 1px solid var(--border); border-radius: 14px; background: linear-gradient(135deg, var(--surface-hover), var(--surface) 42%, var(--surface)); }
+  .dashboard-featured-projects__detail.project-theme { border-color: var(--project-border); background: linear-gradient(135deg, var(--project-wash), var(--surface) 42%, var(--surface)); }
   .dashboard-featured-projects__detail-main { display: flex; min-height: 0; height: 100%; flex-direction: column; gap: 18px; align-items: stretch; }
   .dashboard-featured-projects__detail-art { width: 100%; min-height: 220px; flex: 1 1 auto; overflow: hidden; border: 1px solid var(--border); background: var(--bg); }
+  .dashboard-featured-projects__detail.project-theme .dashboard-featured-projects__detail-art { border-color: var(--project-border); box-shadow: inset 0 0 30px color-mix(in srgb, var(--project-accent) 8%, transparent); }
   .dashboard-featured-projects__detail-art img { display: block; width: 100%; height: 100%; object-fit: contain; }
   .dashboard-featured-projects__detail-copy { display: flex; min-width: 0; flex: 0 0 auto; flex-direction: column; justify-content: flex-start; }
   .dashboard-featured-projects__detail-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
   .dashboard-featured-projects__detail-heading h3 { margin-top: 5px; color: var(--text-primary); font-size: clamp(1.35rem, 3vw, 2rem); letter-spacing: -0.05em; }
   .dashboard-featured-projects__detail-copy > p { margin-top: 12px; color: var(--text-secondary); font-size: 0.82rem; line-height: 1.7; }
+  .dashboard-featured-projects__detail.project-theme .dashboard-eyebrow { color: var(--project-accent); }
   .dashboard-featured-projects__detail-stack-row { display: flex; min-width: 0; align-items: center; justify-content: space-between; gap: 14px; margin-top: 16px; }
   .dashboard-featured-projects__detail-stack-row .dashboard-skill-pills { min-width: 0; margin-top: 0; }
   .dashboard-featured-projects__detail-stack-row .dashboard-action { flex: 0 0 auto; }
+  .dashboard-featured-projects__detail.project-theme .dashboard-skill-pill { border-color: color-mix(in srgb, var(--project-border) 72%, var(--border)); background: color-mix(in srgb, var(--project-wash) 72%, var(--surface)); }
+  .dashboard-featured-projects__detail.project-theme .dashboard-action { border-color: var(--project-border); background: color-mix(in srgb, var(--project-wash) 72%, var(--surface)); color: var(--project-accent); }
+  .dashboard-featured-projects__detail.project-theme .dashboard-action:hover, .dashboard-featured-projects__detail.project-theme .dashboard-action:focus-visible { border-color: var(--project-accent); background: var(--project-accent); color: #ffffff; }
 
   .dashboard-project-explorer { display: grid; grid-template-columns: minmax(220px, 0.75fr) minmax(0, 1.6fr); gap: 18px; }
   .dashboard-project-explorer__list { display: grid; align-content: start; gap: 8px; }
@@ -574,6 +581,7 @@
     .dashboard-project-explorer__highlights, .project-detail__highlights { grid-template-columns: 1fr; }
     .dashboard-project-explorer__metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .dashboard-panel { padding: 18px; }
+    .dashboard-featured-projects__selector { justify-content: flex-start; }
     .dashboard-featured-projects__selector-item { flex-basis: 112px; }
     .dashboard-featured-projects__detail { padding: 18px; }
     .dashboard-featured-projects__detail-main { min-height: 0; gap: 16px; }

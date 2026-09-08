@@ -66,6 +66,10 @@ try {
       footerSignature: document.querySelector(".dashboard-sidebar__signature")?.textContent?.trim(),
       hasContactSection: Boolean(contact),
       hasContactCopy: pageText.includes("Let's work together"),
+      featuredDetailAccent: getComputedStyle(document.querySelector("[data-featured-project-detail]")).getPropertyValue("--project-accent").trim(),
+      activeSelectorAccent: getComputedStyle(document.querySelector("[data-project-selector][data-active='true']")).getPropertyValue("--project-accent").trim(),
+      selectorJustifyContent: getComputedStyle(document.querySelector(".dashboard-featured-projects__selector")).justifyContent,
+      activityRows: document.querySelectorAll(".dashboard-activity__item").length,
       desktopGrid: {
         projectSkillsShareRow: Boolean(projectBounds && skillsBounds && Math.abs(projectBounds.top - skillsBounds.top) <= 2),
         projectsBeforeSkills: Boolean(projectBounds && skillsBounds && projectBounds.left < skillsBounds.left),
@@ -86,6 +90,13 @@ try {
   if (overviewState.footerLabel !== "For work and collaboration contact me at" || overviewState.footerSignature || overviewState.hasPortraitPurpose) failures.push("sidebar contact footer");
   if (overviewState.hasContactSection || overviewState.hasContactCopy) failures.push("contact removal");
   if (overviewState.sidebarEmail !== "mailto:adzyl.jipos@gmail.com") failures.push("sidebar email link");
+  if (!overviewState.featuredDetailAccent || !overviewState.activeSelectorAccent || overviewState.selectorJustifyContent !== "center" || overviewState.activityRows !== 3) {
+    failures.push("themed featured projects and compact activity");
+  }
+  const selectorAccents = await desktop.locator("[data-project-selector]").evaluateAll((selectors) => selectors.map((selector) => getComputedStyle(selector).getPropertyValue("--project-accent").trim()));
+  if (selectorAccents.length !== 3 || selectorAccents.some((accent) => !accent) || new Set(selectorAccents).size !== selectorAccents.length) {
+    failures.push("project selector themes");
+  }
   if (!overviewState.desktopGrid.projectSkillsShareRow || !overviewState.desktopGrid.projectsBeforeSkills || !overviewState.desktopGrid.certificationsSpansGrid || !overviewState.desktopGrid.certificationsBelowProjects) {
     failures.push("desktop overview grid placement");
   }
