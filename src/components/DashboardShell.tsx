@@ -200,11 +200,9 @@ export default function DashboardShell({ children }: { children: React.ReactNode
       <div className="dashboard-shell__content">
         <header className="dashboard-mobile-bar">
           <a href="/" onClick={(event) => { event.preventDefault(); handleNavigation(navigation[0]); }}>
-            <img src={heroData.profileImage} alt="" />
             <span>{heroData.name}</span>
           </a>
           <div className="dashboard-mobile-bar__actions">
-            <ThemeToggle />
             <button
               type="button"
               className="dashboard-icon-button"

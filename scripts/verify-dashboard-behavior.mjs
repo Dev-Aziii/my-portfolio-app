@@ -30,6 +30,12 @@ try {
     const sectionIds = [...document.querySelectorAll("[data-dashboard-section]")].map((section) => section.id);
     const contact = document.getElementById("contact");
     const pageText = document.body.innerText;
+    const projects = document.querySelector(".dashboard-panel--projects");
+    const skills = document.querySelector(".dashboard-content-grid__secondary > section");
+    const certifications = document.querySelector(".dashboard-content-grid__full");
+    const projectBounds = projects?.getBoundingClientRect();
+    const skillsBounds = skills?.getBoundingClientRect();
+    const certificationsBounds = certifications?.getBoundingClientRect();
     const asciiPortrait = document.querySelector("[data-profile-ascii]");
     const asciiLines = asciiPortrait?.textContent?.split("\n") ?? [];
     return {
@@ -60,6 +66,12 @@ try {
       footerSignature: document.querySelector(".dashboard-sidebar__signature")?.textContent?.trim(),
       hasContactSection: Boolean(contact),
       hasContactCopy: pageText.includes("Let's work together"),
+      desktopGrid: {
+        projectSkillsShareRow: Boolean(projectBounds && skillsBounds && Math.abs(projectBounds.top - skillsBounds.top) <= 2),
+        projectsBeforeSkills: Boolean(projectBounds && skillsBounds && projectBounds.left < skillsBounds.left),
+        certificationsSpansGrid: certifications ? getComputedStyle(certifications).gridColumn === "1 / -1" : false,
+        certificationsBelowProjects: Boolean(projectBounds && certificationsBounds && certificationsBounds.top > projectBounds.top),
+      },
     };
   });
   if (overviewState.sectionIds.includes("about") || overviewState.sectionIds.includes("experience") || overviewState.sectionIds.includes("education") || overviewState.sectionIds.includes("github")) {
@@ -74,6 +86,9 @@ try {
   if (overviewState.footerLabel !== "For work and collaboration contact me at" || overviewState.footerSignature || overviewState.hasPortraitPurpose) failures.push("sidebar contact footer");
   if (overviewState.hasContactSection || overviewState.hasContactCopy) failures.push("contact removal");
   if (overviewState.sidebarEmail !== "mailto:adzyl.jipos@gmail.com") failures.push("sidebar email link");
+  if (!overviewState.desktopGrid.projectSkillsShareRow || !overviewState.desktopGrid.projectsBeforeSkills || !overviewState.desktopGrid.certificationsSpansGrid || !overviewState.desktopGrid.certificationsBelowProjects) {
+    failures.push("desktop overview grid placement");
+  }
 
   await desktop.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
   await desktop.waitForTimeout(250);
@@ -171,6 +186,36 @@ try {
 
   const mobile = await browser.newPage({ viewport: { width: 390, height: 844 } });
   await mobile.goto(baseUrl, { waitUntil: "networkidle" });
+  const mobileOverviewState = await mobile.evaluate(() => {
+    const mobileBar = document.querySelector(".dashboard-mobile-bar");
+    const menu = mobileBar?.querySelector(".dashboard-icon-button");
+    const artwork = document.querySelector(".dashboard-featured-projects__detail-art");
+    const artworkImage = artwork?.querySelector("img");
+    const sections = [
+      document.querySelector(".dashboard-panel--projects"),
+      document.querySelector(".dashboard-content-grid__full"),
+      document.querySelector(".dashboard-content-grid__secondary > section"),
+      document.querySelector(".dashboard-activity"),
+    ];
+    return {
+      mobileHeaderHasProfileImage: Boolean(mobileBar?.querySelector("img")),
+      mobileHeaderHasThemeToggle: Boolean(mobileBar?.querySelector("[data-theme-toggle]")),
+      mobileHeaderButtonCount: mobileBar?.querySelectorAll("button").length ?? 0,
+      mobileHeaderRightInset: menu ? window.innerWidth - menu.getBoundingClientRect().right : 0,
+      sectionTops: sections.map((section) => section?.getBoundingClientRect().top ?? -1),
+      artworkHeight: artwork ? Number.parseFloat(getComputedStyle(artwork).height) : 0,
+      artworkObjectFit: artworkImage ? getComputedStyle(artworkImage).objectFit : "",
+    };
+  });
+  if (mobileOverviewState.mobileHeaderHasProfileImage || mobileOverviewState.mobileHeaderHasThemeToggle || mobileOverviewState.mobileHeaderButtonCount !== 1 || mobileOverviewState.mobileHeaderRightInset < 20) {
+    failures.push("mobile header controls and inset");
+  }
+  if (mobileOverviewState.sectionTops.some((top, index, tops) => index > 0 && top <= tops[index - 1])) {
+    failures.push("mobile overview section order");
+  }
+  if (mobileOverviewState.artworkHeight < 200 || mobileOverviewState.artworkObjectFit !== "contain") {
+    failures.push("mobile overview artwork sizing");
+  }
   await mobile.getByRole("button", { name: "Open navigation" }).click();
   await mobile.waitForTimeout(260);
   const drawerOpen = await mobile.evaluate(() => {
