@@ -34,9 +34,11 @@ try {
       sectionIds,
       navItems: document.querySelectorAll(".dashboard-nav__item").length,
       sidebarName: document.querySelector(".dashboard-profile__name")?.textContent?.trim(),
-      sidebarRole: document.querySelector(".dashboard-profile__role"),
+      sidebarRole: document.querySelector(".dashboard-profile__role")?.textContent?.trim(),
       contactNav: [...document.querySelectorAll(".dashboard-nav__item")].some((item) => item.textContent?.trim() === "Contact"),
       sidebarEmail: document.querySelector(".dashboard-sidebar__footer[href^='mailto:']")?.getAttribute("href"),
+      quickLinks: [...document.querySelectorAll(".dashboard-sidebar__quick-link")].map((item) => item.textContent?.trim()),
+      contactLinks: [...document.querySelectorAll(".dashboard-sidebar__contact-link")].map((item) => item.textContent?.trim()),
       hasContactSection: Boolean(contact),
       hasContactCopy: pageText.includes("Let's work together"),
     };
@@ -44,7 +46,8 @@ try {
   if (overviewState.sectionIds.includes("about") || overviewState.sectionIds.includes("experience") || overviewState.sectionIds.includes("education") || overviewState.sectionIds.includes("github")) {
     failures.push("overview redundant sections");
   }
-  if (overviewState.navItems !== 5 || overviewState.sidebarName !== "Azi" || overviewState.sidebarRole || overviewState.contactNav) failures.push("compact sidebar navigation");
+  if (overviewState.navItems !== 5 || overviewState.sidebarName !== "Azi" || overviewState.sidebarRole !== "Software Developer" || overviewState.contactNav) failures.push("sidebar navigation");
+  if (overviewState.quickLinks.join("|") !== "GitHub|LinkedIn|Download CV" || overviewState.contactLinks.join("|") !== "Get in touch|Send a message") failures.push("sidebar utility groups");
   if (overviewState.hasContactSection || overviewState.hasContactCopy) failures.push("contact removal");
   if (overviewState.sidebarEmail !== "mailto:adzyl.jipos@gmail.com") failures.push("sidebar email link");
 
@@ -114,7 +117,7 @@ try {
   await desktop.locator("[data-project-selector]").first().hover();
   await desktop.waitForTimeout(350);
   const featuredLogoHoverFilter = await desktop.evaluate(() => getComputedStyle(document.querySelector("[data-project-selector] img")).filter);
-  if (artworkFilters.hero !== heroHoverFilter || artworkFilters.profile === profileHoverFilter || artworkFilters.featuredLogo !== featuredLogoHoverFilter || artworkFilters.featuredLogo !== "none" || artworkFilters.featuredHero !== "none") failures.push("image color hover treatment");
+  if (artworkFilters.hero !== "none" || artworkFilters.profile !== "none" || artworkFilters.featuredLogo !== "none" || artworkFilters.featuredHero !== "none" || artworkFilters.hero !== heroHoverFilter || artworkFilters.profile !== profileHoverFilter || artworkFilters.featuredLogo !== featuredLogoHoverFilter) failures.push("image color treatment");
   if (themeToggleState.some((toggle) => toggle.role !== "radiogroup" || toggle.options.length !== 3 || toggle.options.some((option) => option.role !== "radio" || !["true", "false"].includes(option.checked) || option.icon !== 1))) failures.push("theme switch semantics");
 
   await desktop.goto(new URL("projects", baseUrl).href, { waitUntil: "networkidle" });
@@ -143,10 +146,10 @@ try {
   if ((await experience.locator("h1").first().textContent())?.trim() !== "Career Experience") failures.push("career experience route");
   if (await experience.locator(".dashboard-sidebar__bio").count()) failures.push("career experience sidebar bio");
   if (await experience.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)) failures.push("career experience overflow");
-  const experienceGeometry = await experience.locator(".dashboard-route-page, .dashboard-route-page__icon, button:not(.theme-toggle):not(.theme-toggle__option)").evaluateAll((elements) =>
-    elements.every((element) => getComputedStyle(element).borderRadius === "0px")
+  const experienceGeometry = await experience.locator(".dashboard-route-page__icon, button:not(.theme-toggle):not(.theme-toggle__option)").evaluateAll((elements) =>
+    elements.every((element) => getComputedStyle(element).borderRadius !== "0px")
   );
-  if (!experienceGeometry) failures.push("career experience square geometry");
+  if (!experienceGeometry) failures.push("career experience rounded geometry");
   const skillToggle = experience.locator(".career-timeline__toggle").first();
   if (await skillToggle.count()) {
     const before = await skillToggle.getAttribute("aria-expanded");
