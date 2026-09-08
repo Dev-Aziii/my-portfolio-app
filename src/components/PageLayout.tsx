@@ -43,7 +43,6 @@ export default function PageLayout({
             </span>
           ) : null}
           <div>
-            <span className="dashboard-eyebrow">Portfolio section</span>
             <h1>{title}</h1>
             {description ? (
               <p className="dashboard-route-page__description">{description}</p>

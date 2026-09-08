@@ -15,7 +15,7 @@ export default function DashboardActivity({ onOpenGithub }: DashboardActivityPro
     <section className="dashboard-panel dashboard-activity" aria-labelledby="activity-heading">
       <div className="dashboard-section-header">
         <div>
-          <span className="dashboard-eyebrow">Open source signal</span>
+          <span className="dashboard-eyebrow">Contributions</span>
           <h2 id="activity-heading">Recent Activity</h2>
         </div>
         <div className="dashboard-activity__header-actions">

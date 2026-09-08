@@ -43,7 +43,7 @@ export default function Projects({ projects, limit, showViewAll, compact, hideTi
       {!hideTitle && (
         <div className="dashboard-section-header">
           <div>
-            <span className="dashboard-eyebrow">Selected work</span>
+            <span className="dashboard-eyebrow">My Works</span>
             <h2>Featured Projects</h2>
           </div>
           {showViewAll && <Link className="dashboard-inline-link" to="/projects">View all <ArrowUpRight aria-hidden="true" /></Link>}
