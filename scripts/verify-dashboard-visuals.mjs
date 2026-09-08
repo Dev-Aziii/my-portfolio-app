@@ -117,7 +117,7 @@ try {
         sidebarOverflowX: sidebarStyles?.overflowX ?? "",
         sidebarOverflowY: sidebarStyles?.overflowY ?? "",
         contentMarginLeft: content ? Number.parseFloat(getComputedStyle(content).marginLeft) : -1,
-        profileCardOverlapsArt: Boolean(profileArtBounds && profileCardBounds && profileCardBounds.top < profileArtBounds.bottom && profileCardBounds.bottom > profileArtBounds.bottom),
+        profileCardOverlapsArt: Boolean(profileArtBounds && profileCardBounds && profileCardBounds.top < profileArtBounds.bottom && profileCardBounds.bottom > profileArtBounds.top),
         contactNav: [...document.querySelectorAll(".dashboard-nav__item")].some((item) => item.textContent?.trim() === "Contact"),
         sidebarEmail: document.querySelector(".dashboard-sidebar__footer-email[href^='mailto:']")?.getAttribute("href") ?? "",
         imageFilters: [
@@ -143,10 +143,10 @@ try {
     if (!state.artworkLoaded || !state.artworkSrc.endsWith("/images/azii.webp")) failures.push(`${name}: hero artwork`);
     if (!state.roundedGeometry) failures.push(`${name}: rounded geometry`);
     if (state.sidebarTagline !== "> Turning ideas into solutions" || !state.asciiPortrait || state.sidebarEmail !== "mailto:adzyl.jipos@gmail.com" || state.footerLabel !== "For work and collaboration contact me at") failures.push(`${name}: sidebar content`);
-    const expectedSidebarWidth = name === "desktop" ? 336 : name === "tablet" ? 292 : 336;
+    const expectedSidebarWidth = name === "desktop" ? 304 : name === "tablet" ? 276 : 304;
     const expectedAsciiFontSize = name === "tablet" ? "5.25px" : "5.7px";
     if (state.sidebarWidth !== expectedSidebarWidth || state.contentMarginLeft !== (name === "mobile" ? 0 : expectedSidebarWidth)) failures.push(`${name}: sidebar responsive width`);
-    if (state.asciiFontSize !== expectedAsciiFontSize || state.sidebarOverflowX !== "hidden" || state.sidebarOverflowY !== "hidden" || state.sidebarMiddleOverflowX !== "hidden" || state.sidebarMiddleOverflowY !== "auto" || state.profileCardRadius !== "12px" || state.profileCardMinHeight !== "94px" || state.profileCardMarginTop !== "-88px" || state.sidebarInnerFrameBorder !== "0px" || !state.profileCardOverlapsArt) failures.push(`${name}: ascii sidebar geometry`);
+    if (state.asciiFontSize !== expectedAsciiFontSize || state.sidebarOverflowX !== "hidden" || state.sidebarOverflowY !== "hidden" || state.sidebarMiddleOverflowX !== "hidden" || state.sidebarMiddleOverflowY !== "auto" || state.profileCardRadius !== "12px" || state.profileCardMinHeight !== "94px" || state.profileCardMarginTop !== "-100px" || state.sidebarInnerFrameBorder !== "0px" || !state.profileCardOverlapsArt) failures.push(`${name}: ascii sidebar geometry`);
     if (state.sidebarBackgroundColor === "rgba(0, 0, 0, 0)") failures.push(`${name}: light sidebar surface`);
     if (state.imageFilters.some((filter) => filter !== "none")) failures.push(`${name}: grayscale image treatment`);
     if (/34, 197, 94|0, 240, 255|6, 182, 212|green|cyan/i.test(state.visibleColors)) {

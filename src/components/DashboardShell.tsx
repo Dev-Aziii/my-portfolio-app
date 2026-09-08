@@ -83,9 +83,44 @@ export default function DashboardShell({ children }: { children: React.ReactNode
           aria-label="Go to portfolio overview"
           onClick={(event) => { event.preventDefault(); handleNavigation(navigation[0]); }}
         >
-          <span className="dashboard-profile__identity">
-            <span className="dashboard-profile__name">Azi</span>
-            <span className="dashboard-profile__tagline">&gt; Turning ideas into solutions</span>
+          <svg
+            className="dashboard-profile__frame"
+            viewBox="0 0 252 94"
+            preserveAspectRatio="none"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              className="dashboard-profile__shape-bg"
+              d="M 0 12 C 0 5.37 5.37 0 12 0 L 132 0 C 135 0 137.5 1.5 139.2 3.8 L 159.8 24.2 C 161.5 26 164 26 166 26 L 240 26 C 246.63 26 252 31.37 252 38 L 252 82 C 252 88.63 246.63 94 240 94 L 12 94 C 5.37 94 0 88.63 0 82 Z"
+            />
+            <path
+              className="dashboard-profile__shape-stroke"
+              d="M 0.5 12 C 0.5 5.65 5.65 0.5 12 0.5 L 132 0.5 C 135 0.5 137.5 2 139.2 4.1 L 159.8 24.5 C 161.5 26.5 164 26.5 166 26.5 L 240 26.5 C 246.35 26.5 251.5 31.65 251.5 38 L 251.5 82 C 251.5 88.35 246.35 93.5 240 93.5 L 12 93.5 C 5.65 93.5 0.5 88.35 0.5 82 Z"
+            />
+            <line
+              className="dashboard-profile__shape-accent"
+              x1="162"
+              y1="94"
+              x2="216"
+              y2="40"
+            />
+          </svg>
+
+          <span className="dashboard-profile__content">
+            <span className="dashboard-profile__top-row">
+              <span className="dashboard-profile__name">Azi</span>
+              <span className="dashboard-profile__status-badge">
+                <span className="dashboard-profile__status-line" aria-hidden="true" />
+                <span className="dashboard-profile__status-dot" aria-hidden="true" />
+                <span className="dashboard-profile__status-text">Online</span>
+              </span>
+            </span>
+
+            <span className="dashboard-profile__bottom-row">
+              <span className="dashboard-profile__tagline">&gt; Turning ideas into solutions</span>
+              <span className="dashboard-profile__tech-code" aria-hidden="true">//</span>
+            </span>
           </span>
         </a>
       </div>

@@ -67,7 +67,7 @@ try {
   }
   if (overviewState.navItems !== 5 || overviewState.sidebarName !== "Azi" || overviewState.sidebarTagline !== "> Turning ideas into solutions" || overviewState.contactNav) failures.push("sidebar navigation");
   if (overviewState.sidebarOverflowX !== "hidden" || overviewState.sidebarOverflowY !== "hidden" || overviewState.sidebarMiddleOverflowX !== "hidden" || overviewState.sidebarMiddleOverflowY !== "auto") failures.push("sidebar scroll ownership");
-  if (overviewState.profileCardRadius !== "12px" || overviewState.profileCardMinHeight !== "94px" || overviewState.profileCardMarginTop !== "-88px" || overviewState.sidebarInnerFrameBorder !== "0px") failures.push("profile card geometry");
+  if (overviewState.profileCardRadius !== "12px" || overviewState.profileCardMinHeight !== "94px" || overviewState.profileCardMarginTop !== "-100px" || overviewState.sidebarInnerFrameBorder !== "0px") failures.push("profile card geometry");
   if (overviewState.hasSidebarAvailability || overviewState.asciiHidden !== "true") failures.push("ascii profile semantics");
   if (!overviewState.asciiCharactersValid || overviewState.asciiLineCount < 40 || overviewState.asciiLineWidths.length !== 1 || overviewState.asciiLineWidths[0] !== 72) failures.push("ascii profile grid");
   if (overviewState.quickLinks.join("|") !== "GitHub|LinkedIn|Download CV" || overviewState.contactLinks.length !== 0 || overviewState.hasSidebarConnectSection) failures.push("sidebar utility groups");
