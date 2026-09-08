@@ -10,7 +10,6 @@ import {
   LayoutDashboard,
   Mail,
   Menu,
-  MessageCircle,
   Linkedin,
   X,
 } from "lucide-react";
@@ -76,7 +75,6 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         <div className="dashboard-profile-art" aria-hidden="true">
           <span className="dashboard-profile-art__mantra">Build<br />Learn<br />Create</span>
           <pre className="dashboard-profile-art__portrait" data-profile-ascii aria-hidden="true">{profileAscii}</pre>
-          <span className="dashboard-profile-art__purpose">Ideas<br />into<br />useful<br />software.</span>
         </div>
 
         <a
@@ -87,11 +85,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         >
           <span className="dashboard-profile__identity">
             <span className="dashboard-profile__name">Azi</span>
-            <span className="dashboard-profile__role">{heroData.title}</span>
-          </span>
-          <span className="dashboard-profile__availability">
-            <span className="dashboard-profile__status" aria-hidden="true" />
-            Always building.
+            <span className="dashboard-profile__tagline">&gt; Turning ideas into solutions</span>
           </span>
         </a>
       </div>
@@ -140,28 +134,17 @@ export default function DashboardShell({ children }: { children: React.ReactNode
           </div>
         </section>
 
-        <section className="dashboard-sidebar__section" aria-labelledby="sidebar-connect">
-          <span id="sidebar-connect" className="dashboard-sidebar__section-label">Let&apos;s connect</span>
-          <div className="dashboard-sidebar__link-list">
-            <a className="dashboard-sidebar__contact-link" href={`mailto:${heroData.email}`}>
-              <Mail aria-hidden="true" />
-              <span>Get in touch</span>
-            </a>
-            <a className="dashboard-sidebar__contact-link" href={`mailto:${heroData.email}?subject=Portfolio%20inquiry`}>
-              <MessageCircle aria-hidden="true" />
-              <span>Send a message</span>
-            </a>
-          </div>
-        </section>
       </div>
 
       <div className="dashboard-sidebar__footer-group">
         <ThemeToggle />
-        <a className="dashboard-sidebar__footer" href={`mailto:${heroData.email}`} aria-label={`Email ${heroData.email}`}>
-          <Mail aria-hidden="true" />
-          <span>{heroData.email}</span>
-        </a>
-        <span className="dashboard-sidebar__signature">Build <span aria-hidden="true">·</span> Learn <span aria-hidden="true">·</span> Create</span>
+        <div className="dashboard-sidebar__footer">
+          <span className="dashboard-sidebar__footer-label">For work and collaboration contact me at</span>
+          <a className="dashboard-sidebar__footer-email" href={`mailto:${heroData.email}`} aria-label={`Email ${heroData.email}`}>
+            <Mail aria-hidden="true" />
+            <span>{heroData.email}</span>
+          </a>
+        </div>
       </div>
     </aside>
   );

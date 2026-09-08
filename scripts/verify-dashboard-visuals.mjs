@@ -94,6 +94,14 @@ try {
         navItems: document.querySelectorAll(".dashboard-nav__item").length,
         quickLinks: document.querySelectorAll(".dashboard-sidebar__quick-link").length,
         contactLinks: document.querySelectorAll(".dashboard-sidebar__contact-link").length,
+        hasSidebarConnectSection: Boolean(document.getElementById("sidebar-connect")),
+        footerLabel: document.querySelector(".dashboard-sidebar__footer-label")?.textContent?.trim() ?? "",
+        sidebarMiddleOverflowX: getComputedStyle(document.querySelector(".dashboard-sidebar__middle")).overflowX,
+        sidebarMiddleOverflowY: getComputedStyle(document.querySelector(".dashboard-sidebar__middle")).overflowY,
+        profileCardRadius: getComputedStyle(profileCard).borderRadius,
+        profileCardMinHeight: getComputedStyle(profileCard).minHeight,
+        profileCardMarginTop: getComputedStyle(profileCard).marginTop,
+        sidebarInnerFrameBorder: getComputedStyle(sidebar, "::before").borderTopWidth,
         artworkLoaded: Boolean(artwork && artwork.complete && artwork.naturalWidth > 0),
         artworkSrc: artwork?.getAttribute("src") ?? "",
         heroBackgroundImage: hero ? getComputedStyle(hero).backgroundImage : "",
@@ -101,17 +109,18 @@ try {
         selectorMinHeight: selectorItem ? getComputedStyle(selectorItem).minHeight : "",
         selectorLogoSize: selectorLogo ? getComputedStyle(selectorLogo).width : "",
         roundedGeometry,
-        sidebarRole: Boolean(document.querySelector(".dashboard-profile__role")),
+        sidebarTagline: document.querySelector(".dashboard-profile__tagline")?.textContent?.trim() ?? "",
         asciiPortrait: Boolean(asciiPortrait),
         asciiFontSize: asciiStyles?.fontSize ?? "",
         asciiColor: asciiStyles?.color ?? "",
         sidebarWidth: sidebar?.getBoundingClientRect().width ?? 0,
         sidebarBackgroundColor: sidebarStyles?.backgroundColor ?? "",
+        sidebarOverflowX: sidebarStyles?.overflowX ?? "",
         sidebarOverflowY: sidebarStyles?.overflowY ?? "",
         contentMarginLeft: content ? Number.parseFloat(getComputedStyle(content).marginLeft) : -1,
         profileCardOverlapsArt: Boolean(profileArtBounds && profileCardBounds && profileCardBounds.top < profileArtBounds.bottom && profileCardBounds.bottom > profileArtBounds.bottom),
         contactNav: [...document.querySelectorAll(".dashboard-nav__item")].some((item) => item.textContent?.trim() === "Contact"),
-        sidebarEmail: document.querySelector(".dashboard-sidebar__footer[href^='mailto:']")?.getAttribute("href") ?? "",
+        sidebarEmail: document.querySelector(".dashboard-sidebar__footer-email[href^='mailto:']")?.getAttribute("href") ?? "",
         imageFilters: [
           ".dashboard-hero__art img",
           ".dashboard-certification-card__icon img",
@@ -129,16 +138,16 @@ try {
         };
     });
 
-    if (state.overflow || !state.hero || state.stats !== 0 || state.projects !== 3 || state.navItems !== 5 || state.quickLinks !== 3 || state.contactLinks !== 2 || state.contactNav) {
+    if (state.overflow || !state.hero || state.stats !== 0 || state.projects !== 3 || state.navItems !== 5 || state.quickLinks !== 3 || state.contactLinks !== 0 || state.hasSidebarConnectSection || state.contactNav) {
       failures.push(`${name}: core dashboard structure`);
     }
     if (!state.artworkLoaded || !state.artworkSrc.endsWith("/images/azii.webp")) failures.push(`${name}: hero artwork`);
     if (!state.roundedGeometry) failures.push(`${name}: rounded geometry`);
-    if (!state.sidebarRole || !state.asciiPortrait || state.sidebarEmail !== "mailto:adzyl.jipos@gmail.com") failures.push(`${name}: sidebar content`);
+    if (state.sidebarTagline !== "> Turning ideas into solutions" || !state.asciiPortrait || state.sidebarEmail !== "mailto:adzyl.jipos@gmail.com" || state.footerLabel !== "For work and collaboration contact me at") failures.push(`${name}: sidebar content`);
     const expectedSidebarWidth = name === "desktop" ? 336 : name === "tablet" ? 292 : 336;
     const expectedAsciiFontSize = name === "tablet" ? "5.25px" : "5.7px";
     if (state.sidebarWidth !== expectedSidebarWidth || state.contentMarginLeft !== (name === "mobile" ? 0 : expectedSidebarWidth)) failures.push(`${name}: sidebar responsive width`);
-    if (state.asciiFontSize !== expectedAsciiFontSize || state.sidebarOverflowY !== "auto" || !state.profileCardOverlapsArt) failures.push(`${name}: ascii sidebar geometry`);
+    if (state.asciiFontSize !== expectedAsciiFontSize || state.sidebarOverflowX !== "hidden" || state.sidebarOverflowY !== "hidden" || state.sidebarMiddleOverflowX !== "hidden" || state.sidebarMiddleOverflowY !== "auto" || state.profileCardRadius !== "12px" || state.profileCardMinHeight !== "94px" || state.profileCardMarginTop !== "-88px" || state.sidebarInnerFrameBorder !== "0px" || !state.profileCardOverlapsArt) failures.push(`${name}: ascii sidebar geometry`);
     if (state.sidebarBackgroundColor === "rgba(0, 0, 0, 0)") failures.push(`${name}: light sidebar surface`);
     if (state.imageFilters.some((filter) => filter !== "none")) failures.push(`${name}: grayscale image treatment`);
     if (/34, 197, 94|0, 240, 255|6, 182, 212|green|cyan/i.test(state.visibleColors)) {

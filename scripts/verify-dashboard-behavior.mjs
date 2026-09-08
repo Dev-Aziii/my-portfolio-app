@@ -36,16 +36,28 @@ try {
       sectionIds,
       navItems: document.querySelectorAll(".dashboard-nav__item").length,
       sidebarName: document.querySelector(".dashboard-profile__name")?.textContent?.trim(),
-      sidebarRole: document.querySelector(".dashboard-profile__role")?.textContent?.trim(),
-      sidebarStatus: document.querySelector(".dashboard-profile__availability")?.textContent?.trim(),
+      sidebarTagline: document.querySelector(".dashboard-profile__tagline")?.textContent?.trim(),
+      hasSidebarAvailability: Boolean(document.querySelector(".dashboard-profile__availability")),
+      sidebarOverflowX: getComputedStyle(document.querySelector(".dashboard-sidebar")).overflowX,
+      sidebarOverflowY: getComputedStyle(document.querySelector(".dashboard-sidebar")).overflowY,
+      sidebarMiddleOverflowX: getComputedStyle(document.querySelector(".dashboard-sidebar__middle")).overflowX,
+      sidebarMiddleOverflowY: getComputedStyle(document.querySelector(".dashboard-sidebar__middle")).overflowY,
+      profileCardRadius: getComputedStyle(document.querySelector(".dashboard-profile")).borderRadius,
+      profileCardMinHeight: getComputedStyle(document.querySelector(".dashboard-profile")).minHeight,
+      profileCardMarginTop: getComputedStyle(document.querySelector(".dashboard-profile")).marginTop,
+      sidebarInnerFrameBorder: getComputedStyle(document.querySelector(".dashboard-sidebar"), "::before").borderTopWidth,
       asciiHidden: asciiPortrait?.getAttribute("aria-hidden"),
       asciiLineCount: asciiLines.length,
       asciiLineWidths: [...new Set(asciiLines.map((line) => line.length))],
       asciiCharactersValid: /^[01\s]+$/.test(asciiPortrait?.textContent ?? ""),
       contactNav: [...document.querySelectorAll(".dashboard-nav__item")].some((item) => item.textContent?.trim() === "Contact"),
-      sidebarEmail: document.querySelector(".dashboard-sidebar__footer[href^='mailto:']")?.getAttribute("href"),
+      sidebarEmail: document.querySelector(".dashboard-sidebar__footer-email[href^='mailto:']")?.getAttribute("href"),
+      footerLabel: document.querySelector(".dashboard-sidebar__footer-label")?.textContent?.trim(),
       quickLinks: [...document.querySelectorAll(".dashboard-sidebar__quick-link")].map((item) => item.textContent?.trim()),
       contactLinks: [...document.querySelectorAll(".dashboard-sidebar__contact-link")].map((item) => item.textContent?.trim()),
+      hasSidebarConnectSection: Boolean(document.getElementById("sidebar-connect")),
+      hasPortraitPurpose: Boolean(document.querySelector(".dashboard-profile-art__purpose")),
+      footerSignature: document.querySelector(".dashboard-sidebar__signature")?.textContent?.trim(),
       hasContactSection: Boolean(contact),
       hasContactCopy: pageText.includes("Let's work together"),
     };
@@ -53,10 +65,13 @@ try {
   if (overviewState.sectionIds.includes("about") || overviewState.sectionIds.includes("experience") || overviewState.sectionIds.includes("education") || overviewState.sectionIds.includes("github")) {
     failures.push("overview redundant sections");
   }
-  if (overviewState.navItems !== 5 || overviewState.sidebarName !== "Azi" || overviewState.sidebarRole !== "Software Developer" || overviewState.contactNav) failures.push("sidebar navigation");
-  if (overviewState.sidebarStatus !== "Always building." || overviewState.asciiHidden !== "true") failures.push("ascii profile semantics");
+  if (overviewState.navItems !== 5 || overviewState.sidebarName !== "Azi" || overviewState.sidebarTagline !== "> Turning ideas into solutions" || overviewState.contactNav) failures.push("sidebar navigation");
+  if (overviewState.sidebarOverflowX !== "hidden" || overviewState.sidebarOverflowY !== "hidden" || overviewState.sidebarMiddleOverflowX !== "hidden" || overviewState.sidebarMiddleOverflowY !== "auto") failures.push("sidebar scroll ownership");
+  if (overviewState.profileCardRadius !== "12px" || overviewState.profileCardMinHeight !== "94px" || overviewState.profileCardMarginTop !== "-88px" || overviewState.sidebarInnerFrameBorder !== "0px") failures.push("profile card geometry");
+  if (overviewState.hasSidebarAvailability || overviewState.asciiHidden !== "true") failures.push("ascii profile semantics");
   if (!overviewState.asciiCharactersValid || overviewState.asciiLineCount < 40 || overviewState.asciiLineWidths.length !== 1 || overviewState.asciiLineWidths[0] !== 72) failures.push("ascii profile grid");
-  if (overviewState.quickLinks.join("|") !== "GitHub|LinkedIn|Download CV" || overviewState.contactLinks.join("|") !== "Get in touch|Send a message") failures.push("sidebar utility groups");
+  if (overviewState.quickLinks.join("|") !== "GitHub|LinkedIn|Download CV" || overviewState.contactLinks.length !== 0 || overviewState.hasSidebarConnectSection) failures.push("sidebar utility groups");
+  if (overviewState.footerLabel !== "For work and collaboration contact me at" || overviewState.footerSignature || overviewState.hasPortraitPurpose) failures.push("sidebar contact footer");
   if (overviewState.hasContactSection || overviewState.hasContactCopy) failures.push("contact removal");
   if (overviewState.sidebarEmail !== "mailto:adzyl.jipos@gmail.com") failures.push("sidebar email link");
 
