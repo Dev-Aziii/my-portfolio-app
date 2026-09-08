@@ -1,4 +1,4 @@
-import type { SocialLink, Membership } from "./types";
+import type { SocialLink } from "./types";
 
 function LinkedInIcon() {
   return (
@@ -28,12 +28,3 @@ export const socialLinks: SocialLink[] = [
     icon: GitHubIcon,
   },
 ];
-
-export const memberships: Membership[] = [
-  {
-    name: "AppBuildersPH (Member)",
-    href: "https://www.facebook.com/groups/980298767865372/?rdid=PAUuuHL3Pj7LVVG2&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2Fg%2F1VNRPWhWaK%2F%3F_rdc%3D1%26_rdr#",
-  },
-];
-
-export const contactEmail = "adzyl.jipos@gmail.com";

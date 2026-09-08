@@ -8,7 +8,6 @@ export interface HeroData {
   location: string;
   email: string;
   profileImage: string;
-  profileImage2: string;
   cvUrl: string;
 }
 
@@ -107,25 +106,8 @@ export interface Certification {
   iconUrl?: string;
 }
 
-export interface Recommendation {
-  quote: string;
-  author: string;
-  title: string;
-  initials: string;
-}
-
-export interface GalleryImage {
-  src: string;
-  alt: string;
-}
-
 export interface SocialLink {
   name: string;
   href: string;
   icon: React.ComponentType;
-}
-
-export interface Membership {
-  name: string;
-  href: string;
 }

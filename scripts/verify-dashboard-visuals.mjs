@@ -89,7 +89,6 @@ try {
         viewport: window.innerWidth,
         overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
         hero: Boolean(document.querySelector("[data-profile-hero]")),
-        stats: document.querySelectorAll(".dashboard-stat-card").length,
         projects: document.querySelectorAll("[data-project-selector]").length,
         navItems: document.querySelectorAll(".dashboard-nav__item").length,
         quickLinks: document.querySelectorAll(".dashboard-sidebar__quick-link").length,
@@ -138,7 +137,7 @@ try {
         };
     });
 
-    if (state.overflow || !state.hero || state.stats !== 0 || state.projects !== 3 || state.navItems !== 5 || state.quickLinks !== 3 || state.contactLinks !== 0 || state.hasSidebarConnectSection || state.contactNav) {
+    if (state.overflow || !state.hero || state.projects !== 3 || state.navItems !== 5 || state.quickLinks !== 3 || state.contactLinks !== 0 || state.hasSidebarConnectSection || state.contactNav) {
       failures.push(`${name}: core dashboard structure`);
     }
     if (!state.artworkLoaded || !state.artworkSrc.endsWith("/images/azii.webp")) failures.push(`${name}: hero artwork`);
