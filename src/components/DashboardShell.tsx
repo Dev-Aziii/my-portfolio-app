@@ -113,7 +113,8 @@ export default function DashboardShell({ children }: { children: React.ReactNode
               <span className="dashboard-profile__status-badge">
                 <span className="dashboard-profile__status-line" aria-hidden="true" />
                 <span className="dashboard-profile__status-dot" aria-hidden="true" />
-                <span className="dashboard-profile__status-text">Online</span>
+                <span className="dashboard-profile__status-dot" aria-hidden="true" />
+                <span className="dashboard-profile__status-dot" aria-hidden="true" />
               </span>
             </span>
 
