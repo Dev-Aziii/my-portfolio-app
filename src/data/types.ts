@@ -47,10 +47,23 @@ export interface Project {
   title: string;
   description: string;
   url: string;
-  icon:  LucideIcon | IconType | FunctionComponent<SVGProps<SVGSVGElement>>;
-  logo?: string;
+  icon: LucideIcon | IconType | FunctionComponent<SVGProps<SVGSVGElement>>;
+  logo: string;
+  badge: "Web Application" | "Desktop Application" | "Locally Hosted";
+  theme: ProjectTheme;
   slug?: string;
   details?: ProjectDetails;
+}
+
+export interface ProjectThemeTone {
+  accent: string;
+  wash: string;
+  border: string;
+}
+
+export interface ProjectTheme {
+  light: ProjectThemeTone;
+  dark: ProjectThemeTone;
 }
 
 export interface ProjectHighlight {

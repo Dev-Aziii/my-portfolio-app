@@ -165,13 +165,62 @@ try {
   const projects = await browser.newPage({ viewport: { width: 1024, height: 768 } });
   await projects.goto(new URL("projects", baseUrl).href, { waitUntil: "networkidle" });
   if ((await projects.locator("h1").first().textContent())?.trim() !== "Projects") failures.push("projects route");
-  if (!(await projects.locator(".dashboard-project-card, [data-project-card]").count())) failures.push("projects cards");
+  const projectCatalogState = await projects.evaluate(() => {
+    const catalog = document.querySelector("[data-project-catalog]");
+    const cards = [...document.querySelectorAll("[data-project-catalog-card]")];
+    const logos = [...document.querySelectorAll("[data-project-catalog-card] img[data-project-logo]")];
+    const gridColumns = catalog ? getComputedStyle(catalog).gridTemplateColumns.split(" ").filter(Boolean).length : 0;
+    return {
+      cards: cards.length,
+      logos: logos.length,
+      logosLoaded: logos.every((logo) => logo.complete && logo.naturalWidth > 0),
+      heroImages: document.querySelectorAll("[data-project-catalog-card] img[src*='/hero.webp']").length,
+      detailLinks: document.querySelectorAll("[data-project-catalog-link][href^='/projects/']").length,
+      demoLinks: document.querySelectorAll("[data-project-demo]").length,
+      demoLinksSafe: [...document.querySelectorAll("[data-project-demo]")].every((link) => link.target === "_blank" && link.rel.includes("noopener")),
+      localStatuses: document.querySelectorAll("[data-project-local-status]").length,
+      themedCards: cards.filter((card) => getComputedStyle(card).getPropertyValue("--project-accent").trim()).length,
+      gridColumns,
+    };
+  });
+  if (projectCatalogState.cards !== 4 || projectCatalogState.logos !== 4 || !projectCatalogState.logosLoaded) failures.push("projects logo catalog");
+  if (projectCatalogState.heroImages !== 0) failures.push("projects catalog hero image removal");
+  if (projectCatalogState.detailLinks !== 4 || projectCatalogState.demoLinks !== 3 || !projectCatalogState.demoLinksSafe || projectCatalogState.localStatuses !== 1) failures.push("projects catalog actions");
+  if (projectCatalogState.themedCards !== 4) failures.push("projects catalog accents");
+  if (projectCatalogState.gridColumns !== 2) failures.push("projects tablet columns");
   if (await projects.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)) failures.push("projects overflow");
+  const firstLogoBounds = await projects.locator("[data-project-catalog-card]").first().locator("[data-project-logo]").boundingBox();
+  if (!firstLogoBounds) {
+    failures.push("projects card navigation target");
+  } else {
+    await Promise.all([
+      projects.waitForURL(new URL("projects/teza", baseUrl).href),
+      projects.mouse.click(firstLogoBounds.x + firstLogoBounds.width / 2, firstLogoBounds.y + firstLogoBounds.height / 2),
+    ]);
+  }
+  if (!projects.url().endsWith("/projects/teza")) failures.push("projects card navigation");
   await projects.close();
+
+  const projectsMobile = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  await projectsMobile.goto(new URL("projects", baseUrl).href, { waitUntil: "networkidle" });
+  const mobileCatalogState = await projectsMobile.evaluate(() => {
+    const catalog = document.querySelector("[data-project-catalog]");
+    return {
+      columns: catalog ? getComputedStyle(catalog).gridTemplateColumns.split(" ").filter(Boolean).length : 0,
+      overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+    };
+  });
+  if (mobileCatalogState.columns !== 1 || mobileCatalogState.overflow) failures.push("projects mobile layout");
+  await projectsMobile.close();
 
   const detail = await browser.newPage({ viewport: { width: 1024, height: 768 } });
   await detail.goto(new URL("projects/teza", baseUrl).href, { waitUntil: "networkidle" });
   if ((await detail.locator("h1").first().textContent())?.trim() !== "Tezā") failures.push("project detail route");
+  const detailAccent = await detail.evaluate(() => {
+    const element = document.querySelector("[data-project-detail-theme]");
+    return element ? getComputedStyle(element).getPropertyValue("--project-accent").trim() : "";
+  });
+  if (!detailAccent) failures.push("project detail accents");
   if (await detail.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)) failures.push("project detail overflow");
   await detail.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
   await detail.waitForTimeout(250);

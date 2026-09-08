@@ -6,6 +6,7 @@ import Lightbox from "@/components/Lightbox";
 import { projects } from "@/data";
 import usePageTitle from "@/hooks/usePageTitle";
 import { formatDemoLabel, isValidHttpUrl } from "@/lib/utils";
+import { getProjectThemeStyle } from "@/lib/projectTheme";
 
 export default function ProjectDetailPage() {
   usePageTitle("Project Details | Adzyl Jipos");
@@ -22,8 +23,9 @@ export default function ProjectDetailPage() {
   const currentImage = gallery[currentIndex];
 
   return (
-    <PageLayout title={project.title} logo={project.logo} icon={project.icon} backTo="/projects" backLabel="Back to Projects">
-      <div className="project-detail">
+    <div className="project-theme project-detail-theme" style={getProjectThemeStyle(project.theme)} data-project-detail-theme>
+      <PageLayout title={project.title} logo={project.logo} icon={project.icon} backTo="/projects" backLabel="Back to Projects">
+        <div className="project-detail">
         <section className="project-detail__gallery" aria-label={`${project.title} gallery`}>
           <div className="project-detail__gallery-main" onClick={() => setLightboxIndex(currentIndex)} role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") setLightboxIndex(currentIndex); }}>
             <img src={currentImage} alt={`${project.title} ${currentIndex + 1}`} />
@@ -81,7 +83,8 @@ export default function ProjectDetailPage() {
             <div className="project-detail__highlights">{details.highlights.map((highlight) => <span key={highlight.label} className="project-detail__highlight">{highlight.label}</span>)}</div>
           </section>
         ) : null}
-      </div>
-    </PageLayout>
+        </div>
+      </PageLayout>
+    </div>
   );
 }

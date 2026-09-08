@@ -4,6 +4,8 @@ export type {
   ExperienceEntry,
   PositionEntry,
   Project,
+  ProjectTheme,
+  ProjectThemeTone,
   Certification,
   Recommendation,
   GalleryImage,

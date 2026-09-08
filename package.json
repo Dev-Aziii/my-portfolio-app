@@ -12,6 +12,7 @@
     "test:theme": "node scripts/verify-light-theme.mjs",
     "test:dashboard-visual": "node scripts/verify-dashboard-visuals.mjs",
     "test:dashboard-behavior": "node scripts/verify-dashboard-behavior.mjs",
+    "test:projects-visual": "node scripts/verify-project-catalog-visuals.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -9,6 +9,8 @@ interface PageLayoutProps {
   backLabel?: string;
   logo?: string;
   icon?: ComponentType<{ className?: string }>;
+  description?: string;
+  headingAside?: ReactNode;
 }
 
 export default function PageLayout({
@@ -18,6 +20,8 @@ export default function PageLayout({
   backLabel = "Back to Overview",
   logo,
   icon: IconComponent,
+  description,
+  headingAside,
 }: PageLayoutProps) {
   return (
     <div className="dashboard-route-page">
@@ -30,21 +34,30 @@ export default function PageLayout({
       </div>
 
       <div className="dashboard-route-page__heading">
-        {logo ? (
-          <img src={logo} alt="" className="dashboard-route-page__icon" />
-        ) : IconComponent ? (
-          <span className="dashboard-route-page__icon dashboard-route-page__icon--glyph">
-            <IconComponent aria-hidden="true" />
-          </span>
-        ) : null}
-        <div>
-          <span className="dashboard-eyebrow">Portfolio section</span>
-          <h1>{title}</h1>
+        <div className="dashboard-route-page__heading-main">
+          {logo ? (
+            <img src={logo} alt="" className="dashboard-route-page__icon" />
+          ) : IconComponent ? (
+            <span className="dashboard-route-page__icon dashboard-route-page__icon--glyph">
+              <IconComponent aria-hidden="true" />
+            </span>
+          ) : null}
+          <div>
+            <span className="dashboard-eyebrow">Portfolio section</span>
+            <h1>{title}</h1>
+            {description ? (
+              <p className="dashboard-route-page__description">{description}</p>
+            ) : null}
+          </div>
         </div>
+        {headingAside ? (
+          <aside className="dashboard-route-page__heading-aside">
+            {headingAside}
+          </aside>
+        ) : null}
       </div>
 
       <div className="dashboard-route-page__content">{children}</div>
     </div>
   );
 }
-

@@ -82,7 +82,7 @@ async function state(page) {
       featuredPanelRect: rect(".dashboard-panel--projects"),
       activityPanelRect: rect(".dashboard-activity"),
       selectorFilters: [...document.querySelectorAll("[data-project-selector] img")].map((img) => getComputedStyle(img).filter),
-      projectImageFilters: [...document.querySelectorAll(".dashboard-project-card__image img, .dashboard-project-explorer__item img, .dashboard-project-explorer__logo img, .project-detail__gallery-main img, .project-detail__thumb img, .lightbox__image")].map((img) => getComputedStyle(img).filter),
+      projectImageFilters: [...document.querySelectorAll(".dashboard-project-card__image img, .dashboard-project-explorer__item img, .dashboard-project-explorer__logo img, .project-catalog-card__logo img, .project-detail__gallery-main img, .project-detail__thumb img, .lightbox__image")].map((img) => getComputedStyle(img).filter),
     };
   });
 }

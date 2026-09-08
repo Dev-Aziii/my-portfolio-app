@@ -7,6 +7,11 @@ export const projects: Project[] = [
     slug: "teza",
     icon: SiReact,
     logo: "/images/projects/teza/logo.webp",
+    badge: "Web Application",
+    theme: {
+      light: { accent: "#c02667", wash: "#fde7f0", border: "#eaa3c1" },
+      dark: { accent: "#ff6fa8", wash: "#2a111d", border: "#78314e" },
+    },
     url: "https://teza-v1.vercel.app/",
     description: "A modern progressive web application that helps couples stay connected through shared updates, plans, spontaneous proposals, and meaningful daily interactions.",
     details: {
@@ -56,6 +61,11 @@ export const projects: Project[] = [
     slug: "elecsys",
     icon: SiLaravel,
     logo: "/images/projects/elecsys/logo.webp",
+    badge: "Locally Hosted",
+    theme: {
+      light: { accent: "#0f7a47", wash: "#e2f5ea", border: "#8fcdaa" },
+      dark: { accent: "#45e393", wash: "#0b2418", border: "#276947" },
+    },
     url: "locally hosted",
     description: "A high-performance, containerized election management system engineered for offline-first reliability in large-scale cooperative voting environments.",
     details: {
@@ -99,6 +109,11 @@ export const projects: Project[] = [
     url: "http://accsys-jps.runasp.net",
     icon: SiDotnet,
     logo: "/images/projects/accsys/logo.webp",
+    badge: "Web Application",
+    theme: {
+      light: { accent: "#087b89", wash: "#e0f4f6", border: "#82cbd3" },
+      dark: { accent: "#54d9e8", wash: "#092328", border: "#276b74" },
+    },
     slug: "accsys",
     details: {
       heroImage: "/images/projects/accsys/hero.webp",
@@ -148,6 +163,12 @@ export const projects: Project[] = [
       "Desktop-based Human Resource Management System (HRMS) developed in C# using Windows Forms and enhanced with DevExpress components.",
     url: "https://github.com/Dev-Aziii/peopleHUB-HRMS",
     icon: SiSharp,
+    logo: "/images/projects/peoplehub/logo.webp",
+    badge: "Desktop Application",
+    theme: {
+      light: { accent: "#315fc4", wash: "#e8eeff", border: "#9eb5ee" },
+      dark: { accent: "#76a0ff", wash: "#111d3b", border: "#36548e" },
+    },
     slug: "peoplehub-hrms",
     details: {
       heroImage: "/images/projects/peoplehub/hero.webp",
