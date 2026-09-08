@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { heroData } from "@/data";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const navigation = [
   { id: "home", label: "Overview", route: "/", icon: LayoutDashboard },
@@ -93,10 +94,13 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         })}
       </nav>
 
-      <a className="dashboard-sidebar__footer" href={`mailto:${heroData.email}`} aria-label={`Email ${heroData.email}`}>
-        <Mail aria-hidden="true" />
-        <span>{heroData.email}</span>
-      </a>
+      <div className="dashboard-sidebar__footer-group">
+        <ThemeToggle />
+        <a className="dashboard-sidebar__footer" href={`mailto:${heroData.email}`} aria-label={`Email ${heroData.email}`}>
+          <Mail aria-hidden="true" />
+          <span>{heroData.email}</span>
+        </a>
+      </div>
     </aside>
   );
 
@@ -118,15 +122,18 @@ export default function DashboardShell({ children }: { children: React.ReactNode
             <img src={heroData.profileImage} alt="" />
             <span>{heroData.name}</span>
           </a>
-          <button
-            type="button"
-            className="dashboard-icon-button"
-            aria-label={isDrawerOpen ? "Close navigation" : "Open navigation"}
-            aria-expanded={isDrawerOpen}
-            onClick={() => setIsDrawerOpen((open) => !open)}
-          >
-            {isDrawerOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
-          </button>
+          <div className="dashboard-mobile-bar__actions">
+            <ThemeToggle />
+            <button
+              type="button"
+              className="dashboard-icon-button"
+              aria-label={isDrawerOpen ? "Close navigation" : "Open navigation"}
+              aria-expanded={isDrawerOpen}
+              onClick={() => setIsDrawerOpen((open) => !open)}
+            >
+              {isDrawerOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
+            </button>
+          </div>
         </header>
         <main className="dashboard-main">{children}</main>
       </div>

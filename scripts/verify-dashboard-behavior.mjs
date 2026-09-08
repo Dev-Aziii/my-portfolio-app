@@ -95,16 +95,27 @@ try {
   const artworkFilters = await desktop.evaluate(() => ({
     hero: getComputedStyle(document.querySelector(".dashboard-hero__art img")).filter,
     profile: getComputedStyle(document.querySelector(".dashboard-profile__image")).filter,
-    project: getComputedStyle(document.querySelector(".dashboard-project-card__image img")).filter,
+    featuredLogo: getComputedStyle(document.querySelector("[data-project-selector] img")).filter,
+    featuredHero: getComputedStyle(document.querySelector("[data-featured-project-detail] img")).filter,
   }));
+  const themeToggleState = await desktop.locator("[data-theme-toggle]").evaluateAll((toggles) => toggles.map((toggle) => ({
+    role: toggle.getAttribute("role"),
+    options: [...toggle.querySelectorAll("[data-theme-option]")].map((option) => ({
+      value: option.getAttribute("data-theme-option"),
+      role: option.getAttribute("role"),
+      checked: option.getAttribute("aria-checked"),
+      icon: option.querySelectorAll("svg").length,
+    })),
+  })));
   const heroHoverFilter = await desktop.evaluate(() => getComputedStyle(document.querySelector(".dashboard-hero__art img")).filter);
   await desktop.locator(".dashboard-profile").hover();
   await desktop.waitForTimeout(350);
   const profileHoverFilter = await desktop.evaluate(() => getComputedStyle(document.querySelector(".dashboard-profile__image")).filter);
-  await desktop.locator(".dashboard-project-card-link").first().hover();
+  await desktop.locator("[data-project-selector]").first().hover();
   await desktop.waitForTimeout(350);
-  const projectHoverFilter = await desktop.evaluate(() => getComputedStyle(document.querySelector(".dashboard-project-card__image img")).filter);
-  if (artworkFilters.hero !== heroHoverFilter || artworkFilters.profile === profileHoverFilter || artworkFilters.project === projectHoverFilter) failures.push("image color hover treatment");
+  const featuredLogoHoverFilter = await desktop.evaluate(() => getComputedStyle(document.querySelector("[data-project-selector] img")).filter);
+  if (artworkFilters.hero !== heroHoverFilter || artworkFilters.profile === profileHoverFilter || artworkFilters.featuredLogo !== featuredLogoHoverFilter || artworkFilters.featuredLogo !== "none" || artworkFilters.featuredHero !== "none") failures.push("image color hover treatment");
+  if (themeToggleState.some((toggle) => toggle.role !== "radiogroup" || toggle.options.length !== 3 || toggle.options.some((option) => option.role !== "radio" || !["true", "false"].includes(option.checked) || option.icon !== 1))) failures.push("theme switch semantics");
 
   await desktop.goto(new URL("projects", baseUrl).href, { waitUntil: "networkidle" });
   await desktop.getByRole("button", { name: "Skills" }).click();
@@ -132,7 +143,7 @@ try {
   if ((await experience.locator("h1").first().textContent())?.trim() !== "Career Experience") failures.push("career experience route");
   if (await experience.locator(".dashboard-sidebar__bio").count()) failures.push("career experience sidebar bio");
   if (await experience.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)) failures.push("career experience overflow");
-  const experienceGeometry = await experience.locator(".dashboard-route-page, .dashboard-route-page__icon, button").evaluateAll((elements) =>
+  const experienceGeometry = await experience.locator(".dashboard-route-page, .dashboard-route-page__icon, button:not(.theme-toggle):not(.theme-toggle__option)").evaluateAll((elements) =>
     elements.every((element) => getComputedStyle(element).borderRadius === "0px")
   );
   if (!experienceGeometry) failures.push("career experience square geometry");

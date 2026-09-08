@@ -10,11 +10,12 @@ interface ProjectsProps {
   showViewAll?: boolean;
   compact?: boolean;
   hideTitle?: boolean;
-  variant?: "stack" | "grid";
+  variant?: "stack" | "grid" | "featured";
 }
 
 export default function Projects({ projects, limit, showViewAll, compact, hideTitle, variant }: ProjectsProps) {
   const isGridView = variant === "grid" || hideTitle || compact;
+  const isFeaturedView = variant === "featured";
   const displayed = projects.slice(0, limit ?? (isGridView ? undefined : 3));
   const [activeIndex, setActiveIndex] = useState(0);
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
@@ -89,6 +90,65 @@ export default function Projects({ projects, limit, showViewAll, compact, hideTi
             );
             return project.slug && project.details ? <Link key={project.title} className="dashboard-project-card-link" to={`/projects/${project.slug}`}>{content}</Link> : <div key={project.title}>{content}</div>;
           })}
+        </div>
+      ) : isFeaturedView ? (
+        <div className="dashboard-featured-projects">
+          <div className="dashboard-featured-projects__selector" role="list" aria-label="Featured projects">
+            {displayed.map((project, index) => (
+              <button
+                key={project.title}
+                type="button"
+                className="dashboard-featured-projects__selector-item"
+                data-project-selector
+                data-active={index === activeIndex}
+                aria-pressed={index === activeIndex}
+                onClick={() => setActiveIndex(index)}
+              >
+                <span className="dashboard-featured-projects__selector-logo">
+                  {project.logo ? <img src={project.logo} alt="" /> : null}
+                </span>
+                <span>{project.title}</span>
+              </button>
+            ))}
+          </div>
+
+          {activeProject && (
+            <article className="dashboard-featured-projects__detail" data-featured-project-detail>
+              <div className="dashboard-featured-projects__detail-main">
+                {activeProject.details?.heroImage && (
+                  <div className="dashboard-featured-projects__detail-art">
+                    <img src={activeProject.details.heroImage} alt={`${activeProject.title} project preview`} />
+                  </div>
+                )}
+                <div className="dashboard-featured-projects__detail-copy">
+                  <div className="dashboard-featured-projects__detail-heading">
+                    <div>
+                      <span className="dashboard-eyebrow">Selected project</span>
+                      <h3>{activeProject.title}</h3>
+                    </div>
+                    {activeProject.details?.year && (
+                      <span className="dashboard-eyebrow">{activeProject.details.year}</span>
+                    )}
+                  </div>
+                  <p>{activeProject.description}</p>
+                  <div className="dashboard-featured-projects__detail-stack-row">
+                    {activeProject.details?.techs && (
+                      <div className="dashboard-skill-pills">
+                        {activeProject.details.techs.slice(0, 5).map((tech) => (
+                          <span key={tech} className="dashboard-skill-pill">{tech}</span>
+                        ))}
+                      </div>
+                    )}
+                    {activeProject.slug && activeProject.details && (
+                      <Link to={`/projects/${activeProject.slug}`} className="dashboard-action" data-featured-project-cta>
+                        View project <ArrowUpRight aria-hidden="true" />
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </article>
+          )}
         </div>
       ) : (
         <div className="dashboard-project-explorer">

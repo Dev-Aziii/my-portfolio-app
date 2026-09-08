@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:theme-transition": "vitest run src/lib/themeTransition.test.ts",
+    "test:theme": "node scripts/verify-light-theme.mjs",
     "test:dashboard-visual": "node scripts/verify-dashboard-visuals.mjs",
     "test:dashboard-behavior": "node scripts/verify-dashboard-behavior.mjs",
     "preview": "vite preview"

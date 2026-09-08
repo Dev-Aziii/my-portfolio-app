@@ -34,20 +34,27 @@ try {
   for (const [name, viewport] of viewports) {
     const page = await browser.newPage({ viewport });
     await page.goto(baseUrl, { waitUntil: "networkidle" });
+    await page.evaluate(() => {
+      localStorage.setItem("theme", "light");
+      document.documentElement.classList.remove("dark");
+    });
+    await page.reload({ waitUntil: "networkidle" });
     await page.screenshot({ path: path.join(outputDir, `${name}.png`), fullPage: false });
 
     const state = await page.evaluate(() => {
       const root = getComputedStyle(document.documentElement);
       const sidebar = document.querySelector(".dashboard-sidebar");
       const artwork = document.querySelector(".dashboard-hero__art img");
+      const projectPanel = document.querySelector(".dashboard-panel--projects");
+      const activityPanel = document.querySelector(".dashboard-activity");
       const squareSelectors = [
         ".dashboard-hero",
-        ".dashboard-stat-card",
         ".dashboard-panel",
-        ".dashboard-project-card",
         ".dashboard-action",
         ".dashboard-nav__item",
         ".dashboard-profile__image",
+        ".dashboard-featured-projects__selector-item",
+        ".dashboard-featured-projects__detail",
       ];
       const squareGeometry = squareSelectors.every((selector) => {
         const element = document.querySelector(selector);
@@ -66,7 +73,7 @@ try {
         overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
         hero: Boolean(document.querySelector("[data-profile-hero]")),
         stats: document.querySelectorAll(".dashboard-stat-card").length,
-        projects: document.querySelectorAll(".dashboard-project-card").length,
+        projects: document.querySelectorAll("[data-project-selector]").length,
         navItems: document.querySelectorAll(".dashboard-nav__item").length,
         artworkLoaded: Boolean(artwork && artwork.complete && artwork.naturalWidth > 0),
         artworkSrc: artwork?.getAttribute("src") ?? "",
@@ -78,26 +85,29 @@ try {
         visibleColors,
         mobileBarVisible: getComputedStyle(document.querySelector(".dashboard-mobile-bar")).display !== "none",
         sidebarVisible: Boolean(sidebar && sidebar.getBoundingClientRect().right > 0),
-        palette: {
+          palette: {
           bg: root.getPropertyValue("--bg").trim(),
           surface: root.getPropertyValue("--surface").trim(),
           border: root.getPropertyValue("--border").trim(),
-        },
-      };
+          },
+          projectPanelBottom: projectPanel?.getBoundingClientRect().bottom ?? 0,
+          activityPanelBottom: activityPanel?.getBoundingClientRect().bottom ?? 0,
+        };
     });
 
-    if (state.overflow || !state.hero || state.stats !== 4 || state.projects !== 4 || state.navItems !== 5 || state.contactNav) {
+    if (state.overflow || !state.hero || state.stats !== 0 || state.projects !== 3 || state.navItems !== 5 || state.contactNav) {
       failures.push(`${name}: core dashboard structure`);
     }
-    if (!state.artworkLoaded || !state.artworkSrc.endsWith("/images/aziwallp6.png")) failures.push(`${name}: hero artwork`);
+    if (!state.artworkLoaded || !state.artworkSrc.endsWith("/images/aziwallp6.webp")) failures.push(`${name}: hero artwork`);
     if (!state.squareGeometry) failures.push(`${name}: square geometry`);
     if (state.sidebarBio || state.sidebarContact || state.sidebarEmail !== "mailto:adzyl.jipos@gmail.com") failures.push(`${name}: minimal sidebar content`);
     if (/34, 197, 94|0, 240, 255|6, 182, 212|green|cyan/i.test(state.visibleColors)) {
       failures.push(`${name}: colored runtime accents`);
     }
-    if (state.palette.bg !== "#000000" || state.palette.surface !== "#0a0a0a" || state.palette.border !== "#2d2d2d") {
+    if (state.palette.bg !== "#f5f5f5" || state.palette.surface !== "#ffffff" || state.palette.border !== "#c8c8c8") {
       failures.push(`${name}: palette tokens`);
     }
+    if (name === "desktop" && Math.abs(state.projectPanelBottom - state.activityPanelBottom) > 2) failures.push("desktop: featured/activity alignment");
     if (name === "mobile" && !state.mobileBarVisible) failures.push("mobile: top navigation visibility");
     if (name !== "mobile" && !state.sidebarVisible) failures.push(`${name}: sidebar visibility`);
     await page.close();

@@ -35,12 +35,12 @@ export default function Home() {
         <Hero data={heroData} socialLinks={socialLinks} />
       </section>
 
-      <DashboardStats stats={stats} />
+      {/* <DashboardStats stats={stats} /> */}
 
       <div className="dashboard-content-grid">
         <div className="dashboard-content-grid__primary">
           <section id="projects" data-dashboard-section="projects" className="dashboard-panel dashboard-panel--projects">
-            <Projects projects={projects} limit={4} showViewAll variant="grid" />
+            <Projects projects={projects} limit={3} showViewAll variant="featured" />
           </section>
 
         </div>
