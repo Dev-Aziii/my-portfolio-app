@@ -41,6 +41,7 @@ try {
     const profileImage = document.querySelector("[data-profile-image]");
     const profileArt = document.querySelector(".dashboard-profile-art");
     const profileCard = document.querySelector(".dashboard-profile");
+    const profileDissolve = document.querySelector("[data-profile-dissolve]");
     const asciiLines = asciiPortrait?.textContent?.split("\n") ?? [];
     const rectSnapshot = (element) => {
       const bounds = element?.getBoundingClientRect();
@@ -71,6 +72,9 @@ try {
       profileImageLoaded: Boolean(profileImage && profileImage.complete && profileImage.naturalWidth > 0),
       profileArtHeight: profileArt ? getComputedStyle(profileArt).height : "",
       profileCardHeight: profileCard ? getComputedStyle(profileCard).height : "",
+      profileDissolveTag: profileDissolve?.tagName.toLowerCase() ?? "",
+      profileDissolveCanvas: Boolean(profileDissolve?.querySelector("canvas")),
+      profileDissolveState: profileDissolve?.getAttribute("data-profile-dissolve-state") ?? "",
       profileArtBounds: rectSnapshot(profileArt),
       profileCardBounds: rectSnapshot(profileCard),
       contactNav: [...document.querySelectorAll(".dashboard-nav__item")].some((item) => item.textContent?.trim() === "Contact"),
@@ -103,7 +107,7 @@ try {
   if (overviewState.profileCardRadius !== "12px" || overviewState.profileCardMinHeight !== "94px" || overviewState.profileCardMarginTop !== "-100px" || overviewState.sidebarInnerFrameBorder !== "0px") failures.push("profile card geometry");
   if (overviewState.hasSidebarAvailability || overviewState.asciiHidden !== "true") failures.push("ascii profile semantics");
   if (!overviewState.asciiCharactersValid || overviewState.asciiLineCount < 40 || overviewState.asciiLineWidths.length !== 1 || overviewState.asciiLineWidths[0] !== 72) failures.push("ascii profile grid");
-  if (overviewState.profileToggleTag !== "button" || overviewState.profileTogglePressed !== "false" || overviewState.profileToggleLabel !== "Show profile photo" || !overviewState.profileImageLoaded || !overviewState.profileImageSrc.endsWith("/images/profile.webp") || overviewState.profileArtHeight !== "300px" || overviewState.profileCardHeight !== "94px") {
+  if (overviewState.profileToggleTag !== "button" || overviewState.profileTogglePressed !== "false" || overviewState.profileToggleLabel !== "Show profile photo" || !overviewState.profileImageLoaded || !overviewState.profileImageSrc.endsWith("/images/profile.webp") || overviewState.profileArtHeight !== "300px" || overviewState.profileCardHeight !== "94px" || overviewState.profileDissolveTag !== "div" || !overviewState.profileDissolveCanvas || overviewState.profileDissolveState !== "closed") {
     failures.push("profile reveal control");
   }
   if (overviewState.quickLinks.join("|") !== "GitHub|LinkedIn|Download CV" || overviewState.contactLinks.length !== 0 || overviewState.hasSidebarConnectSection) failures.push("sidebar utility groups");
@@ -125,18 +129,35 @@ try {
   const profileClosed = await desktop.evaluate(() => {
     const art = document.querySelector(".dashboard-profile-art")?.getBoundingClientRect();
     const card = document.querySelector(".dashboard-profile")?.getBoundingClientRect();
+    const dissolveCanvas = document.querySelector("[data-profile-dissolve] canvas");
     return {
       path: window.location.pathname,
+      dissolveGrid: dissolveCanvas?.getAttribute("data-profile-dissolve-grid") ?? "",
       art: art ? { top: art.top, left: art.left, width: art.width, height: art.height } : null,
       card: card ? { top: card.top, left: card.left, width: card.width, height: card.height } : null,
     };
   });
+  if (profileClosed.dissolveGrid !== "24x36") failures.push("profile dissolve granularity");
   const profileToggle = desktop.locator("[data-profile-toggle]");
   if (await profileToggle.count() !== 1) {
     failures.push("profile reveal interaction control");
   } else {
     await profileToggle.click();
-    await desktop.waitForTimeout(800);
+    await desktop.waitForTimeout(120);
+    const profileRevealMid = await desktop.evaluate(() => {
+      const dissolve = document.querySelector("[data-profile-dissolve]");
+      const image = document.querySelector("[data-profile-image]");
+      return {
+        state: dissolve?.getAttribute("data-profile-dissolve-state"),
+        dissolveOpacity: dissolve ? getComputedStyle(dissolve).opacity : "",
+        imageOpacity: image ? getComputedStyle(image).opacity : "",
+      };
+    });
+    if (profileRevealMid.state !== "revealing" || profileRevealMid.dissolveOpacity === "0" || profileRevealMid.imageOpacity !== "0") failures.push("profile reveal mid-transition");
+    await desktop.waitForTimeout(780);
+    const profileRevealSlow = await desktop.evaluate(() => document.querySelector("[data-profile-dissolve]")?.getAttribute("data-profile-dissolve-state"));
+    if (profileRevealSlow !== "revealing") failures.push("profile reveal duration");
+    await desktop.waitForTimeout(600);
     await desktop.evaluate(() => document.activeElement?.blur());
     await desktop.mouse.move(500, 500);
     await desktop.waitForTimeout(220);
@@ -144,31 +165,48 @@ try {
       const art = document.querySelector(".dashboard-profile-art")?.getBoundingClientRect();
       const card = document.querySelector(".dashboard-profile")?.getBoundingClientRect();
       const image = document.querySelector("[data-profile-image]");
+      const dissolve = document.querySelector("[data-profile-dissolve]");
       return {
         path: window.location.pathname,
         pressed: document.querySelector("[data-profile-toggle]")?.getAttribute("aria-pressed"),
         state: document.querySelector(".dashboard-profile-art")?.getAttribute("data-profile-revealed"),
         label: document.querySelector("[data-profile-toggle]")?.getAttribute("aria-label"),
-        imageClipPath: image ? getComputedStyle(image).clipPath : "",
         imageOpacity: image ? getComputedStyle(image).opacity : "",
+        dissolveState: dissolve?.getAttribute("data-profile-dissolve-state"),
+        dissolveOpacity: dissolve ? getComputedStyle(dissolve).opacity : "",
         overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
         art: art ? { top: art.top, left: art.left, width: art.width, height: art.height } : null,
         card: card ? { top: card.top, left: card.left, width: card.width, height: card.height } : null,
       };
     });
-    if (profileOpen.path !== profileClosed.path || profileOpen.pressed !== "true" || profileOpen.state !== "true" || profileOpen.label !== "Show ASCII portrait" || profileOpen.overflow || profileOpen.imageClipPath === "inset(100% 0px 0px)" || profileOpen.imageOpacity === "0" || JSON.stringify(profileOpen.art) !== JSON.stringify(profileClosed.art) || JSON.stringify(profileOpen.card) !== JSON.stringify(profileClosed.card)) {
+    if (profileOpen.path !== profileClosed.path || profileOpen.pressed !== "true" || profileOpen.state !== "true" || profileOpen.label !== "Show ASCII portrait" || profileOpen.overflow || profileOpen.dissolveState !== "open" || profileOpen.dissolveOpacity !== "0" || profileOpen.imageOpacity === "0" || JSON.stringify(profileOpen.art) !== JSON.stringify(profileClosed.art) || JSON.stringify(profileOpen.card) !== JSON.stringify(profileClosed.card)) {
       failures.push("profile reveal open state");
     }
     await profileToggle.click();
-    await desktop.waitForTimeout(800);
+    await desktop.waitForTimeout(120);
+    const profileHideMid = await desktop.evaluate(() => {
+      const dissolve = document.querySelector("[data-profile-dissolve]");
+      const image = document.querySelector("[data-profile-image]");
+      return {
+        state: dissolve?.getAttribute("data-profile-dissolve-state"),
+        dissolveOpacity: dissolve ? getComputedStyle(dissolve).opacity : "",
+        imageOpacity: image ? getComputedStyle(image).opacity : "",
+      };
+    });
+    if (profileHideMid.state !== "hiding" || profileHideMid.dissolveOpacity === "0" || Number.parseFloat(profileHideMid.imageOpacity) >= 1) failures.push("profile reveal reverse mid-transition");
+    await desktop.waitForTimeout(780);
+    const profileHideSlow = await desktop.evaluate(() => document.querySelector("[data-profile-dissolve]")?.getAttribute("data-profile-dissolve-state"));
+    if (profileHideSlow !== "hiding") failures.push("profile reveal reverse duration");
+    await desktop.waitForTimeout(600);
     const profileReversed = await desktop.evaluate(() => ({
       path: window.location.pathname,
       pressed: document.querySelector("[data-profile-toggle]")?.getAttribute("aria-pressed"),
       state: document.querySelector(".dashboard-profile-art")?.getAttribute("data-profile-revealed"),
       label: document.querySelector("[data-profile-toggle]")?.getAttribute("aria-label"),
+      dissolveState: document.querySelector("[data-profile-dissolve]")?.getAttribute("data-profile-dissolve-state"),
       overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
     }));
-    if (profileReversed.path !== profileClosed.path || profileReversed.pressed !== "false" || profileReversed.state !== "false" || profileReversed.label !== "Show profile photo" || profileReversed.overflow) {
+    if (profileReversed.path !== profileClosed.path || profileReversed.pressed !== "false" || profileReversed.state !== "false" || profileReversed.label !== "Show profile photo" || profileReversed.dissolveState !== "closed" || profileReversed.overflow) {
       failures.push("profile reveal reverse state");
     }
   }
@@ -311,14 +349,15 @@ try {
     failures.push("mobile profile reveal control");
   } else {
     await mobileProfileToggle.click();
-    await mobile.waitForTimeout(800);
+    await mobile.waitForTimeout(1600);
     const mobileProfileOpen = await mobile.evaluate(() => ({
       path: window.location.pathname,
       pressed: document.querySelector("[data-profile-toggle]")?.getAttribute("aria-pressed"),
       sidebarOpen: document.querySelector(".dashboard-sidebar")?.classList.contains("is-open"),
+      dissolveState: document.querySelector("[data-profile-dissolve]")?.getAttribute("data-profile-dissolve-state"),
       overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
     }));
-    if (mobileProfileOpen.path !== "/" || mobileProfileOpen.pressed !== "true" || !mobileProfileOpen.sidebarOpen || mobileProfileOpen.overflow) failures.push("mobile profile reveal");
+    if (mobileProfileOpen.path !== "/" || mobileProfileOpen.pressed !== "true" || mobileProfileOpen.dissolveState !== "open" || !mobileProfileOpen.sidebarOpen || mobileProfileOpen.overflow) failures.push("mobile profile reveal");
   }
   await mobile.keyboard.press("Escape");
   await mobile.waitForTimeout(260);
@@ -329,6 +368,29 @@ try {
   await mobile.waitForTimeout(260);
   if (await mobile.locator(".dashboard-drawer-overlay").count()) failures.push("mobile drawer button close");
   await mobile.close();
+
+  const reducedMotion = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  await reducedMotion.emulateMedia({ reducedMotion: "reduce" });
+  await reducedMotion.goto(baseUrl, { waitUntil: "networkidle" });
+  await reducedMotion.getByRole("button", { name: "Open navigation" }).click();
+  await reducedMotion.waitForTimeout(260);
+  const reducedMotionToggle = reducedMotion.locator("[data-profile-toggle]");
+  if (await reducedMotionToggle.count() !== 1) {
+    failures.push("reduced-motion profile reveal control");
+  } else {
+    await reducedMotionToggle.click();
+    await reducedMotion.waitForTimeout(80);
+    const reducedOpen = await reducedMotion.evaluate(() => ({
+      state: document.querySelector("[data-profile-dissolve]")?.getAttribute("data-profile-dissolve-state"),
+      imageOpacity: getComputedStyle(document.querySelector("[data-profile-image]")).opacity,
+    }));
+    if (reducedOpen.state !== "open" || reducedOpen.imageOpacity === "0") failures.push("reduced-motion profile reveal");
+    await reducedMotionToggle.click();
+    await reducedMotion.waitForTimeout(80);
+    const reducedClosed = await reducedMotion.evaluate(() => document.querySelector("[data-profile-dissolve]")?.getAttribute("data-profile-dissolve-state"));
+    if (reducedClosed !== "closed") failures.push("reduced-motion profile reverse");
+  }
+  await reducedMotion.close();
 
   const experience = await browser.newPage({ viewport: { width: 1024, height: 768 } });
   await experience.goto(new URL("experience", baseUrl).href, { waitUntil: "networkidle" });

@@ -16,6 +16,7 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import { heroData, profileAscii, socialLinks } from "@/data";
 import ThemeToggle from "@/components/ThemeToggle";
+import ProfilePortraitDissolve from "@/components/ProfilePortraitDissolve";
 
 const navigation = [
   { id: "home", label: "Overview", route: "/", icon: LayoutDashboard },
@@ -76,7 +77,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         <div className="dashboard-profile-art" data-profile-revealed={isProfileImageRevealed} aria-hidden="true">
           <span className="dashboard-profile-art__mantra">Build<br />Learn<br />Create</span>
           <pre className="dashboard-profile-art__portrait" data-profile-ascii aria-hidden="true">{profileAscii}</pre>
-          <img className="dashboard-profile-art__image" data-profile-image src={heroData.profileImage} alt="" draggable="false" />
+          <ProfilePortraitDissolve src={heroData.profileImage} revealed={isProfileImageRevealed} />
         </div>
 
         <button
