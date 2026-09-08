@@ -1,4 +1,5 @@
 import { ArrowUpRight } from "lucide-react";
+import type { CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import type { TechCategory } from "@/data/types";
 
@@ -41,7 +42,14 @@ export default function TechStack({
             <span className="dashboard-eyebrow">{category.name}</span>
             <div className="dashboard-skill-pills">
               {category.items.slice(0, limit).map((item) => (
-                <span key={item.name} className="dashboard-skill-pill">{item.name}</span>
+                <span
+                  key={item.name}
+                  className="dashboard-skill-pill dashboard-skill-pill--tech"
+                  style={{ "--tech-brand-color": item.brandColor } as CSSProperties}
+                >
+                  <item.icon className="dashboard-skill-pill__icon" aria-hidden="true" />
+                  {item.name}
+                </span>
               ))}
             </div>
           </div>

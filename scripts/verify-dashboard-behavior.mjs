@@ -77,6 +77,29 @@ try {
     if (routeState.path !== route || routeState.active !== label || routeState.activeCount !== 1) failures.push(`${label.toLowerCase()} route navigation`);
   }
 
+  await desktop.goto(new URL("tech-stack", baseUrl).href, { waitUntil: "networkidle" });
+  const techStackState = await desktop.evaluate(() => {
+    const pills = [...document.querySelectorAll(".dashboard-skill-pill--tech")];
+    const firstPill = pills[0];
+    const firstIcon = firstPill?.querySelector("svg");
+    const firstIconStyles = firstIcon ? getComputedStyle(firstIcon) : null;
+    return {
+      pillCount: pills.length,
+      everyPillHasOneIcon: pills.every((pill) => pill.querySelectorAll("svg").length === 1),
+      everyIconIsDecorative: pills.every((pill) => pill.querySelector("svg")?.getAttribute("aria-hidden") === "true"),
+      everyPillHasBrandColor: pills.every((pill) => pill.style.getPropertyValue("--tech-brand-color").trim()),
+      fontSize: firstPill ? getComputedStyle(firstPill).fontSize : "",
+      padding: firstPill ? getComputedStyle(firstPill).padding : "",
+      iconSize: firstIconStyles ? `${firstIconStyles.width} ${firstIconStyles.height}` : "",
+    };
+  });
+  if (techStackState.pillCount === 0 || !techStackState.everyPillHasOneIcon || !techStackState.everyIconIsDecorative || !techStackState.everyPillHasBrandColor) {
+    failures.push("tech-stack pill icons");
+  }
+  if (techStackState.fontSize !== "10.4px" || techStackState.padding !== "6px 10px" || techStackState.iconSize !== "14px 14px") {
+    failures.push("tech-stack pill sizing");
+  }
+
   await desktop.goto(baseUrl, { waitUntil: "networkidle" });
   const githubButton = desktop.getByRole("button", { name: "View GitHub contributions" });
   if (await githubButton.count() !== 1) {
