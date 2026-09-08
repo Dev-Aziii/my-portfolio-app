@@ -37,7 +37,15 @@ try {
     const skillsBounds = skills?.getBoundingClientRect();
     const certificationsBounds = certifications?.getBoundingClientRect();
     const asciiPortrait = document.querySelector("[data-profile-ascii]");
+    const profileToggle = document.querySelector("[data-profile-toggle]");
+    const profileImage = document.querySelector("[data-profile-image]");
+    const profileArt = document.querySelector(".dashboard-profile-art");
+    const profileCard = document.querySelector(".dashboard-profile");
     const asciiLines = asciiPortrait?.textContent?.split("\n") ?? [];
+    const rectSnapshot = (element) => {
+      const bounds = element?.getBoundingClientRect();
+      return bounds ? { top: bounds.top, left: bounds.left, width: bounds.width, height: bounds.height } : null;
+    };
     return {
       sectionIds,
       navItems: document.querySelectorAll(".dashboard-nav__item").length,
@@ -56,6 +64,15 @@ try {
       asciiLineCount: asciiLines.length,
       asciiLineWidths: [...new Set(asciiLines.map((line) => line.length))],
       asciiCharactersValid: /^[01\s]+$/.test(asciiPortrait?.textContent ?? ""),
+      profileToggleTag: profileToggle?.tagName.toLowerCase() ?? "",
+      profileTogglePressed: profileToggle?.getAttribute("aria-pressed"),
+      profileToggleLabel: profileToggle?.getAttribute("aria-label"),
+      profileImageSrc: profileImage?.getAttribute("src") ?? "",
+      profileImageLoaded: Boolean(profileImage && profileImage.complete && profileImage.naturalWidth > 0),
+      profileArtHeight: profileArt ? getComputedStyle(profileArt).height : "",
+      profileCardHeight: profileCard ? getComputedStyle(profileCard).height : "",
+      profileArtBounds: rectSnapshot(profileArt),
+      profileCardBounds: rectSnapshot(profileCard),
       contactNav: [...document.querySelectorAll(".dashboard-nav__item")].some((item) => item.textContent?.trim() === "Contact"),
       sidebarEmail: document.querySelector(".dashboard-sidebar__footer-email[href^='mailto:']")?.getAttribute("href"),
       footerLabel: document.querySelector(".dashboard-sidebar__footer-label")?.textContent?.trim(),
@@ -86,6 +103,9 @@ try {
   if (overviewState.profileCardRadius !== "12px" || overviewState.profileCardMinHeight !== "94px" || overviewState.profileCardMarginTop !== "-100px" || overviewState.sidebarInnerFrameBorder !== "0px") failures.push("profile card geometry");
   if (overviewState.hasSidebarAvailability || overviewState.asciiHidden !== "true") failures.push("ascii profile semantics");
   if (!overviewState.asciiCharactersValid || overviewState.asciiLineCount < 40 || overviewState.asciiLineWidths.length !== 1 || overviewState.asciiLineWidths[0] !== 72) failures.push("ascii profile grid");
+  if (overviewState.profileToggleTag !== "button" || overviewState.profileTogglePressed !== "false" || overviewState.profileToggleLabel !== "Show profile photo" || !overviewState.profileImageLoaded || !overviewState.profileImageSrc.endsWith("/images/profile.webp") || overviewState.profileArtHeight !== "300px" || overviewState.profileCardHeight !== "94px") {
+    failures.push("profile reveal control");
+  }
   if (overviewState.quickLinks.join("|") !== "GitHub|LinkedIn|Download CV" || overviewState.contactLinks.length !== 0 || overviewState.hasSidebarConnectSection) failures.push("sidebar utility groups");
   if (overviewState.footerLabel !== "For work and collaboration contact me at" || overviewState.footerSignature || overviewState.hasPortraitPurpose) failures.push("sidebar contact footer");
   if (overviewState.hasContactSection || overviewState.hasContactCopy) failures.push("contact removal");
@@ -99,6 +119,58 @@ try {
   }
   if (!overviewState.desktopGrid.projectSkillsShareRow || !overviewState.desktopGrid.projectsBeforeSkills || !overviewState.desktopGrid.certificationsSpansGrid || !overviewState.desktopGrid.certificationsBelowProjects) {
     failures.push("desktop overview grid placement");
+  }
+
+  await desktop.goto(baseUrl, { waitUntil: "networkidle" });
+  const profileClosed = await desktop.evaluate(() => {
+    const art = document.querySelector(".dashboard-profile-art")?.getBoundingClientRect();
+    const card = document.querySelector(".dashboard-profile")?.getBoundingClientRect();
+    return {
+      path: window.location.pathname,
+      art: art ? { top: art.top, left: art.left, width: art.width, height: art.height } : null,
+      card: card ? { top: card.top, left: card.left, width: card.width, height: card.height } : null,
+    };
+  });
+  const profileToggle = desktop.locator("[data-profile-toggle]");
+  if (await profileToggle.count() !== 1) {
+    failures.push("profile reveal interaction control");
+  } else {
+    await profileToggle.click();
+    await desktop.waitForTimeout(800);
+    await desktop.evaluate(() => document.activeElement?.blur());
+    await desktop.mouse.move(500, 500);
+    await desktop.waitForTimeout(220);
+    const profileOpen = await desktop.evaluate(() => {
+      const art = document.querySelector(".dashboard-profile-art")?.getBoundingClientRect();
+      const card = document.querySelector(".dashboard-profile")?.getBoundingClientRect();
+      const image = document.querySelector("[data-profile-image]");
+      return {
+        path: window.location.pathname,
+        pressed: document.querySelector("[data-profile-toggle]")?.getAttribute("aria-pressed"),
+        state: document.querySelector(".dashboard-profile-art")?.getAttribute("data-profile-revealed"),
+        label: document.querySelector("[data-profile-toggle]")?.getAttribute("aria-label"),
+        imageClipPath: image ? getComputedStyle(image).clipPath : "",
+        imageOpacity: image ? getComputedStyle(image).opacity : "",
+        overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+        art: art ? { top: art.top, left: art.left, width: art.width, height: art.height } : null,
+        card: card ? { top: card.top, left: card.left, width: card.width, height: card.height } : null,
+      };
+    });
+    if (profileOpen.path !== profileClosed.path || profileOpen.pressed !== "true" || profileOpen.state !== "true" || profileOpen.label !== "Show ASCII portrait" || profileOpen.overflow || profileOpen.imageClipPath === "inset(100% 0px 0px)" || profileOpen.imageOpacity === "0" || JSON.stringify(profileOpen.art) !== JSON.stringify(profileClosed.art) || JSON.stringify(profileOpen.card) !== JSON.stringify(profileClosed.card)) {
+      failures.push("profile reveal open state");
+    }
+    await profileToggle.click();
+    await desktop.waitForTimeout(800);
+    const profileReversed = await desktop.evaluate(() => ({
+      path: window.location.pathname,
+      pressed: document.querySelector("[data-profile-toggle]")?.getAttribute("aria-pressed"),
+      state: document.querySelector(".dashboard-profile-art")?.getAttribute("data-profile-revealed"),
+      label: document.querySelector("[data-profile-toggle]")?.getAttribute("aria-label"),
+      overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+    }));
+    if (profileReversed.path !== profileClosed.path || profileReversed.pressed !== "false" || profileReversed.state !== "false" || profileReversed.label !== "Show profile photo" || profileReversed.overflow) {
+      failures.push("profile reveal reverse state");
+    }
   }
 
   await desktop.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
@@ -234,6 +306,20 @@ try {
     return Boolean(sidebar && sidebar.getBoundingClientRect().left >= -1 && document.querySelector(".dashboard-drawer-overlay"));
   });
   if (!drawerOpen) failures.push("mobile drawer open");
+  const mobileProfileToggle = mobile.locator("[data-profile-toggle]");
+  if (await mobileProfileToggle.count() !== 1) {
+    failures.push("mobile profile reveal control");
+  } else {
+    await mobileProfileToggle.click();
+    await mobile.waitForTimeout(800);
+    const mobileProfileOpen = await mobile.evaluate(() => ({
+      path: window.location.pathname,
+      pressed: document.querySelector("[data-profile-toggle]")?.getAttribute("aria-pressed"),
+      sidebarOpen: document.querySelector(".dashboard-sidebar")?.classList.contains("is-open"),
+      overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+    }));
+    if (mobileProfileOpen.path !== "/" || mobileProfileOpen.pressed !== "true" || !mobileProfileOpen.sidebarOpen || mobileProfileOpen.overflow) failures.push("mobile profile reveal");
+  }
   await mobile.keyboard.press("Escape");
   await mobile.waitForTimeout(260);
   const drawerClosed = await mobile.evaluate(() => !document.querySelector(".dashboard-drawer-overlay"));

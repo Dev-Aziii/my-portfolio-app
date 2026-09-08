@@ -47,6 +47,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   const location = useLocation();
   const navigate = useNavigate();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isProfileImageRevealed, setIsProfileImageRevealed] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = isDrawerOpen ? "hidden" : "";
@@ -72,16 +73,19 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   const sidebar = (
     <aside className={`dashboard-sidebar${isDrawerOpen ? " is-open" : ""}`} aria-label="Portfolio navigation">
       <div className="dashboard-sidebar__top">
-        <div className="dashboard-profile-art" aria-hidden="true">
+        <div className="dashboard-profile-art" data-profile-revealed={isProfileImageRevealed} aria-hidden="true">
           <span className="dashboard-profile-art__mantra">Build<br />Learn<br />Create</span>
           <pre className="dashboard-profile-art__portrait" data-profile-ascii aria-hidden="true">{profileAscii}</pre>
+          <img className="dashboard-profile-art__image" data-profile-image src={heroData.profileImage} alt="" draggable="false" />
         </div>
 
-        <a
+        <button
+          type="button"
           className="dashboard-profile"
-          href="/"
-          aria-label="Go to portfolio overview"
-          onClick={(event) => { event.preventDefault(); handleNavigation(navigation[0]); }}
+          data-profile-toggle
+          aria-pressed={isProfileImageRevealed}
+          aria-label={isProfileImageRevealed ? "Show ASCII portrait" : "Show profile photo"}
+          onClick={() => setIsProfileImageRevealed((revealed) => !revealed)}
         >
           <svg
             className="dashboard-profile__frame"
@@ -123,7 +127,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
               <span className="dashboard-profile__tech-code" aria-hidden="true">//</span>
             </span>
           </span>
-        </a>
+        </button>
       </div>
 
       <div className="dashboard-sidebar__middle">

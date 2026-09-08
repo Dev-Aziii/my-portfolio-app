@@ -57,6 +57,7 @@ try {
       const asciiStyles = asciiPortrait ? getComputedStyle(asciiPortrait) : null;
       const profileArtBounds = profileArt?.getBoundingClientRect();
       const profileCardBounds = profileCard?.getBoundingClientRect();
+      const profileImage = document.querySelector("[data-profile-image]");
       const artwork = document.querySelector(".dashboard-hero__art img");
       const projectPanel = document.querySelector(".dashboard-panel--projects");
       const activityPanel = document.querySelector(".dashboard-activity");
@@ -118,6 +119,15 @@ try {
         sidebarOverflowY: sidebarStyles?.overflowY ?? "",
         contentMarginLeft: content ? Number.parseFloat(getComputedStyle(content).marginLeft) : -1,
         profileCardOverlapsArt: Boolean(profileArtBounds && profileCardBounds && profileCardBounds.top < profileArtBounds.bottom && profileCardBounds.bottom > profileArtBounds.top),
+        profileImageLoaded: Boolean(profileImage && profileImage.complete && profileImage.naturalWidth > 0),
+        profileImageSrc: profileImage?.getAttribute("src") ?? "",
+        profileArtHeight: profileArt ? getComputedStyle(profileArt).height : "",
+        profileCardHeight: profileCard ? getComputedStyle(profileCard).height : "",
+        asciiWidth: asciiPortrait?.getBoundingClientRect().width ?? 0,
+        asciiHeight: asciiPortrait?.getBoundingClientRect().height ?? 0,
+        asciiCenterOffset: asciiPortrait && profileArt && profileArtBounds
+          ? (asciiPortrait.getBoundingClientRect().left + asciiPortrait.getBoundingClientRect().width / 2) - (profileArtBounds.left + profileArtBounds.width / 2)
+          : 0,
         contactNav: [...document.querySelectorAll(".dashboard-nav__item")].some((item) => item.textContent?.trim() === "Contact"),
         sidebarEmail: document.querySelector(".dashboard-sidebar__footer-email[href^='mailto:']")?.getAttribute("href") ?? "",
         imageFilters: [
@@ -143,10 +153,11 @@ try {
     if (!state.artworkLoaded || !state.artworkSrc.endsWith("/images/azii.webp")) failures.push(`${name}: hero artwork`);
     if (!state.roundedGeometry) failures.push(`${name}: rounded geometry`);
     if (state.sidebarTagline !== "> Turning ideas into solutions" || !state.asciiPortrait || state.sidebarEmail !== "mailto:adzyl.jipos@gmail.com" || state.footerLabel !== "For work and collaboration contact me at") failures.push(`${name}: sidebar content`);
+    if (!state.profileImageLoaded || !state.profileImageSrc.endsWith("/images/profile.webp") || state.profileArtHeight !== "300px" || state.profileCardHeight !== "94px") failures.push(`${name}: profile reveal asset geometry`);
     const expectedSidebarWidth = name === "desktop" ? 304 : name === "tablet" ? 276 : 304;
-    const expectedAsciiFontSize = name === "tablet" ? "5.25px" : "5.7px";
+    const expectedAsciiFontSize = "5.7px";
     if (state.sidebarWidth !== expectedSidebarWidth || state.contentMarginLeft !== (name === "mobile" ? 0 : expectedSidebarWidth)) failures.push(`${name}: sidebar responsive width`);
-    if (state.asciiFontSize !== expectedAsciiFontSize || state.sidebarOverflowX !== "hidden" || state.sidebarOverflowY !== "hidden" || state.sidebarMiddleOverflowX !== "hidden" || state.sidebarMiddleOverflowY !== "auto" || state.profileCardRadius !== "12px" || state.profileCardMinHeight !== "94px" || state.profileCardMarginTop !== "-100px" || state.sidebarInnerFrameBorder !== "0px" || !state.profileCardOverlapsArt) failures.push(`${name}: ascii sidebar geometry`);
+    if (state.asciiFontSize !== expectedAsciiFontSize || Math.abs(state.asciiWidth - 187.3) > 1 || Math.abs(state.asciiHeight - 267) > 1 || Math.abs(state.asciiCenterOffset - 7) > 1.5 || state.sidebarOverflowX !== "hidden" || state.sidebarOverflowY !== "hidden" || state.sidebarMiddleOverflowX !== "hidden" || state.sidebarMiddleOverflowY !== "auto" || state.profileCardRadius !== "12px" || state.profileCardMinHeight !== "94px" || state.profileCardMarginTop !== "-100px" || state.sidebarInnerFrameBorder !== "0px" || !state.profileCardOverlapsArt) failures.push(`${name}: ascii sidebar geometry`);
     if (state.sidebarBackgroundColor === "rgba(0, 0, 0, 0)") failures.push(`${name}: light sidebar surface`);
     if (state.imageFilters.some((filter) => filter !== "none")) failures.push(`${name}: grayscale image treatment`);
     if (/34, 197, 94|0, 240, 255|6, 182, 212|green|cyan/i.test(state.visibleColors)) {
@@ -158,6 +169,25 @@ try {
     if (state.heroBackgroundImage !== state.sharedPanelBackgroundImage) failures.push(`${name}: hero container background`);
     if (state.selectorMinHeight !== "56px" || state.selectorLogoSize !== "30px") failures.push(`${name}: compact project selectors`);
 
+    const profileToggle = page.locator("[data-profile-toggle]");
+    if (await profileToggle.count() !== 1) {
+      failures.push(`${name}: profile reveal toggle`);
+    } else {
+      await profileToggle.click();
+      await page.waitForTimeout(800);
+      await page.screenshot({ path: path.join(outputDir, `${name}-light-profile-revealed.png`), fullPage: false });
+      const profileRevealState = await page.evaluate(() => ({
+        pressed: document.querySelector("[data-profile-toggle]")?.getAttribute("aria-pressed"),
+        state: document.querySelector(".dashboard-profile-art")?.getAttribute("data-profile-revealed"),
+        clipPath: getComputedStyle(document.querySelector("[data-profile-image]")).clipPath,
+        opacity: getComputedStyle(document.querySelector("[data-profile-image]")).opacity,
+        overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+      }));
+      if (profileRevealState.pressed !== "true" || profileRevealState.state !== "true" || profileRevealState.clipPath === "inset(100% 0px 0px)" || profileRevealState.opacity === "0" || profileRevealState.overflow) {
+        failures.push(`${name}: profile reveal visual state`);
+      }
+    }
+
     await page.evaluate(() => {
       localStorage.setItem("theme", "dark");
       document.documentElement.classList.add("dark");
@@ -168,6 +198,12 @@ try {
       await page.getByRole("button", { name: "Open navigation" }).click();
       await page.waitForTimeout(260);
       await page.screenshot({ path: path.join(outputDir, "mobile-dark-sidebar.png"), fullPage: false });
+    }
+    const darkProfileToggle = page.locator("[data-profile-toggle]");
+    if (await darkProfileToggle.count() === 1) {
+      await darkProfileToggle.click();
+      await page.waitForTimeout(800);
+      await page.screenshot({ path: path.join(outputDir, `${name}-dark-profile-revealed.png`), fullPage: false });
     }
     const darkHeroBackground = await page.evaluate(() => ({
       hero: getComputedStyle(document.querySelector(".dashboard-hero")).backgroundImage,
