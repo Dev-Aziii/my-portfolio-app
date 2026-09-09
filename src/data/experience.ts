@@ -1,8 +1,6 @@
 import type { ExperienceEntry } from "./types";
 
 export const experiences: ExperienceEntry[] = [
-  /* Sample Experience Entry */
-  /*
   {
     title: "Software Developer & Freelance Consultant",
     company: "Independent / Client Projects",
@@ -14,29 +12,32 @@ export const experiences: ExperienceEntry[] = [
     positions: [
       {
         title: "Full-Stack Web & Mobile Developer",
-        timeSpan: "JAN 2025 - PRESENT · PRESENT",
+        timeSpan: "JAN 2025 - PRESENT",
         description: [
-          "Architecting and shipping responsive web and cross-platform mobile applications for diverse clients using React, TypeScript, Laravel, and Flutter.",
-          "Engineering high-performance RESTful APIs, optimizing SQL query performance, and deploying cloud-hosted client applications on scalable serverless platforms.",
+          "Building and maintaining web, mobile, and desktop applications using Flutter, Laravel, React, TypeScript, and WinUI for a variety of client projects.",
+          "Developing REST APIs, working with SQL/NOSQL databases, improving application performance, and deploying client applications to cloud and serverless platforms.",
         ],
-        skills: ["React", "TypeScript", "Flutter", "Laravel", "Tailwind CSS", "REST APIs", "Node.js", "Git"],
-      },
-      {
-        title: "Junior Web Developer",
-        timeSpan: "JAN 2024 - DEC 2024 · 1 YR",
-        description: [
-          "Developed customized client websites and web applications, ensuring high accessibility standards, responsive UI layouts, and seamless state management.",
-          "Collaborated closely with design teams to translate UI/UX wireframes into production-grade interactive interfaces.",
+        skills: [
+          "Laravel",
+          "React",
+          "Flutter",
+          "Dart",
+          "PHP",
+          "TypeScript",
+          "WinUI",
+          "C#",
+          "Tailwind CSS",
+          "REST APIs",
+          "SQL",
+          "Git"
         ],
-        skills: ["React", "JavaScript", "HTML5", "CSS3", "PHP", "MySQL"],
       },
     ],
   },
-  */
   {
     title: "University of Mindanao - Main Campus",
     company: "University of Mindanao",
-    year: "2022 - 2026",
+    year: "2023 - 2027",
     kind: "education",
     logoInitials: "UM",
     schedule: "Degree Program · 4 yrs",
@@ -44,12 +45,12 @@ export const experiences: ExperienceEntry[] = [
     positions: [
       {
         title: "BS Information Technology Student | Capstone Lead/Full-Stack Developer",
-        timeSpan: "AUG 2022 - MAY 2026 · 4 YRS",
+        timeSpan: "AUG 2022 - SEP 2027 · 4 YRS",
         description: [
           "Pursuing Bachelor of Science in Information Technology, focusing on software engineering principles, enterprise database design, and mobile computing.",
           "Led development of capstone software projects, coordinating system design, API integrations, and code reviews across team members.",
         ],
-        skills: [ "Database Systems", "Data Structures", "Web Development", "Mobile App Development", "Machine Learning", "Team Leadership" ],
+        skills: ["Database Systems", "Data Structures", "Web Development", "Mobile App Development", "Machine Learning", "Team Leadership"],
       },
     ],
   },
