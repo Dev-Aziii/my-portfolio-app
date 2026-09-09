@@ -6,9 +6,16 @@ interface GitHubContributionsProps {
   initialData?: GitHubData;
 }
 
+type HoveredContribution = {
+  day: ContributionDay;
+  x: number;
+  y: number;
+  placement: "above" | "below";
+};
+
 export default function GitHubContributions({ initialData = githubContributionsData }: GitHubContributionsProps) {
   const [data] = useState<GitHubData>(initialData);
-  const [hoveredDay, setHoveredDay] = useState<{ day: ContributionDay; x: number; y: number } | null>(null);
+  const [hoveredDay, setHoveredDay] = useState<HoveredContribution | null>(null);
 
   const weeks = useMemo(() => {
     const result: ContributionDay[][] = [];
@@ -56,7 +63,7 @@ export default function GitHubContributions({ initialData = githubContributionsD
   return (
     <section className="github-panel" aria-labelledby="github-heading">
       <div className="github-panel__header">
-        <h2 id="github-heading" className="dashboard-eyebrow">[ - GITHUB - ]</h2>
+        <h2 id="github-heading" className="dashboard-eyebrow">Github Contributions</h2>
         <a className="github-panel__link" href={`https://github.com/${data.username}`} target="_blank" rel="noopener noreferrer">
           @{data.username.toUpperCase()} <ArrowUpRight aria-hidden="true" />
         </a>
@@ -75,13 +82,7 @@ export default function GitHubContributions({ initialData = githubContributionsD
             ))}
           </div>
 
-          <div className="github-panel__matrix" style={{ position: "relative" }}>
-            {hoveredDay && (
-              <div className="github-panel__tooltip" style={{ left: hoveredDay.x, top: hoveredDay.y - 6 }}>
-                <strong>{hoveredDay.day.count === 0 ? "No contributions" : `${hoveredDay.day.count} contribution${hoveredDay.day.count === 1 ? "" : "s"}`}</strong>
-                <small>on {formatDate(hoveredDay.day.date)}</small>
-              </div>
-            )}
+          <div className="github-panel__matrix">
             {weeks.map((week, weekIdx) => (
               <div key={weekIdx} className="github-panel__week">
                 {week.map((day) => (
@@ -93,7 +94,19 @@ export default function GitHubContributions({ initialData = githubContributionsD
                     aria-label={`${day.count} contributions on ${formatDate(day.date)}`}
                     onMouseEnter={(event) => {
                       const target = event.currentTarget;
-                      setHoveredDay({ day, x: target.offsetLeft + target.offsetWidth / 2, y: target.offsetTop });
+                      const bounds = target.getBoundingClientRect();
+                      const horizontalPadding = Math.min(92, Math.max(8, window.innerWidth / 2 - 8));
+                      const x = Math.min(
+                        Math.max(bounds.left + bounds.width / 2, horizontalPadding),
+                        window.innerWidth - horizontalPadding,
+                      );
+                      const placement: HoveredContribution["placement"] = bounds.top > 72 ? "above" : "below";
+                      setHoveredDay({
+                        day,
+                        x,
+                        y: placement === "above" ? bounds.top - 8 : bounds.bottom + 8,
+                        placement,
+                      });
                     }}
                     onMouseLeave={() => setHoveredDay(null)}
                   />
@@ -102,6 +115,16 @@ export default function GitHubContributions({ initialData = githubContributionsD
             ))}
           </div>
         </div>
+
+        {hoveredDay && (
+          <div
+            className={`github-panel__tooltip github-panel__tooltip--${hoveredDay.placement}`}
+            style={{ left: hoveredDay.x, top: hoveredDay.y }}
+          >
+            <strong>{hoveredDay.day.count === 0 ? "No contributions" : `${hoveredDay.day.count} contribution${hoveredDay.day.count === 1 ? "" : "s"}`}</strong>
+            <small>on {formatDate(hoveredDay.day.date)}</small>
+          </div>
+        )}
 
         <div className="github-panel__footer">
           <span>{data.totalContributions.toLocaleString()} contributions in the last year</span>

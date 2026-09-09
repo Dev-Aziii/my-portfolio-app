@@ -25,7 +25,6 @@ export default function ThemeToggle() {
 
   useEffect(() => {
     const systemPreference = window.matchMedia("(prefers-color-scheme: dark)");
-    const html = document.documentElement;
     const syncTheme = () => {
       const preference = readStoredTheme(readStorage()) ?? "system";
       setTheme(preference);

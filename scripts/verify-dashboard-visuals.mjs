@@ -61,7 +61,15 @@ try {
       const profileDissolve = document.querySelector("[data-profile-dissolve]");
       const artwork = document.querySelector(".dashboard-hero__art img");
       const projectPanel = document.querySelector(".dashboard-panel--projects");
-      const activityPanel = document.querySelector(".dashboard-activity");
+      const experiencePanel = document.querySelector("#experience");
+      const rightColumn = document.querySelector(".dashboard-content-grid__secondary");
+      const githubPanel = document.querySelector("[data-overview-section='github']");
+      const githubRecord = document.querySelector("[data-overview-section='github'] .github-panel__record");
+      const githubScroll = document.querySelector("[data-overview-section='github'] .github-panel__scroll");
+      const certificationGrid = document.querySelector("#certifications .dashboard-certifications");
+      const skillGroups = document.querySelector("#skills .dashboard-skill-groups");
+      const githubPanelBounds = githubPanel?.getBoundingClientRect();
+      const githubRecordBounds = githubRecord?.getBoundingClientRect();
       const hero = document.querySelector(".dashboard-hero");
       const sharedPanel = document.querySelector(".dashboard-panel");
       const selectorItem = document.querySelector("[data-project-selector]");
@@ -145,13 +153,20 @@ try {
         visibleColors,
         mobileBarVisible: getComputedStyle(document.querySelector(".dashboard-mobile-bar")).display !== "none",
         sidebarVisible: Boolean(sidebar && sidebar.getBoundingClientRect().right > 0),
-          palette: {
+        palette: {
           bg: root.getPropertyValue("--bg").trim(),
           surface: root.getPropertyValue("--surface").trim(),
           border: root.getPropertyValue("--border").trim(),
-          },
-          projectPanelBottom: projectPanel?.getBoundingClientRect().bottom ?? 0,
-          activityPanelBottom: activityPanel?.getBoundingClientRect().bottom ?? 0,
+        },
+        projectPanelBottom: projectPanel?.getBoundingClientRect().bottom ?? 0,
+        rightColumnBottom: rightColumn?.getBoundingClientRect().bottom ?? 0,
+        experiencePanelTop: experiencePanel?.getBoundingClientRect().top ?? 0,
+        githubPanelTop: githubPanel?.getBoundingClientRect().top ?? 0,
+        githubRecordFitsPanel: Boolean(githubPanelBounds && githubRecordBounds && githubRecordBounds.width <= githubPanelBounds.width + 1),
+        githubScrollsContent: Boolean(githubScroll && githubScroll.scrollWidth > githubScroll.clientWidth),
+        certificationCards: document.querySelectorAll("#certifications .dashboard-certification-card").length,
+        certificationColumns: certificationGrid ? getComputedStyle(certificationGrid).gridTemplateColumns.split(" ").filter(Boolean).length : 0,
+        skillGroupColumns: skillGroups ? getComputedStyle(skillGroups).gridTemplateColumns.split(" ").filter(Boolean).length : 0,
         };
     });
 
@@ -176,6 +191,9 @@ try {
     }
     if (state.heroBackgroundImage !== state.sharedPanelBackgroundImage) failures.push(`${name}: hero container background`);
     if (state.selectorMinHeight !== "56px" || state.selectorLogoSize !== "30px") failures.push(`${name}: compact project selectors`);
+    const expectedSkillGroupColumns = name === "mobile" ? 1 : 2;
+    if (state.certificationCards !== 4 || state.certificationColumns !== 1 || state.skillGroupColumns !== expectedSkillGroupColumns) failures.push(`${name}: compact certification or skills layout`);
+    if (!state.githubRecordFitsPanel || (name === "mobile" && !state.githubScrollsContent)) failures.push(`${name}: github horizontal scroll`);
 
     const profileToggle = page.locator("[data-profile-toggle]");
     if (await profileToggle.count() !== 1) {
@@ -255,7 +273,7 @@ try {
     }));
     if (darkHeroBackground.hero !== darkHeroBackground.panel) failures.push(`${name}: dark hero background`);
     if (darkHeroBackground.sidebarBackgroundColor === "rgba(0, 0, 0, 0)" || darkHeroBackground.asciiColor === state.asciiColor) failures.push(`${name}: dark sidebar theme`);
-    if (name === "desktop" && Math.abs(state.projectPanelBottom - state.activityPanelBottom) > 2) failures.push("desktop: featured/activity alignment");
+    if (name === "desktop" && Math.abs(state.projectPanelBottom - state.rightColumnBottom) > 2) failures.push("desktop: featured/summary alignment");
     if (name === "mobile" && !state.mobileBarVisible) failures.push("mobile: top navigation visibility");
     if (name !== "mobile" && !state.sidebarVisible) failures.push(`${name}: sidebar visibility`);
     await page.close();

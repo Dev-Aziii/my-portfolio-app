@@ -4,9 +4,9 @@ export const experiences: ExperienceEntry[] = [
   {
     title: "Software Developer & Freelance Consultant",
     company: "Independent / Client Projects",
-    year: "2024 - PRESENT",
+    year: "2025 - PRESENT",
     logoInitials: "SD",
-    schedule: "Full-time / Contract · 2 yrs",
+    schedule: "Full-time / Contract",
     location: "Davao City, Philippines · Hybrid / Remote",
     isCurrent: true,
     positions: [

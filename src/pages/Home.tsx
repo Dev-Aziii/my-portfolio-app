@@ -1,13 +1,13 @@
-import { useState } from "react";
 import Certifications from "@/components/Certifications";
-import DashboardActivity from "@/components/DashboardActivity";
-import GitHubModal from "@/components/GitHubModal";
+import Experience from "@/components/Experience";
 import Hero from "@/components/Hero";
+import GitHubContributions from "@/components/GitHubContributions";
 import Projects from "@/components/Projects";
 import TechStack from "@/components/TechStack";
 import usePageTitle from "@/hooks/usePageTitle";
 import {
   certifications,
+  experiences,
   heroData,
   projects,
   socialLinks,
@@ -16,7 +16,6 @@ import {
 
 export default function Home() {
   usePageTitle("Adzyl Jipos — Portfolio");
-  const [isGithubOpen, setIsGithubOpen] = useState(false);
 
   return (
     <div className="dashboard-home">
@@ -33,19 +32,23 @@ export default function Home() {
         </div>
 
         <aside className="dashboard-content-grid__secondary">
-          <section id="skills" data-dashboard-section="skills">
-            <TechStack categories={techStack} limit={6} categoryLimit={4} showViewAll />
+          <section id="certifications" data-dashboard-section="certifications" className="dashboard-overview__side-section dashboard-overview__side-section--certifications">
+            <Certifications certifications={certifications} limit={4} showViewAll />
           </section>
 
-          <DashboardActivity onOpenGithub={() => setIsGithubOpen(true)} />
+          <section id="experience" data-dashboard-section="experience" className="dashboard-overview__side-section dashboard-overview__side-section--experience">
+            <Experience entries={experiences} limit={3} showViewAll />
+          </section>
         </aside>
-
-        <section id="certifications" data-dashboard-section="certifications" className="dashboard-content-grid__full">
-          <Certifications certifications={certifications} limit={4} showViewAll />
-        </section>
       </div>
 
-      <GitHubModal open={isGithubOpen} onClose={() => setIsGithubOpen(false)} />
+      <section id="skills" data-dashboard-section="skills" className="dashboard-overview__full dashboard-overview__full--skills">
+        <TechStack categories={techStack} limit={9} categoryLimit={4} showViewAll />
+      </section>
+
+      <section className="dashboard-panel dashboard-overview__full dashboard-overview__github" data-overview-section="github">
+        <GitHubContributions />
+      </section>
     </div>
   );
 }

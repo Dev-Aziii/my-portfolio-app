@@ -31,11 +31,18 @@ try {
     const contact = document.getElementById("contact");
     const pageText = document.body.innerText;
     const projects = document.querySelector(".dashboard-panel--projects");
-    const skills = document.querySelector(".dashboard-content-grid__secondary > section");
-    const certifications = document.querySelector(".dashboard-content-grid__full");
+    const experience = document.getElementById("experience");
+    const certifications = document.getElementById("certifications");
+    const skills = document.getElementById("skills");
+    const github = document.querySelector("[data-overview-section='github']");
     const projectBounds = projects?.getBoundingClientRect();
+    const experienceBounds = experience?.getBoundingClientRect();
     const skillsBounds = skills?.getBoundingClientRect();
     const certificationsBounds = certifications?.getBoundingClientRect();
+    const githubBounds = github?.getBoundingClientRect();
+    const contentGrid = document.querySelector(".dashboard-content-grid")?.getBoundingClientRect();
+    const certificationGrid = document.querySelector("#certifications .dashboard-certifications");
+    const skillGroups = document.querySelector("#skills .dashboard-skill-groups");
     const asciiPortrait = document.querySelector("[data-profile-ascii]");
     const profileToggle = document.querySelector("[data-profile-toggle]");
     const profileImage = document.querySelector("[data-profile-image]");
@@ -90,16 +97,25 @@ try {
       featuredDetailAccent: getComputedStyle(document.querySelector("[data-featured-project-detail]")).getPropertyValue("--project-accent").trim(),
       activeSelectorAccent: getComputedStyle(document.querySelector("[data-project-selector][data-active='true']")).getPropertyValue("--project-accent").trim(),
       selectorJustifyContent: getComputedStyle(document.querySelector(".dashboard-featured-projects__selector")).justifyContent,
+      experienceRows: document.querySelectorAll("#experience .dashboard-timeline__item").length,
+      certificationCards: document.querySelectorAll("#certifications .dashboard-certification-card").length,
+      certificationColumns: certificationGrid ? getComputedStyle(certificationGrid).gridTemplateColumns.split(" ").filter(Boolean).length : 0,
+      skillGroupColumns: skillGroups ? getComputedStyle(skillGroups).gridTemplateColumns.split(" ").filter(Boolean).length : 0,
       activityRows: document.querySelectorAll(".dashboard-activity__item").length,
+      inlineGithubChart: document.querySelectorAll("[data-overview-section='github'] .github-panel").length,
+      renderedGithubModal: document.querySelectorAll(".github-modal").length,
       desktopGrid: {
-        projectSkillsShareRow: Boolean(projectBounds && skillsBounds && Math.abs(projectBounds.top - skillsBounds.top) <= 2),
-        projectsBeforeSkills: Boolean(projectBounds && skillsBounds && projectBounds.left < skillsBounds.left),
-        certificationsSpansGrid: certifications ? getComputedStyle(certifications).gridColumn === "1 / -1" : false,
-        certificationsBelowProjects: Boolean(projectBounds && certificationsBounds && certificationsBounds.top > projectBounds.top),
+        projectExperienceShareRow: Boolean(projectBounds && experienceBounds && Math.abs(projectBounds.top - experienceBounds.top) <= 2),
+        projectsBeforeExperience: Boolean(projectBounds && experienceBounds && projectBounds.left < experienceBounds.left),
+        certificationsInRightColumn: Boolean(certificationsBounds && experienceBounds && Math.abs(certificationsBounds.left - experienceBounds.left) <= 2),
+        certificationsBelowExperience: Boolean(experienceBounds && certificationsBounds && certificationsBounds.top > experienceBounds.bottom),
+        skillsSpansContent: Boolean(skillsBounds && contentGrid && Math.abs(skillsBounds.width - contentGrid.width) <= 2),
+        skillsBelowGrid: Boolean(skillsBounds && projectBounds && experienceBounds && certificationsBounds && skillsBounds.top > Math.max(projectBounds.bottom, experienceBounds.bottom, certificationsBounds.bottom)),
+        githubBelowSkills: Boolean(githubBounds && skillsBounds && githubBounds.top > skillsBounds.bottom),
       },
     };
   });
-  if (overviewState.sectionIds.includes("about") || overviewState.sectionIds.includes("experience") || overviewState.sectionIds.includes("education") || overviewState.sectionIds.includes("github")) {
+  if (overviewState.sectionIds.includes("about") || overviewState.sectionIds.includes("education") || overviewState.sectionIds.includes("github")) {
     failures.push("overview redundant sections");
   }
   if (overviewState.navItems !== 5 || overviewState.sidebarName !== "Azi" || overviewState.sidebarTagline !== "> Turning ideas into solutions" || overviewState.contactNav) failures.push("sidebar navigation");
@@ -114,14 +130,14 @@ try {
   if (overviewState.footerLabel !== "For work and collaboration contact me at" || overviewState.footerSignature || overviewState.hasPortraitPurpose) failures.push("sidebar contact footer");
   if (overviewState.hasContactSection || overviewState.hasContactCopy) failures.push("contact removal");
   if (overviewState.sidebarEmail !== "mailto:adzyl.jipos@gmail.com") failures.push("sidebar email link");
-  if (!overviewState.featuredDetailAccent || !overviewState.activeSelectorAccent || overviewState.selectorJustifyContent !== "center" || overviewState.activityRows !== 3) {
-    failures.push("themed featured projects and compact activity");
+  if (!overviewState.featuredDetailAccent || !overviewState.activeSelectorAccent || overviewState.selectorJustifyContent !== "center" || overviewState.experienceRows !== 3 || overviewState.certificationCards !== 4 || overviewState.certificationColumns !== 1 || overviewState.skillGroupColumns !== 2 || overviewState.activityRows !== 0 || overviewState.inlineGithubChart !== 1 || overviewState.renderedGithubModal !== 0) {
+    failures.push("themed featured projects and overview summaries");
   }
   const selectorAccents = await desktop.locator("[data-project-selector]").evaluateAll((selectors) => selectors.map((selector) => getComputedStyle(selector).getPropertyValue("--project-accent").trim()));
   if (selectorAccents.length !== 3 || selectorAccents.some((accent) => !accent) || new Set(selectorAccents).size !== selectorAccents.length) {
     failures.push("project selector themes");
   }
-  if (!overviewState.desktopGrid.projectSkillsShareRow || !overviewState.desktopGrid.projectsBeforeSkills || !overviewState.desktopGrid.certificationsSpansGrid || !overviewState.desktopGrid.certificationsBelowProjects) {
+  if (!overviewState.desktopGrid.projectExperienceShareRow || !overviewState.desktopGrid.projectsBeforeExperience || !overviewState.desktopGrid.certificationsInRightColumn || !overviewState.desktopGrid.certificationsBelowExperience || !overviewState.desktopGrid.skillsSpansContent || !overviewState.desktopGrid.skillsBelowGrid || !overviewState.desktopGrid.githubBelowSkills) {
     failures.push("desktop overview grid placement");
   }
 
@@ -261,21 +277,28 @@ try {
   }
 
   await desktop.goto(baseUrl, { waitUntil: "networkidle" });
-  const githubButton = desktop.getByRole("button", { name: "View GitHub contributions" });
-  if (await githubButton.count() !== 1) {
-    failures.push("github modal trigger");
+  if (await desktop.locator("[data-overview-section='github'] .github-panel").count() !== 1 || await desktop.getByRole("dialog").count() !== 0) {
+    failures.push("inline github contributions");
+  }
+  const githubEdgeCell = desktop.locator("[data-overview-section='github'] .github-panel__week:last-child .github-panel__cell:last-child");
+  if (await githubEdgeCell.count() !== 1) {
+    failures.push("github tooltip anchor");
   } else {
-    await githubButton.click();
-    if (await desktop.getByRole("dialog").count() !== 1 || !(await desktop.getByRole("dialog").getByText("[ - GITHUB - ]").count())) failures.push("github modal open");
-    await desktop.keyboard.press("Escape");
-    await desktop.waitForTimeout(200);
-    if (await desktop.getByRole("dialog").count() !== 0 || await desktop.evaluate(() => document.body.style.overflow !== "")) failures.push("github modal escape close");
-    await githubButton.click();
-    await desktop.getByRole("button", { name: "Close GitHub dialog" }).click();
-    if (await desktop.getByRole("dialog").count() !== 0) failures.push("github modal button close");
-    await githubButton.click();
-    await desktop.locator(".github-modal").click({ position: { x: 5, y: 5 } });
-    if (await desktop.getByRole("dialog").count() !== 0) failures.push("github modal backdrop close");
+    await githubEdgeCell.hover();
+    await desktop.waitForTimeout(100);
+    const githubTooltipState = await desktop.evaluate(() => {
+      const tooltip = document.querySelector(".github-panel__tooltip");
+      const bounds = tooltip?.getBoundingClientRect();
+      return {
+        exists: Boolean(tooltip),
+        position: tooltip ? getComputedStyle(tooltip).position : "",
+        insideScroll: Boolean(tooltip?.closest(".github-panel__scroll")),
+        fullyVisible: Boolean(bounds && bounds.left >= 0 && bounds.right <= window.innerWidth && bounds.top >= 0 && bounds.bottom <= window.innerHeight),
+      };
+    });
+    if (!githubTooltipState.exists || githubTooltipState.position !== "fixed" || githubTooltipState.insideScroll || !githubTooltipState.fullyVisible) {
+      failures.push("github tooltip visibility");
+    }
   }
 
   const artworkFilters = await desktop.evaluate(() => ({
@@ -314,16 +337,28 @@ try {
     const artworkImage = artwork?.querySelector("img");
     const sections = [
       document.querySelector(".dashboard-panel--projects"),
-      document.querySelector(".dashboard-content-grid__full"),
-      document.querySelector(".dashboard-content-grid__secondary > section"),
-      document.querySelector(".dashboard-activity"),
+      document.querySelector("#certifications"),
+      document.querySelector("#experience"),
+      document.querySelector("#skills"),
+      document.querySelector("[data-overview-section='github']"),
     ];
+    const skillGroups = document.querySelector("#skills .dashboard-skill-groups");
+    const githubPanel = document.querySelector("[data-overview-section='github']");
+    const githubRecord = document.querySelector("[data-overview-section='github'] .github-panel__record");
+    const githubScroll = document.querySelector("[data-overview-section='github'] .github-panel__scroll");
+    const githubPanelBounds = githubPanel?.getBoundingClientRect();
+    const githubRecordBounds = githubRecord?.getBoundingClientRect();
+    const githubScrollBounds = githubScroll?.getBoundingClientRect();
     return {
       mobileHeaderHasProfileImage: Boolean(mobileBar?.querySelector("img")),
       mobileHeaderHasThemeToggle: Boolean(mobileBar?.querySelector("[data-theme-toggle]")),
       mobileHeaderButtonCount: mobileBar?.querySelectorAll("button").length ?? 0,
       mobileHeaderRightInset: menu ? window.innerWidth - menu.getBoundingClientRect().right : 0,
       sectionTops: sections.map((section) => section?.getBoundingClientRect().top ?? -1),
+      skillGroupColumns: skillGroups ? getComputedStyle(skillGroups).gridTemplateColumns.split(" ").filter(Boolean).length : 0,
+      githubRecordFitsPanel: Boolean(githubPanelBounds && githubRecordBounds && githubRecordBounds.width <= githubPanelBounds.width + 1),
+      githubScrollFitsRecord: Boolean(githubRecordBounds && githubScrollBounds && githubScrollBounds.width <= githubRecordBounds.width + 1),
+      githubScrollsContent: Boolean(githubScroll && githubScroll.scrollWidth > githubScroll.clientWidth),
       artworkHeight: artwork ? Number.parseFloat(getComputedStyle(artwork).height) : 0,
       artworkObjectFit: artworkImage ? getComputedStyle(artworkImage).objectFit : "",
     };
@@ -334,6 +369,8 @@ try {
   if (mobileOverviewState.sectionTops.some((top, index, tops) => index > 0 && top <= tops[index - 1])) {
     failures.push("mobile overview section order");
   }
+  if (mobileOverviewState.skillGroupColumns !== 1) failures.push("mobile skills grid");
+  if (!mobileOverviewState.githubRecordFitsPanel || !mobileOverviewState.githubScrollFitsRecord || !mobileOverviewState.githubScrollsContent) failures.push("mobile github horizontal scroll");
   if (mobileOverviewState.artworkHeight < 200 || mobileOverviewState.artworkObjectFit !== "contain") {
     failures.push("mobile overview artwork sizing");
   }
