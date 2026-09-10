@@ -153,7 +153,7 @@ try {
       card: card ? { top: card.top, left: card.left, width: card.width, height: card.height } : null,
     };
   });
-  if (profileClosed.dissolveGrid !== "24x36") failures.push("profile dissolve granularity");
+  if (profileClosed.dissolveGrid !== "40x60") failures.push("profile dissolve granularity");
   const profileToggle = desktop.locator("[data-profile-toggle]");
   if (await profileToggle.count() !== 1) {
     failures.push("profile reveal interaction control");
@@ -162,14 +162,16 @@ try {
     await desktop.waitForTimeout(120);
     const profileRevealMid = await desktop.evaluate(() => {
       const dissolve = document.querySelector("[data-profile-dissolve]");
+      const ascii = document.querySelector("[data-profile-ascii]");
       const image = document.querySelector("[data-profile-image]");
       return {
         state: dissolve?.getAttribute("data-profile-dissolve-state"),
         dissolveOpacity: dissolve ? getComputedStyle(dissolve).opacity : "",
+        asciiOpacity: ascii ? getComputedStyle(ascii).opacity : "",
         imageOpacity: image ? getComputedStyle(image).opacity : "",
       };
     });
-    if (profileRevealMid.state !== "revealing" || profileRevealMid.dissolveOpacity === "0" || profileRevealMid.imageOpacity !== "0") failures.push("profile reveal mid-transition");
+    if (profileRevealMid.state !== "revealing" || profileRevealMid.dissolveOpacity === "0" || Number.parseFloat(profileRevealMid.asciiOpacity) <= 0.45 || profileRevealMid.imageOpacity !== "0") failures.push("profile reveal mid-transition");
     await desktop.waitForTimeout(780);
     const profileRevealSlow = await desktop.evaluate(() => document.querySelector("[data-profile-dissolve]")?.getAttribute("data-profile-dissolve-state"));
     if (profileRevealSlow !== "revealing") failures.push("profile reveal duration");
@@ -187,6 +189,7 @@ try {
         pressed: document.querySelector("[data-profile-toggle]")?.getAttribute("aria-pressed"),
         state: document.querySelector(".dashboard-profile-art")?.getAttribute("data-profile-revealed"),
         label: document.querySelector("[data-profile-toggle]")?.getAttribute("aria-label"),
+        asciiOpacity: document.querySelector("[data-profile-ascii]") ? getComputedStyle(document.querySelector("[data-profile-ascii]")).opacity : "",
         imageOpacity: image ? getComputedStyle(image).opacity : "",
         dissolveState: dissolve?.getAttribute("data-profile-dissolve-state"),
         dissolveOpacity: dissolve ? getComputedStyle(dissolve).opacity : "",
@@ -195,7 +198,7 @@ try {
         card: card ? { top: card.top, left: card.left, width: card.width, height: card.height } : null,
       };
     });
-    if (profileOpen.path !== profileClosed.path || profileOpen.pressed !== "true" || profileOpen.state !== "true" || profileOpen.label !== "Show ASCII portrait" || profileOpen.overflow || profileOpen.dissolveState !== "open" || profileOpen.dissolveOpacity !== "0" || profileOpen.imageOpacity === "0" || JSON.stringify(profileOpen.art) !== JSON.stringify(profileClosed.art) || JSON.stringify(profileOpen.card) !== JSON.stringify(profileClosed.card)) {
+    if (profileOpen.path !== profileClosed.path || profileOpen.pressed !== "true" || profileOpen.state !== "true" || profileOpen.label !== "Show ASCII portrait" || Number.parseFloat(profileOpen.asciiOpacity) >= 0.2 || profileOpen.overflow || profileOpen.dissolveState !== "open" || profileOpen.dissolveOpacity !== "1" || profileOpen.imageOpacity === "0" || JSON.stringify(profileOpen.art) !== JSON.stringify(profileClosed.art) || JSON.stringify(profileOpen.card) !== JSON.stringify(profileClosed.card)) {
       failures.push("profile reveal open state");
     }
     await profileToggle.click();

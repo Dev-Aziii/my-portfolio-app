@@ -59,6 +59,7 @@ try {
       const profileCardBounds = profileCard?.getBoundingClientRect();
       const profileImage = document.querySelector("[data-profile-image]");
       const profileDissolve = document.querySelector("[data-profile-dissolve]");
+      const asciiOpacity = asciiPortrait ? getComputedStyle(asciiPortrait).opacity : "";
       const artwork = document.querySelector(".dashboard-hero__art img");
       const projectPanel = document.querySelector(".dashboard-panel--projects");
       const experiencePanel = document.querySelector("#experience");
@@ -135,6 +136,7 @@ try {
         profileDissolveTag: profileDissolve?.tagName.toLowerCase() ?? "",
         profileDissolveCanvas: Boolean(profileDissolve?.querySelector("canvas")),
         profileDissolveGrid: profileDissolve?.querySelector("canvas")?.getAttribute("data-profile-dissolve-grid") ?? "",
+        asciiOpacity,
         profileDissolveState: profileDissolve?.getAttribute("data-profile-dissolve-state") ?? "",
         profileDissolveWidth: profileDissolve?.getBoundingClientRect().width ?? 0,
         profileDissolveHeight: profileDissolve?.getBoundingClientRect().height ?? 0,
@@ -176,7 +178,7 @@ try {
     if (!state.artworkLoaded || !state.artworkSrc.endsWith("/images/azii.webp")) failures.push(`${name}: hero artwork`);
     if (!state.roundedGeometry) failures.push(`${name}: rounded geometry`);
     if (state.sidebarTagline !== "> Turning ideas into solutions" || !state.asciiPortrait || state.sidebarEmail !== "mailto:adzyl.jipos@gmail.com" || state.footerLabel !== "For work and collaboration contact me at") failures.push(`${name}: sidebar content`);
-    if (!state.profileImageLoaded || !state.profileImageSrc.endsWith("/images/profile.webp") || state.profileArtHeight !== "300px" || state.profileCardHeight !== "94px" || state.profileDissolveTag !== "div" || !state.profileDissolveCanvas || state.profileDissolveGrid !== "24x36" || state.profileDissolveState !== "closed" || Math.abs(state.profileDissolveWidth - 247) > 1 || Math.abs(state.profileDissolveHeight - 331) > 1 || state.profileDissolvePointerEvents !== "none") failures.push(`${name}: profile reveal asset geometry`);
+    if (!state.profileImageLoaded || !state.profileImageSrc.endsWith("/images/profile.webp") || state.profileArtHeight !== "300px" || state.profileCardHeight !== "94px" || state.profileDissolveTag !== "div" || !state.profileDissolveCanvas || state.profileDissolveGrid !== "40x60" || Number.parseFloat(state.asciiOpacity) <= 0.45 || state.profileDissolveState !== "closed" || Math.abs(state.profileDissolveWidth - 247) > 1 || Math.abs(state.profileDissolveHeight - 331) > 1 || state.profileDissolvePointerEvents !== "none") failures.push(`${name}: profile reveal asset geometry`);
     const expectedSidebarWidth = name === "desktop" ? 304 : name === "tablet" ? 276 : 304;
     const expectedAsciiFontSize = "5.7px";
     if (state.sidebarWidth !== expectedSidebarWidth || state.contentMarginLeft !== (name === "mobile" ? 0 : expectedSidebarWidth)) failures.push(`${name}: sidebar responsive width`);
@@ -205,10 +207,11 @@ try {
       const profileRevealMid = await page.evaluate(() => ({
         state: document.querySelector("[data-profile-dissolve]")?.getAttribute("data-profile-dissolve-state"),
         dissolveOpacity: document.querySelector("[data-profile-dissolve]") ? getComputedStyle(document.querySelector("[data-profile-dissolve]")).opacity : "",
+        asciiOpacity: document.querySelector("[data-profile-ascii]") ? getComputedStyle(document.querySelector("[data-profile-ascii]")).opacity : "",
         imageOpacity: document.querySelector("[data-profile-image]") ? getComputedStyle(document.querySelector("[data-profile-image]")).opacity : "",
         overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
       }));
-      if (profileRevealMid.state !== "revealing" || profileRevealMid.dissolveOpacity === "0" || profileRevealMid.imageOpacity !== "0" || profileRevealMid.overflow) {
+      if (profileRevealMid.state !== "revealing" || profileRevealMid.dissolveOpacity === "0" || Number.parseFloat(profileRevealMid.asciiOpacity) <= 0.45 || profileRevealMid.imageOpacity !== "0" || profileRevealMid.overflow) {
         failures.push(`${name}: profile dissolve mid-transition`);
       }
       await page.waitForTimeout(1250);
@@ -218,10 +221,11 @@ try {
         state: document.querySelector(".dashboard-profile-art")?.getAttribute("data-profile-revealed"),
         dissolveState: document.querySelector("[data-profile-dissolve]")?.getAttribute("data-profile-dissolve-state"),
         dissolveOpacity: document.querySelector("[data-profile-dissolve]") ? getComputedStyle(document.querySelector("[data-profile-dissolve]")).opacity : "",
+        asciiOpacity: document.querySelector("[data-profile-ascii]") ? getComputedStyle(document.querySelector("[data-profile-ascii]")).opacity : "",
         opacity: document.querySelector("[data-profile-image]") ? getComputedStyle(document.querySelector("[data-profile-image]")).opacity : "",
         overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
       }));
-      if (profileRevealState.pressed !== "true" || profileRevealState.state !== "true" || profileRevealState.dissolveState !== "open" || profileRevealState.dissolveOpacity !== "0" || profileRevealState.opacity === "0" || profileRevealState.overflow) {
+      if (profileRevealState.pressed !== "true" || profileRevealState.state !== "true" || profileRevealState.dissolveState !== "open" || profileRevealState.dissolveOpacity !== "1" || Number.parseFloat(profileRevealState.asciiOpacity) >= 0.2 || profileRevealState.opacity === "0" || profileRevealState.overflow) {
         failures.push(`${name}: profile reveal visual state`);
       }
       await profileToggle.click();

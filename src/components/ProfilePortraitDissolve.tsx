@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react";
 
 const SOURCE_WIDTH = 806;
 const SOURCE_HEIGHT = 1080;
-const GRID_COLUMNS = 24;
-const GRID_ROWS = 36;
+const GRID_COLUMNS = 40;
+const GRID_ROWS = 60;
 const DISSOLVE_DURATION_MS = 1300;
 
 type DissolveState = "closed" | "revealing" | "open" | "hiding";
