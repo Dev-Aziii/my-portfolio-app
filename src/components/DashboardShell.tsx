@@ -75,7 +75,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
     <aside className={`dashboard-sidebar${isDrawerOpen ? " is-open" : ""}`} aria-label="Portfolio navigation">
       <div className="dashboard-sidebar__top">
         <div className="dashboard-profile-art" data-profile-revealed={isProfileImageRevealed} aria-hidden="true">
-          <span className="dashboard-profile-art__mantra">Build<br />Learn<br />Create</span>
+          <span className="dashboard-profile-art__mantra">Commit<br />Push<br />Pray</span>
           <pre className="dashboard-profile-art__portrait" data-profile-ascii aria-hidden="true">{profileAscii}</pre>
           <ProfilePortraitDissolve src={heroData.profileImage} revealed={isProfileImageRevealed} />
         </div>

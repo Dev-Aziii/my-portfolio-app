@@ -1,4 +1,4 @@
-import { useEffect, useState, type MouseEvent } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type MouseEvent } from "react";
 import { ArrowUpRight, Check, ChevronDown, ChevronUp, Copy } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { Project } from "@/data/types";
@@ -21,9 +21,101 @@ export default function Projects({ projects, limit, showViewAll, compact, hideTi
   const [activeIndex, setActiveIndex] = useState(0);
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
 
+  // 3-slot layout mapping: slot 0 (Left), slot 1 (Center - Active), slot 2 (Right)
+  const [slots, setSlots] = useState<Record<string, number>>(() => {
+    if (displayed.length === 3) {
+      return {
+        [displayed[1].title]: 0, // Left: ElecSys
+        [displayed[0].title]: 1, // Center: Tezā (starts active in middle)
+        [displayed[2].title]: 2, // Right: AccSys
+      };
+    }
+    return Object.fromEntries(displayed.map((p, i) => [p.title, i]));
+  });
+
+  const selectorRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
+  const prevPositionsRef = useRef<Map<string, number>>(new Map());
+
   useEffect(() => {
     if (activeIndex >= displayed.length && displayed.length > 0) setActiveIndex(0);
   }, [activeIndex, displayed.length]);
+
+  useEffect(() => {
+    if (displayed.length === 3) {
+      const keys = Object.keys(slots);
+      const matches = displayed.every((p) => keys.includes(p.title));
+      if (!matches) {
+        setSlots({
+          [displayed[1].title]: 0,
+          [displayed[0].title]: 1,
+          [displayed[2].title]: 2,
+        });
+      }
+    }
+  }, [displayed, slots]);
+
+  // Handle direct 3-slot swap when selector item is clicked
+  const handleSelectorClick = (targetIndex: number) => {
+    const targetProject = displayed[targetIndex];
+    if (!targetProject) return;
+
+    const currentSlot = slots[targetProject.title] ?? targetIndex;
+    if (currentSlot === 1 && activeIndex === targetIndex) return;
+
+    // 1. Snapshot previous horizontal positions for FLIP animation
+    const positions = new Map<string, number>();
+    selectorRefs.current.forEach((el, key) => {
+      if (el) {
+        positions.set(key, el.getBoundingClientRect().left);
+      }
+    });
+    prevPositionsRef.current = positions;
+
+    // 2. Swap clicked project with the center slot (slot 1)
+    if (displayed.length === 3) {
+      const nextSlots = { ...slots };
+      const centerTitle = Object.keys(nextSlots).find((k) => nextSlots[k] === 1);
+      if (centerTitle && centerTitle !== targetProject.title) {
+        nextSlots[centerTitle] = currentSlot;
+      }
+      nextSlots[targetProject.title] = 1;
+      setSlots(nextSlots);
+    }
+
+    setActiveIndex(targetIndex);
+  };
+
+  // FLIP layout animation: smooth gliding swap between selector slots
+  useLayoutEffect(() => {
+    const prev = prevPositionsRef.current;
+    if (!prev.size) return;
+    prevPositionsRef.current = new Map();
+
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+
+    selectorRefs.current.forEach((el, title) => {
+      if (!el) return;
+      const oldLeft = prev.get(title);
+      if (oldLeft === undefined) return;
+
+      const newLeft = el.getBoundingClientRect().left;
+      const deltaX = oldLeft - newLeft;
+
+      if (Math.abs(deltaX) > 0.5) {
+        el.style.transform = `translateX(${deltaX}px)`;
+        el.style.transition = "none";
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            el.style.transition = "transform 420ms cubic-bezier(0.22, 1, 0.36, 1)";
+            el.style.transform = "translateX(0px)";
+          });
+        });
+      }
+    });
+  }, [slots]);
 
   const copyToClipboard = async (url: string, event: MouseEvent) => {
     event.preventDefault();
@@ -93,18 +185,30 @@ export default function Projects({ projects, limit, showViewAll, compact, hideTi
           })}
         </div>
       ) : isFeaturedView ? (
-        <div className="dashboard-featured-projects">
+        <div
+          className="project-theme dashboard-featured-projects"
+          style={activeProject ? getProjectThemeStyle(activeProject.theme) : undefined}
+        >
+          <div className="dashboard-featured-projects__glow" aria-hidden="true" />
+
           <div className="dashboard-featured-projects__selector" role="list" aria-label="Featured projects">
             {displayed.map((project, index) => (
               <button
                 key={project.title}
+                ref={(el) => {
+                  if (el) selectorRefs.current.set(project.title, el);
+                  else selectorRefs.current.delete(project.title);
+                }}
                 type="button"
                 className="project-theme dashboard-featured-projects__selector-item"
-                style={getProjectThemeStyle(project.theme)}
+                style={{
+                  ...getProjectThemeStyle(project.theme),
+                  order: slots[project.title] ?? index,
+                }}
                 data-project-selector
                 data-active={index === activeIndex}
                 aria-pressed={index === activeIndex}
-                onClick={() => setActiveIndex(index)}
+                onClick={() => handleSelectorClick(index)}
               >
                 <span className="dashboard-featured-projects__selector-logo">
                   {project.logo ? <img src={project.logo} alt="" /> : null}
@@ -120,7 +224,10 @@ export default function Projects({ projects, limit, showViewAll, compact, hideTi
               style={getProjectThemeStyle(activeProject.theme)}
               data-featured-project-detail
             >
-              <div className="dashboard-featured-projects__detail-main">
+              <div
+                key={activeProject.title}
+                className="dashboard-featured-projects__detail-main dashboard-featured-projects__detail-main--animate"
+              >
                 {activeProject.details?.heroImage && (
                   <div className="dashboard-featured-projects__detail-art">
                     <img src={activeProject.details.heroImage} alt={`${activeProject.title} project preview`} />
@@ -128,13 +235,13 @@ export default function Projects({ projects, limit, showViewAll, compact, hideTi
                 )}
                 <div className="dashboard-featured-projects__detail-copy">
                   <div className="dashboard-featured-projects__detail-heading">
-                    <div>
+                    <div className="dashboard-featured-projects__detail-meta">
                       <span className="dashboard-eyebrow">Selected project</span>
-                      <h3>{activeProject.title}</h3>
+                      {activeProject.details?.year && (
+                        <span className="dashboard-eyebrow">{activeProject.details.year}</span>
+                      )}
                     </div>
-                    {activeProject.details?.year && (
-                      <span className="dashboard-eyebrow">{activeProject.details.year}</span>
-                    )}
+                    <h3>{activeProject.title}</h3>
                   </div>
                   <p>{activeProject.description}</p>
                   <div className="dashboard-featured-projects__detail-stack-row">
