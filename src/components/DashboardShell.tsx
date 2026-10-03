@@ -14,9 +14,10 @@ import {
   X,
 } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { heroData, profileAscii, socialLinks } from "@/data";
+import { heroData, socialLinks } from "@/data";
 import ThemeToggle from "@/components/ThemeToggle";
 import ProfilePortraitDissolve from "@/components/ProfilePortraitDissolve";
+import ProfileAsciiPortrait from "@/components/ProfileAsciiPortrait";
 
 const navigation = [
   { id: "home", label: "Overview", route: "/", icon: LayoutDashboard },
@@ -76,7 +77,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
       <div className="dashboard-sidebar__top">
         <div className="dashboard-profile-art" data-profile-revealed={isProfileImageRevealed} aria-hidden="true">
           <span className="dashboard-profile-art__mantra">Commit<br />Push<br />Pray</span>
-          <pre className="dashboard-profile-art__portrait" data-profile-ascii aria-hidden="true">{profileAscii}</pre>
+          <ProfileAsciiPortrait revealed={isProfileImageRevealed} />
           <ProfilePortraitDissolve src={heroData.profileImage} revealed={isProfileImageRevealed} />
         </div>
 
