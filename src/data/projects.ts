@@ -3,6 +3,52 @@ import type { Project } from "./types";
 
 export const projects: Project[] = [
   {
+    title: "ElecSys",
+    slug: "elecsys",
+    icon: SiLaravel,
+    logo: "/images/projects/elecsys/logo.webp",
+    badge: "Locally Hosted",
+    theme: {
+      light: { accent: "#0f7a47", wash: "#e2f5ea", border: "#8fcdaa" },
+      dark: { accent: "#45e393", wash: "#0b2418", border: "#276947" },
+    },
+    url: "locally hosted",
+    description: "A high-performance, containerized election management system engineered for offline-first reliability in large-scale cooperative voting environments.",
+    details: {
+      heroImage: "/images/projects/elecsys/hero.webp",
+      version: "v1.0",
+      year: "2026",
+      techs: ["Laravel", "JavaScript", "Octane", "FrankenPHP", "Docker", "Caddy", "MySQL"],
+      highlights: [
+        { label: "Offline-first voting" },
+        { label: "Transparency and analytics" }
+      ],
+      metrics: [
+        { value: "7,000+", label: "Voters Supported" },
+        { value: "66%", label: "Turnout Rate" },
+        { value: "7 Hours", label: "Execution Window" },
+        { value: "100%", label: "Data Sovereignty" }
+      ],
+      problem: {
+        title: "The Challenge: Breaking SaaS Dependency",
+        description: "The organization previously relied on an external voting platform that required stable internet access—an impractical dependency in a remote setting. This resulted in high operational costs, degraded performance during peak usage, and limited control over system reliability. With thousands of participants expected to vote within a short time window, a more resilient and self-managed solution was required."      },
+      solution: {
+        title: "The Solution: Local-First High Performance",
+        description: "I architected and deployed a containerized application stack on a dedicated on-site server to enable a fully localized voting system. The platform was optimized for high concurrency and low-latency access within a private network environment. By eliminating reliance on external services, the system ensured reliable performance, reduced operational overhead, and provided full control over data and infrastructure."
+      },
+      impact: {
+        title: "The Impact: Zero-Downtime Election Execution",
+        description: "In the 2025 election, the organization reached 7,000+ voters with a 66% turnout rate across a 13-hour voting window (5:00 AM–6:00 PM). With ElecSys deployed for the 2026 election, the same 7,000+ voter reach and 66% turnout were achieved within just 7 hours (6:00 AM–1:00 PM)—cutting the election window by nearly half while maintaining full participation. The system operated with zero downtime, delivered sub-second response times on the local network, and maintained complete data sovereignty without any external SaaS dependency."
+      },
+      additionalImages: [
+        "/images/projects/elecsys/img1.webp",
+        "/images/projects/elecsys/img2.webp",
+        "/images/projects/elecsys/img3.webp",
+        "/images/projects/elecsys/img4.webp"
+      ]
+    }
+  },
+  {
     title: "Tezā",
     slug: "teza",
     icon: SiReact,
@@ -53,52 +99,6 @@ export const projects: Project[] = [
         "/images/projects/teza/img1.webp",
         "/images/projects/teza/img2.webp",
         "/images/projects/teza/img3.webp"
-      ]
-    }
-  },
-  {
-    title: "ElecSys",
-    slug: "elecsys",
-    icon: SiLaravel,
-    logo: "/images/projects/elecsys/logo.webp",
-    badge: "Locally Hosted",
-    theme: {
-      light: { accent: "#0f7a47", wash: "#e2f5ea", border: "#8fcdaa" },
-      dark: { accent: "#45e393", wash: "#0b2418", border: "#276947" },
-    },
-    url: "locally hosted",
-    description: "A high-performance, containerized election management system engineered for offline-first reliability in large-scale cooperative voting environments.",
-    details: {
-      heroImage: "/images/projects/elecsys/hero.webp",
-      version: "v1.0",
-      year: "2026",
-      techs: ["Laravel", "JavaScript", "Octane", "FrankenPHP", "Docker", "Caddy", "MySQL"],
-      highlights: [
-        { label: "Offline-first voting" },
-        { label: "Transparency and analytics" }
-      ],
-      metrics: [
-        { value: "7,000+", label: "Voters Supported" },
-        { value: "66%", label: "Turnout Rate" },
-        { value: "7 Hours", label: "Execution Window" },
-        { value: "100%", label: "Data Sovereignty" }
-      ],
-      problem: {
-        title: "The Challenge: Breaking SaaS Dependency",
-        description: "The organization previously relied on an external voting platform that required stable internet access—an impractical dependency in a remote setting. This resulted in high operational costs, degraded performance during peak usage, and limited control over system reliability. With thousands of participants expected to vote within a short time window, a more resilient and self-managed solution was required."      },
-      solution: {
-        title: "The Solution: Local-First High Performance",
-        description: "I architected and deployed a containerized application stack on a dedicated on-site server to enable a fully localized voting system. The platform was optimized for high concurrency and low-latency access within a private network environment. By eliminating reliance on external services, the system ensured reliable performance, reduced operational overhead, and provided full control over data and infrastructure."
-      },
-      impact: {
-        title: "The Impact: Zero-Downtime Election Execution",
-        description: "In the 2025 election, the organization reached 7,000+ voters with a 66% turnout rate across a 13-hour voting window (5:00 AM–6:00 PM). With ElecSys deployed for the 2026 election, the same 7,000+ voter reach and 66% turnout were achieved within just 7 hours (6:00 AM–1:00 PM)—cutting the election window by nearly half while maintaining full participation. The system operated with zero downtime, delivered sub-second response times on the local network, and maintained complete data sovereignty without any external SaaS dependency."
-      },
-      additionalImages: [
-        "/images/projects/elecsys/img1.webp",
-        "/images/projects/elecsys/img2.webp",
-        "/images/projects/elecsys/img3.webp",
-        "/images/projects/elecsys/img4.webp"
       ]
     }
   },

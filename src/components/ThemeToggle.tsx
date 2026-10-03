@@ -50,24 +50,32 @@ export default function ThemeToggle() {
 
   const handleSelect = (nextTheme: Theme) => {
     const html = document.documentElement;
-    if (html.dataset.themeTransition === "true") return;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+    const commitTheme = () => {
+      applyTheme(document, resolveInitialTheme(nextTheme, window.matchMedia("(prefers-color-scheme: dark)").matches));
+      writeStoredTheme(readStorage(), nextTheme);
+      setTheme(nextTheme);
+      window.dispatchEvent(new CustomEvent(THEME_CHANGE_EVENT, { detail: nextTheme }));
+    };
+
+    // Use View Transitions API for a cinematic cross-fade when supported
+    if (!reducedMotion && document.startViewTransition) {
+      document.startViewTransition(commitTheme);
+      return;
+    }
+
+    // Fallback: CSS transition approach for older browsers
     if (!reducedMotion) {
       html.dataset.themeTransition = "true";
     }
-
-    applyTheme(document, resolveInitialTheme(nextTheme, window.matchMedia("(prefers-color-scheme: dark)").matches));
-    writeStoredTheme(readStorage(), nextTheme);
-    setTheme(nextTheme);
-    window.dispatchEvent(new CustomEvent(THEME_CHANGE_EVENT, { detail: nextTheme }));
-
-    if (reducedMotion) return;
-
-    cleanupTimerRef.current = window.setTimeout(() => {
-      delete html.dataset.themeTransition;
-      cleanupTimerRef.current = null;
-    }, THEME_TRANSITION_DURATION);
+    commitTheme();
+    if (!reducedMotion) {
+      cleanupTimerRef.current = window.setTimeout(() => {
+        delete html.dataset.themeTransition;
+        cleanupTimerRef.current = null;
+      }, THEME_TRANSITION_DURATION);
+    }
   };
 
   return (

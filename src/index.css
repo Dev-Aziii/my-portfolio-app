@@ -616,9 +616,20 @@
     .project-detail__gallery-main { min-height: 250px; }
     .project-detail__gallery-button { width: 32px; height: 32px; }
   }
+  /* View Transitions API: theme switch cross-fade */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 300ms;
+    animation-timing-function: ease-in-out;
+  }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
     html[data-theme-transition="true"] *, html[data-theme-transition="true"] *::before, html[data-theme-transition="true"] *::after { transition-duration: 0.01ms !important; }
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+      animation: none !important;
+    }
   }
   @media (min-width: 901px) {
     .dashboard-content-grid { align-items: stretch; }

@@ -25,8 +25,8 @@ export default function Projects({ projects, limit, showViewAll, compact, hideTi
   const [slots, setSlots] = useState<Record<string, number>>(() => {
     if (displayed.length === 3) {
       return {
-        [displayed[1].title]: 0, // Left: ElecSys
-        [displayed[0].title]: 1, // Center: Tezā (starts active in middle)
+        [displayed[1].title]: 0, // Left: Tezā
+        [displayed[0].title]: 1, // Center: ElecSys (starts active in middle)
         [displayed[2].title]: 2, // Right: AccSys
       };
     }
