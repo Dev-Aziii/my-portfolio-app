@@ -73,6 +73,7 @@ export interface ProjectHighlight {
 export interface ProjectMetric {
   value: string;
   label: string;
+  comparison?: string;
 }
 
 export interface ProjectDetails {

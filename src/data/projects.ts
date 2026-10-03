@@ -24,10 +24,21 @@ export const projects: Project[] = [
         { label: "Transparency and analytics" }
       ],
       metrics: [
-        { value: "7,000+", label: "Voters Supported" },
-        { value: "66%", label: "Turnout Rate" },
-        { value: "7 Hours", label: "Execution Window" },
-        { value: "100%", label: "Data Sovereignty" }
+        {
+          value: "7 Hours",
+          label: "Execution Window",
+          comparison: "46% time cut vs 13h prior"
+        },
+        {
+          value: "7,000+",
+          label: "Voters Supported",
+          comparison: "66% turnout preserved in half the time"
+        },
+        {
+          value: "Zero",
+          label: "System Downtime",
+          comparison: "100% local vs SaaS latency & outages"
+        }
       ],
       problem: {
         title: "The Challenge: Breaking SaaS Dependency",

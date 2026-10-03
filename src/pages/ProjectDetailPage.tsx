@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight, ExternalLink, Maximize2 } from "lucide-react
 import { Navigate, useParams } from "react-router-dom";
 import PageLayout from "@/components/PageLayout";
 import Lightbox from "@/components/Lightbox";
+import ProjectMetrics from "@/components/ProjectMetrics";
 import { projects } from "@/data";
 import usePageTitle from "@/hooks/usePageTitle";
 import { formatDemoLabel, isValidHttpUrl } from "@/lib/utils";
@@ -64,6 +65,8 @@ export default function ProjectDetailPage() {
             <span className="dashboard-eyebrow">{formatDemoLabel(project.url)}</span>
           )}
         </div>
+
+        <ProjectMetrics metrics={details.metrics} />
 
         {[
           ["01 — Problem", details.problem],

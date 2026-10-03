@@ -664,6 +664,29 @@
   .project-detail-theme .project-detail__demo:hover { border-color: var(--project-accent); background: var(--project-wash); color: var(--project-accent); }
   .project-detail-theme .project-detail__section > .dashboard-eyebrow { color: var(--project-accent); }
   .project-detail-theme .project-detail__highlight::before { background: var(--project-accent); box-shadow: 0 0 10px color-mix(in srgb, var(--project-accent) 55%, transparent); }
+  .project-detail-theme .project-detail__metric-card {
+    border-color: var(--project-border);
+    background: color-mix(in srgb, var(--project-wash) 32%, var(--surface));
+  }
+  .project-detail-theme .project-detail__metric-card:hover {
+    border-color: var(--project-accent);
+    box-shadow: 0 10px 24px -6px color-mix(in srgb, var(--project-accent) 22%, transparent);
+  }
+  .project-detail-theme .project-detail__metric-indicator {
+    background: var(--project-accent);
+    box-shadow: 0 0 10px color-mix(in srgb, var(--project-accent) 55%, transparent);
+  }
+  .project-detail-theme .project-detail__metric-value {
+    color: var(--project-accent);
+  }
+  .project-detail-theme .project-detail__metric-comparison {
+    border-color: color-mix(in srgb, var(--project-border) 70%, transparent);
+    background: color-mix(in srgb, var(--project-wash) 65%, var(--surface));
+    color: var(--project-accent);
+  }
+  .project-detail-theme .project-detail__metric-comparison-icon {
+    color: var(--project-accent);
+  }
 
   .career-timeline { position: relative; display: grid; gap: 42px; padding-left: 2px; }
   .career-timeline__entry { position: relative; padding-left: 64px; }
@@ -767,6 +790,80 @@
   .project-detail__highlight { display: flex; gap: 8px; color: var(--text-secondary); font-size: 0.76rem; }
   .project-detail__highlight::before { content: ""; width: 6px; height: 6px; margin-top: 5px; flex: 0 0 auto; background: var(--text-primary); }
 
+  .project-detail__metrics {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .project-detail__metric-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    padding: 18px 20px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface);
+    overflow: hidden;
+    transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  }
+  .project-detail__metric-card:hover {
+    transform: translateY(-2px);
+  }
+  .project-detail__metric-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--text-primary);
+  }
+  .project-detail__metric-value {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: clamp(1.4rem, 2.5vw, 1.85rem);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+  }
+  .project-detail__metric-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+  }
+  .project-detail__metric-comparison {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    padding: 5px 9px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: var(--surface-hover);
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 600;
+    line-height: 1.35;
+    width: fit-content;
+  }
+  .project-detail__metric-comparison-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.68rem;
+    line-height: 1;
+    flex: 0 0 auto;
+  }
+
   .lightbox { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background: var(--lightbox-scrim); }
   .lightbox__button { position: absolute; display: inline-flex; width: 40px; height: 40px; align-items: center; justify-content: center; border: 1px solid var(--border); border-radius: 11px; background: var(--surface); color: var(--text-primary); cursor: pointer; }
   .lightbox__button:hover { border-color: var(--text-primary); background: var(--surface-selected); }
@@ -836,6 +933,7 @@
     .dashboard-route-page__heading-main { align-items: flex-start; }
     .dashboard-project-explorer__highlights, .project-detail__highlights { grid-template-columns: 1fr; }
     .dashboard-project-explorer__metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .project-detail__metrics { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
     .dashboard-panel { padding: 18px; }
     .dashboard-featured-projects__selector { justify-content: flex-start; }
     .dashboard-featured-projects__selector-item { flex-basis: 112px; }
@@ -856,6 +954,7 @@
     .dashboard-action { justify-content: center; padding-inline: 8px; font-size: 0.68rem; }
     .dashboard-action--quiet { grid-column: span 1; }
     .dashboard-project-card__image { height: 124px; }
+    .project-detail__metrics { grid-template-columns: 1fr; }
     .project-detail__gallery-main { min-height: 250px; }
     .project-detail__gallery-button { width: 32px; height: 32px; }
   }
