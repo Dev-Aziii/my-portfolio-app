@@ -41,14 +41,16 @@ describe("theme preference", () => {
     expect(resolveInitialTheme(null, false)).toBe("light");
   });
 
-  it("applies the dark class only for dark mode", () => {
+  it("applies the dark and light classes appropriately", () => {
     const root = createRoot();
 
     applyTheme({ documentElement: root }, "dark");
     expect(root.classList.contains("dark")).toBe(true);
+    expect(root.classList.contains("light")).toBe(false);
 
     applyTheme({ documentElement: root }, "light");
     expect(root.classList.contains("dark")).toBe(false);
+    expect(root.classList.contains("light")).toBe(true);
   });
 
   it("reads and writes preferences without throwing when storage is unavailable", () => {

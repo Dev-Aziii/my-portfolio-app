@@ -56,4 +56,5 @@ export function getTheme(root: ThemeRoot): ResolvedTheme {
 
 export function applyTheme(root: ThemeRoot, theme: ResolvedTheme): void {
   root.documentElement.classList.toggle("dark", theme === "dark");
+  root.documentElement.classList.toggle("light", theme === "light");
 }

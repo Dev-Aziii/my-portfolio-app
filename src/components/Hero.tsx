@@ -31,6 +31,9 @@ export default function Hero({ data, socialLinks }: HeroProps) {
         <div className="dashboard-hero__identity">
           <span className="dashboard-eyebrow dashboard-eyebrow--accent">Hello, I&apos;m</span>
           <h1>{data.name}</h1>
+          <span className="dashboard-hero__collapsed-title" aria-hidden={isExpanded}>
+            {data.title}
+          </span>
         </div>
 
         <div
