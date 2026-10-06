@@ -1,5 +1,6 @@
 import PageLayout from "@/components/PageLayout";
 import CareerTimeline from "@/components/CareerTimeline";
+import BackToTop from "@/components/BackToTop";
 import { experiences } from "@/data";
 import usePageTitle from "@/hooks/usePageTitle";
 
@@ -22,6 +23,7 @@ export default function ExperiencePage() {
           <CareerTimeline entries={experiences} />
         </div>
       </div>
+      <BackToTop />
     </PageLayout>
   );
 }

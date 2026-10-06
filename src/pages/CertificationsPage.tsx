@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ArrowUpRight, Award, FileText } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import CertificateModal from "@/components/CertificateModal";
+import BackToTop from "@/components/BackToTop";
 import { certifications, certificationCategories } from "@/data";
 import type { Certification } from "@/data/types";
 import usePageTitle from "@/hooks/usePageTitle";
@@ -77,6 +78,7 @@ export default function CertificationsPage() {
         cert={selectedCert}
         onClose={() => setSelectedCert(null)}
       />
+      <BackToTop />
     </PageLayout>
   );
 }

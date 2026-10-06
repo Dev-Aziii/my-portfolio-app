@@ -1,5 +1,6 @@
 import PageLayout from "@/components/PageLayout";
 import ProjectCatalog from "@/components/ProjectCatalog";
+import BackToTop from "@/components/BackToTop";
 import { projects } from "@/data";
 import usePageTitle from "@/hooks/usePageTitle";
 
@@ -20,6 +21,7 @@ export default function ProjectsPage() {
       }
     >
       <ProjectCatalog projects={projects} />
+      <BackToTop />
     </PageLayout>
   );
 }

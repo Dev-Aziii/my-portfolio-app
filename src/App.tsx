@@ -7,7 +7,7 @@ import ExperiencePage from "@/pages/ExperiencePage";
 import CertificationsPage from "@/pages/CertificationsPage";
 import NotFound from "@/pages/NotFound";
 import ScrollToTop from "./components/ScrollToTop";
-import BackToTop from "./components/BackToTop";
+
 import DashboardShell from "./components/DashboardShell";
 
 function App() {
@@ -24,7 +24,7 @@ function App() {
           <Route path="/certifications" element={<CertificationsPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-        <BackToTop />
+
       </DashboardShell>
     </BrowserRouter>
   );

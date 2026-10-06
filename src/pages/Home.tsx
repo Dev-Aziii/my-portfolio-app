@@ -4,6 +4,7 @@ import Hero from "@/components/Hero";
 import GitHubContributions from "@/components/GitHubContributions";
 import Projects from "@/components/Projects";
 import TechStack from "@/components/TechStack";
+import BackToTop from "@/components/BackToTop";
 import usePageTitle from "@/hooks/usePageTitle";
 import {
   certifications,
@@ -49,6 +50,7 @@ export default function Home() {
       <section className="dashboard-panel dashboard-overview__full dashboard-overview__github" data-overview-section="github">
         <GitHubContributions />
       </section>
+      <BackToTop />
     </div>
   );
 }
