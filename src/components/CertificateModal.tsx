@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { ExternalLink, X } from "lucide-react";
 import type { Certification } from "@/data/types";
+import useDialogFocus from "@/hooks/useDialogFocus";
 
 interface CertificateModalProps {
   open: boolean;
@@ -10,6 +11,8 @@ interface CertificateModalProps {
 }
 
 export default function CertificateModal({ open, cert, onClose }: CertificateModalProps) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useDialogFocus(open, dialogRef);
   useEffect(() => {
     if (!open) return;
 
@@ -38,7 +41,9 @@ export default function CertificateModal({ open, cert, onClose }: CertificateMod
 
   return createPortal(
     <div
+      ref={dialogRef}
       className="certificate-modal"
+      tabIndex={-1}
       role="dialog"
       aria-modal="true"
       aria-labelledby="certificate-modal-title"
@@ -67,6 +72,7 @@ export default function CertificateModal({ open, cert, onClose }: CertificateMod
               </a>
             )}
             <button
+              data-dialog-close
               type="button"
               className="certificate-modal__close"
               aria-label="Close certificate dialog"

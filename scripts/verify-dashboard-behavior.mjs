@@ -275,7 +275,7 @@ try {
   if (techStackState.pillCount === 0 || !techStackState.everyPillHasOneIcon || !techStackState.everyIconIsDecorative || !techStackState.everyPillHasBrandColor) {
     failures.push("tech-stack pill icons");
   }
-  if (techStackState.fontSize !== "10.4px" || techStackState.padding !== "6px 10px" || techStackState.iconSize !== "14px 14px") {
+  if (techStackState.fontSize !== "12px" || techStackState.padding !== "7px 12px" || techStackState.iconSize !== "16px 16px") {
     failures.push("tech-stack pill sizing");
   }
 
@@ -356,6 +356,7 @@ try {
       mobileHeaderHasProfileImage: Boolean(mobileBar?.querySelector("img")),
       mobileHeaderHasThemeToggle: Boolean(mobileBar?.querySelector("[data-theme-toggle]")),
       mobileHeaderButtonCount: mobileBar?.querySelectorAll("button").length ?? 0,
+      mobileHeaderHasTerminalToggle: Boolean(mobileBar?.querySelector(".presentation-toggle")),
       mobileHeaderRightInset: menu ? window.innerWidth - menu.getBoundingClientRect().right : 0,
       sectionTops: sections.map((section) => section?.getBoundingClientRect().top ?? -1),
       skillGroupColumns: skillGroups ? getComputedStyle(skillGroups).gridTemplateColumns.split(" ").filter(Boolean).length : 0,
@@ -366,7 +367,7 @@ try {
       artworkObjectFit: artworkImage ? getComputedStyle(artworkImage).objectFit : "",
     };
   });
-  if (mobileOverviewState.mobileHeaderHasProfileImage || mobileOverviewState.mobileHeaderHasThemeToggle || mobileOverviewState.mobileHeaderButtonCount !== 1 || mobileOverviewState.mobileHeaderRightInset < 20) {
+  if (mobileOverviewState.mobileHeaderHasProfileImage || mobileOverviewState.mobileHeaderHasThemeToggle || mobileOverviewState.mobileHeaderButtonCount !== 2 || !mobileOverviewState.mobileHeaderHasTerminalToggle || mobileOverviewState.mobileHeaderRightInset < 20) {
     failures.push("mobile header controls and inset");
   }
   if (mobileOverviewState.sectionTops.some((top, index, tops) => index > 0 && top <= tops[index - 1])) {
@@ -437,7 +438,7 @@ try {
   if ((await experience.locator("h1").first().textContent())?.trim() !== "Career Experience") failures.push("career experience route");
   if (await experience.locator(".dashboard-sidebar__bio").count()) failures.push("career experience sidebar bio");
   if (await experience.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)) failures.push("career experience overflow");
-  const experienceGeometry = await experience.locator(".dashboard-route-page__icon, button:not(.theme-toggle):not(.theme-toggle__option)").evaluateAll((elements) =>
+  const experienceGeometry = await experience.locator(".dashboard-route-page__icon, button:not(.theme-toggle):not(.theme-toggle__option):not(.presentation-toggle)").evaluateAll((elements) =>
     elements.every((element) => getComputedStyle(element).borderRadius !== "0px")
   );
   if (!experienceGeometry) failures.push("career experience rounded geometry");
@@ -488,11 +489,11 @@ try {
     failures.push("projects card navigation target");
   } else {
     await Promise.all([
-      projects.waitForURL(new URL("projects/teza", baseUrl).href),
+      projects.waitForURL(new URL("projects/elecsys", baseUrl).href),
       projects.mouse.click(firstLogoBounds.x + firstLogoBounds.width / 2, firstLogoBounds.y + firstLogoBounds.height / 2),
     ]);
   }
-  if (!projects.url().endsWith("/projects/teza")) failures.push("projects card navigation");
+  if (!projects.url().endsWith("/projects/elecsys")) failures.push("projects card navigation");
   await projects.close();
 
   const projectsMobile = await browser.newPage({ viewport: { width: 390, height: 844 } });

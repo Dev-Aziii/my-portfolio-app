@@ -16,6 +16,7 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import { heroData, socialLinks } from "@/data";
 import ThemeToggle from "@/components/ThemeToggle";
+import PresentationToggle from "@/components/PresentationToggle";
 import ProfilePortraitDissolve from "@/components/ProfilePortraitDissolve";
 import ProfileAsciiPortrait from "@/components/ProfileAsciiPortrait";
 
@@ -179,7 +180,10 @@ export default function DashboardShell({ children }: { children: React.ReactNode
       </div>
 
       <div className="dashboard-sidebar__footer-group">
-        <ThemeToggle />
+        <div className="dashboard-preference-controls">
+          <ThemeToggle />
+          <PresentationToggle />
+        </div>
         <div className="dashboard-sidebar__footer">
           <span className="dashboard-sidebar__footer-label">For work and collaboration contact me at</span>
           <a className="dashboard-sidebar__footer-email" href={`mailto:${heroData.email}`} aria-label={`Email ${heroData.email}`}>
@@ -209,6 +213,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
             <span>{heroData.name}</span>
           </a>
           <div className="dashboard-mobile-bar__actions">
+              <PresentationToggle />
             <button
               type="button"
               className="dashboard-icon-button"

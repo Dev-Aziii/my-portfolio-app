@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { getPortraitGeometry, type PortraitFraming } from "@/lib/portrait";
 
 const SOURCE_WIDTH = 806;
 const SOURCE_HEIGHT = 1080;
@@ -11,6 +12,7 @@ type DissolveState = "closed" | "revealing" | "open" | "hiding";
 interface ProfilePortraitDissolveProps {
   src: string;
   revealed: boolean;
+  framing?: PortraitFraming;
 }
 
 interface PortraitFragment {
@@ -76,7 +78,8 @@ function createFragments() {
 
 const fragments = createFragments();
 
-export default function ProfilePortraitDissolve({ src, revealed }: ProfilePortraitDissolveProps) {
+export default function ProfilePortraitDissolve({ src, revealed, framing }: ProfilePortraitDissolveProps) {
+  const geometry = getPortraitGeometry(framing);
   const imageRef = useRef<HTMLImageElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const frameRef = useRef<number | null>(null);
@@ -92,6 +95,7 @@ export default function ProfilePortraitDissolve({ src, revealed }: ProfilePortra
     const canvas = canvasRef.current;
     const context = canvas?.getContext("2d");
     if (!image || !canvas || !context) return;
+    const { crop, draw: destination } = getPortraitGeometry(framing);
 
     const configureCanvas = () => {
       const devicePixelRatio = Math.min(window.devicePixelRatio || 1, 2);
@@ -140,7 +144,7 @@ export default function ProfilePortraitDissolve({ src, revealed }: ProfilePortra
         context.beginPath();
         context.rect(fragment.sourceX, fragment.sourceY, fragment.sourceWidth, fragment.sourceHeight);
         context.clip();
-        context.drawImage(image, 0, 0, SOURCE_WIDTH, SOURCE_HEIGHT);
+        context.drawImage(image, crop.x, crop.y, crop.width, crop.height, destination.x, destination.y, destination.width, destination.height);
         context.restore();
       }
     };
@@ -188,7 +192,7 @@ export default function ProfilePortraitDissolve({ src, revealed }: ProfilePortra
       frameRef.current = null;
       drawRef.current = () => undefined;
     };
-  }, []);
+  }, [framing, src]);
 
   useEffect(() => {
     const target = revealed ? 1 : 0;
@@ -265,6 +269,7 @@ export default function ProfilePortraitDissolve({ src, revealed }: ProfilePortra
         src={src}
         alt=""
         draggable="false"
+        style={framing ? { left: `${geometry.image.x / SOURCE_WIDTH * 100}%`, top: `${geometry.image.y / SOURCE_HEIGHT * 100}%`, width: `${geometry.image.width / SOURCE_WIDTH * 100}%`, height: `${geometry.image.height / SOURCE_HEIGHT * 100}%` } : undefined}
       />
     </>
   );

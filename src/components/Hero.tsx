@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ArrowUpRight, FileDown, Mail, MapPin, Maximize2, Minimize2 } from "lucide-react";
 import type { HeroData, SocialLink } from "@/data/types";
+import { profileIntroduction } from "@/data";
 
 interface HeroProps {
   data: HeroData;
@@ -44,8 +45,7 @@ export default function Hero({ data, socialLinks }: HeroProps) {
           <div className="dashboard-hero__expandable-inner">
             <p className="dashboard-hero__title">{data.title}</p>
             <p className="dashboard-hero__intro">
-              I&apos;m a full-stack developer building web and mobile apps with a focus on clean code,
-              scalable systems, and thoughtful user experiences.
+              {profileIntroduction}
             </p>
 
             <div className="dashboard-hero__meta">

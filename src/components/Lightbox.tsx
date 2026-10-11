@@ -1,6 +1,7 @@
 import { useEffect, useCallback, useRef } from "react";
 import { createPortal } from "react-dom";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import useDialogFocus from "@/hooks/useDialogFocus";
 
 export interface LightboxImage {
   src: string;
@@ -24,6 +25,8 @@ export default function Lightbox({
     currentIndex !== null &&
     currentIndex >= 0 &&
     currentIndex < images.length;
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useDialogFocus(isOpen, dialogRef);
 
   const lastWheelTimeRef = useRef<number>(0);
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
@@ -145,6 +148,11 @@ export default function Lightbox({
 
   return createPortal(
     <div
+      ref={dialogRef}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Project image preview"
+      tabIndex={-1}
       className="lightbox select-none touch-none"
       onClick={onClose}
       onWheel={handleWheel}
@@ -153,6 +161,7 @@ export default function Lightbox({
     >
       {/* Close button */}
       <button
+        data-dialog-close
         onClick={onClose}
         className="lightbox__button lightbox__button--close"
         aria-label="Close"

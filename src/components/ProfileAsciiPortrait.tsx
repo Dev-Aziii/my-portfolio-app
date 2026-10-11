@@ -44,6 +44,14 @@ export default function ProfileAsciiPortrait({ revealed }: ProfileAsciiPortraitP
   useEffect(() => {
     targetRevealedRef.current = revealed;
     const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const settle = () => setDisplayText(revealed ? Array.from({ length: LINE_COUNT }, () => BLANK_LINE).join("\n") : profileAscii);
+    const handleReducedMotionChange = () => {
+      if (!reducedMotionQuery.matches) return;
+      if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
+      frameRef.current = null;
+      settle();
+    };
+    reducedMotionQuery.addEventListener("change", handleReducedMotionChange);
 
     if (frameRef.current !== null) {
       cancelAnimationFrame(frameRef.current);
@@ -51,8 +59,8 @@ export default function ProfileAsciiPortrait({ revealed }: ProfileAsciiPortraitP
     }
 
     if (reducedMotionQuery.matches) {
-      setDisplayText(revealed ? BLANK_LINE : profileAscii);
-      return;
+      settle();
+      return () => reducedMotionQuery.removeEventListener("change", handleReducedMotionChange);
     }
 
     const startedAt = performance.now();
@@ -120,6 +128,7 @@ export default function ProfileAsciiPortrait({ revealed }: ProfileAsciiPortraitP
     isMountedRef.current = true;
 
     return () => {
+      reducedMotionQuery.removeEventListener("change", handleReducedMotionChange);
       if (frameRef.current !== null) {
         cancelAnimationFrame(frameRef.current);
         frameRef.current = null;

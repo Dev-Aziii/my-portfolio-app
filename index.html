@@ -9,8 +9,15 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <meta name="color-scheme" content="light dark" />
+    <style>
+      html[data-presentation="terminal"], html[data-presentation="terminal"] body { background: #050505; color: #f5f5f5; color-scheme: dark; }
+    </style>
     <script>
       (function () {
+        document.documentElement.dataset.presentation = "dashboard";
+        try {
+          if (localStorage.getItem("presentation-mode") === "terminal") document.documentElement.dataset.presentation = "terminal";
+        } catch (e) {}
         try {
           var stored = localStorage.getItem("theme");
           var isDark =

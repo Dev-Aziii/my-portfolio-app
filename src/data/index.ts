@@ -10,7 +10,7 @@ export type {
   SocialLink,
 } from "./types";
 
-export { heroData } from "./hero";
+export { heroData, profileIntroduction } from "./hero";
 export { profileAscii } from "./profileAscii";
 export { techStack } from "./techStack";
 export { experiences } from "./experience";
